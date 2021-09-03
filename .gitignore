@@ -131,3 +131,6 @@ dmypy.json
 #other stuff
 /*/*.png
 /*/*.txt
+
+fig/*
+txt/*
