@@ -1,0 +1,83 @@
+# In this LAMMPS simulation file, we simulate a SiC asperity that
+# moves with a constant velocity. The aim is to study the
+# time-dependent static friction
+#
+# Author: Even Marius Nordhagen
+# Github repo: github.com/evenmn/crystal-aging
+# 
+# This LAMMPS script takes seven arguments:
+# 1. restartfile: Restart file
+# 2. paramfile: Parameter file
+# 3. temp: Simulation temperature
+# 4. seed: Seed used to initialize velocity
+# 5. force: External force on asperity
+# 6. vel: Constant velocity of asperity
+# 7. simtime: Run time
+# 8. pushtime: Time when the asperity was pushed
+#
+
+
+# general simulation setup
+units metal
+boundary p p fm                     # lower z-boundary is fixed, upper z-boundary will be reflective
+atom_style atomic
+read_restart ${restartfile}
+pair_style vashishta
+pair_coeff * * ${paramfile} C Si
+mass 1 12.011
+mass 2 28.079
+timestep 0.002
+
+variable thousand_steps equal $(v_simtime/dt/1000)
+
+
+# set position of asperity in x- and y-dir. z-dir is free. 
+variable rx equal xcm(rigid_upper,x)
+variable ry equal xcm(rigid_upper,y)
+variable rz equal xcm(rigid_upper,z)
+
+# find velocity of asperity
+variable vx equal vcm(rigid_upper,x)
+variable vy equal vcm(rigid_upper,y)
+variable vz equal vcm(rigid_upper,z)
+
+# find force acting on asperity
+variable fx equal fcm(rigid_upper,x)
+variable fy equal fcm(rigid_upper,y)
+variable fz equal fcm(rigid_upper,z)
+
+
+# initialize temperature
+# compute new mobile temp/partial 0 1 1
+# compute new mobile temp/region mobile
+velocity mobile create ${temp} ${seed} #temp new
+
+
+# define fixes
+fix 1 mobile nve
+fix 2 langevin_lower langevin ${temp} ${temp} 1.0 ${seed}
+fix 3 langevin_upper langevin ${temp} ${temp} 1.0 ${seed}
+fix 4 rigid_upper addforce 0.0 0.0 -${force}
+fix 5 all wall/reflect zhi 205
+fix 6 rigid_upper rigid/nvt single temp ${temp} ${temp} 1.0 force 1 off off on
+fix 7 rigid_upper move linear  $(v_vel/100) 0.0 NULL
+
+
+# compute stress xx yy zz xy xz yz
+compute stress all stress/atom NULL
+fix 8 all ave/atom ${thousand_steps} 1 ${thousand_steps} c_stress[*]
+
+
+# compute displacement
+compute chunks all chunk/atom bin/3d x 0.0 10.0 y 0.0 10.0 z 50.0 10.0 nchunk once ids once
+compute com all com/chunk chunks
+variable com_file string ../../../../txt/com/com_temp${temp}_vel${vel}_force${force}_time${pushtime}_seed${seed}.txt
+fix com_avg all ave/time ${thousand_steps} 1 ${thousand_steps} c_com[1] mode vector file ${com_file}
+
+
+# define output
+thermo 1
+thermo_style custom step temp time pxx pyy pzz pe press v_rx v_rz v_vx v_vz v_fx v_fz spcpu
+dump dumper all custom ${thousand_steps} dump.bin id type x y z c_stress[1] c_stress[3] c_stress[5]
+
+run $(v_simtime/dt)
