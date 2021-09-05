@@ -10,10 +10,10 @@ For more information, see the LICENSE file in the top-level dictionary.
 from pre_utils import gen_system
 
 # user-input
-lx = 29.9    # system length x-dir
-ly = 30      # system length y-dir
-ax = 15      # initial x-coordinate of asperity
-ay = 15      # initial y-coordinate of asperity
+lx = 299.9    # system length x-dir
+ly = 300      # system length y-dir
+ax = 150      # initial x-coordinate of asperity
+ay = 150      # initial y-coordinate of asperity
 hl = 50       # height of lower surface/plate
 hu = 150      # height of upper surface
 hup = 2       # height of upper plate

@@ -14,14 +14,14 @@ from lammps_simulator.computer import SlurmGPU, GPU
 
 
 # user inputs
-temp = 2450
+temp = 2200
 #seed = np.random.randint(10000, 100000)
 force = 0.001
 vel = 5
-simtime = 500
+simtime = 5
 #seed_prev = 10989
 
-height = 200
+height = 110
 orientation = "100"
 
 
@@ -33,7 +33,7 @@ push_dir = project_dir + f"simulations/sys_or{orientation}_hi{height}/push/"
 
 
 # push asperity
-time = 250000
+time = 250
 for seed in [19472, 22162, 38661, 64074, 77815]:
     restartfile = relax_dir + f"sim_temp{temp}_force{force}_time5000_seed{seed}/time.{time}.restart"
 

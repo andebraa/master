@@ -136,3 +136,4 @@ fig/*
 txt/*
 slides/*
 simulations/*
+*.data

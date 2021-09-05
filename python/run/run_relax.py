@@ -18,7 +18,7 @@ from lammps_simulator.computer import GPU, CPU, SlurmGPU
 temp = 2300
 simtime = 20
 force = 0.001
-height = 200
+height = 110
 orientation = "100"
 
 seed = np.random.randint(10000, 100000)
