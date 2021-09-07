@@ -17,6 +17,7 @@ ay = 150      # initial y-coordinate of asperity
 hl = 50       # height of lower surface/plate
 hu = 150      # height of upper surface
 hup = 2       # height of upper plate
+lz = hl + hu  #total height of system
 
 octa_d = 3 * 39.0
 dode_d = 3 * 37.3

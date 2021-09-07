@@ -16,7 +16,7 @@ from lammps_simulator.computer import GPU, CPU, SlurmGPU
 
 # User input
 temp = 2300
-simtime = 20
+simtime = 2
 force = 0.001
 height = 110
 orientation = "100"
@@ -29,7 +29,7 @@ project_dir = "../../"
 lammps_dir = project_dir + "lammps/"
 relax_dir = project_dir + f"simulations/sys_or{orientation}_hi{height}/relax/"
 
-datafile = project_dir + f"initial_system/system_or{orientation}_hi{height}.data"
+datafile = project_dir + f"initial_system/system_or{orientation}_hi{height}_grid.data"
 
 
 # run relaxation
