@@ -232,9 +232,6 @@ def gen_grid_system(lx=99.9, ly=100, ax=50, ay=50, hl=50, hu=60, hup=2,
             system.positions += (lx*i, ly*j, 0) #atoms.position from ASE 
             systems += system 
     
-    system_file = path + f"system_or{lower_orient}_hi{lz}_grid.data"
-    system.write(system_file, format="lammps-data")
-    print("System written to: ", system_file)
 
     return systems
 
