@@ -22,7 +22,7 @@ For more information, see the LICENSE file in the top-level dictionary.
 import numpy as np
 from molecular_builder import create_bulk_crystal, carve_geometry
 from molecular_builder.geometry import PlaneGeometry, BoxGeometry, OctahedronGeometry, DodecahedronGeometry, ProceduralSurfaceGeometry
-
+from ase import Atoms 
 
 def orient_110(name, size):
     """Orient crystal such that (110) point along z-axis
@@ -156,7 +156,7 @@ def gen_system(lx=300, ly=300, ax=150, ay=150, hl=50, hu=150, hup=2,
     carve_geometry(asperity, geometry, side='out')
     geometry = PlaneGeometry((0, 0, hl + 2), (0, 0, -1))
     carve_geometry(asperity, geometry, side="out")
-    asperity.write(path + f"asperity_or{lower_orient}_hi{lz}.data", format="lammps-data")
+    #asperity.write(path + f"asperity_or{lower_orient}_hi{lz}.data", format="lammps-data") why write asperity and lower?
 
     # cut asperity and attach to upper plate
     geometry = PlaneGeometry((0, 0, lz - hup - 2), (0, 0, 1))
@@ -174,22 +174,20 @@ def gen_system(lx=300, ly=300, ax=150, ay=150, hl=50, hu=150, hup=2,
                                              repeat=True)
         carve_geometry(lower, geometry, side="out")
 
-    lower.write(path + f"lower_or{lower_orient}_hi{lz}.data", format="lammps-data")
+    #lower.write(path + f"lower_or{lower_orient}_hi{lz}.data", format="lammps-data") Can i just return system?
 
     system = asperity + lower + upper
-    system_file = path + f"system_or{lower_orient}_hi{lz}.data"
-    system.write(system_file, format="lammps-data")
-    print("System written to: ", system_file)
+    
 
-    return system, asperity, lower
+    return system#, asperity, lower
 
-
-
-def gen_grid_system(lx=300, ly=300, ax=150, ay=150, hl=50, hu=150, hup=2,
-               octa_d=3, dode_d=3, lower_orient="100", remove_atoms=True,
+def gen_grid_system(lx=99.9, ly=100, ax=50, ay=50, hl=50, hu=60, hup=2,
+               octa_d=39.0, dode_d=37.3, lower_orient="100", remove_atoms=True,
                path='../../initial_system/', grid = (3,3)):
-    """Generate system. Default parameters correspond to large aging system.
+    """Default parameters correspond to small aging system.
     All lengths are given in units of Å.
+    Calls generate_system to form a grid of identical asperities and systems.
+
 
     Parameters:
     -----------
@@ -221,60 +219,29 @@ def gen_grid_system(lx=300, ly=300, ax=150, ay=150, hl=50, hu=150, hup=2,
         free energy. Default=True
     path : str
         path to where the initial system should be stored
-    grid : tuple
-        number of asperities generated on given surface (developmental)
+    grid : tuple 
+        size of asperities
     """
+    system = 0
+    systems = Atoms()
+    for i in range(grid[0]):
+        for j in range(grid[1]):
+            system = gen_system(lx, ly, ax, ay, hl, hu, hup, octa_d, dode_d, lower_orient,
+                                remove_atoms, path) 
 
-    # total system height
-    lz = hl + hu
-
-    # create lower surface
-    if lower_orient == "100":
-        lower = create_bulk_crystal("silicon_carbide_3c", (lx, ly, hl))
-    elif lower_orient == "110":
-        lower = orient_110("silicon_carbide_3c", (lx, ly, hl))
-    else:
-        raise NotImplementedError
-
-    # carve out asperity
-
+            system.positions += (lx*i, ly*j, 0) #atoms.position from ASE 
+            systems += system 
     
-    asperity = create_bulk_crystal("silicon_carbide_3c", (lx, ly, lz + 5))
-    geometry = OctahedronGeometry(octa_d, (ax, ay, lz - 10))  # d=n*3.90nm
-    carve_geometry(asperity, geometry, side='out')
-    geometry = DodecahedronGeometry(dode_d, (ax, ay, lz - 10))  # d=n*3.73nm
-    carve_geometry(asperity, geometry, side='out')
-    geometry = PlaneGeometry((0, 0, hl + 2), (0, 0, -1))
-    carve_geometry(asperity, geometry, side="out")
-    asperity.write(path + f"asperity_or{lower_orient}_hi{lz}.data", format="lammps-data")
-
-    # cut asperity and attach to upper plate
-    geometry = PlaneGeometry((0, 0, lz - hup - 2), (0, 0, 1))
-    carve_geometry(asperity, geometry, side="out")
-    upper = create_bulk_crystal("silicon_carbide_3c", (lx, ly, hup))
-    upper.positions += (0, 0, lz - hup - 2)
-
-    if remove_atoms:
-        geometry = ProceduralSurfaceGeometry(point=(0, 0, hl + 2),
-                                             normal=(0, 0, 1),
-                                             thickness=5,
-                                             scale=100,
-                                             method='simplex',
-                                             threshold=-0.1,
-                                             repeat=True)
-        carve_geometry(lower, geometry, side="out")
-
-    lower.write(path + f"lower_or{lower_orient}_hi{lz}.data", format="lammps-data")
-
-    system = asperity + lower + upper
-    system_file = path + f"system_or{lower_orient}_hi{lz}.data"
+    system_file = path + f"system_or{lower_orient}_hi{lz}_grid.data"
     system.write(system_file, format="lammps-data")
     print("System written to: ", system_file)
 
-    return system, asperity, lower
+    return systems
+
 
 
 if __name__ == "__main__":
-    sic_110 = orient_110("silicon_carbide_3c", (200, 100, 20))
-    print(len(sic_110))
-    sic_110.write("sic_110.data", format="lammps-data")
+    pass
+    #sic_110 = orient_110("silicon_carbide_3c", (200, 100, 20))
+    #print(len(sic_110))
+    #sic_110.write("sic_110.data", format="lammps-data")

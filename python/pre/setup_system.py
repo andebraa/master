@@ -28,3 +28,8 @@ path = '../../initial_system/'
 
 gen_system(lx, ly, ax, ay, hl, hu, hup, octa_d, dode_d, lower_orient,
            remove_atoms, path)
+
+system_file = path + f"system_or{lower_orient}_hi{lz}.data"
+system.write(system_file, format="lammps-data")
+print("System written to: ", system_file)
+
