@@ -26,7 +26,7 @@ orientation = "100"
 
 
 # paths
-project_dir = "../../"
+project_dir = "/run/user/1004/"
 lammps_dir = project_dir + "lammps/"
 relax_dir = project_dir + f"simulations/sys_or{orientation}_hi{height}/relax/"
 push_dir = project_dir + f"simulations/sys_or{orientation}_hi{height}/push/"
