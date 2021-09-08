@@ -24,7 +24,7 @@ dode_d = 1 * 37.3
 lower_orient = "100"
 remove_atoms = True
 
-path = '/run/user/1004/initial_system/'
+path = '/run/user/1004/initial_system/andebraa_masterdata/'
 
 system = gen_grid_system(lx, ly, ax, ay, hl, hu, hup, octa_d, dode_d, lower_orient,
                          remove_atoms, path, grid=(3,3))
