@@ -25,7 +25,10 @@ dode_d = 3 * 37.3
 lower_orient = "100"
 remove_atoms = True
 
-path = '/run/user/1004/initial_system/andebraa_masterdata/'
+#beefboy path!
+#path = '/run/user/1004/initial_system/andebraa_masterdata/'
+#regular path
+path = '../../initial_system'
 
 system = gen_system(lx, ly, ax, ay, hl, hu, hup, octa_d, dode_d, lower_orient,
            remove_atoms, path)
