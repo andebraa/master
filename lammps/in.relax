@@ -14,10 +14,13 @@
 # 7. height: Height of system
 #
 
+# lower plate is 30x30x5 nm. 
+
+
 
 # general simulation setup
 units metal
-boundary p p fm                     # lower z-boundary is fixed, upper z-boundary will be reflective
+boundary p p fm                     # lower z-boundary is fixed, upper z-boundary will be reflective p: periodic, f: fixed, m: non-                                      periodic and shrink-wrapped with a minimum value
 atom_style atomic
 read_data ${datafile}
 pair_style vashishta
@@ -44,6 +47,7 @@ variable fz equal fcm(rigid_upper,z)
 
 
 # define regions
+# region strain_portion block INF INF INF INF zlo zhi # Assume z is up 
 region rigid_lower block INF INF INF INF INF 10.0
 region langevin_lower block INF INF INF INF 10.0 20.0
 region mobile block INF INF INF INF 20.0 $(v_height-10)
