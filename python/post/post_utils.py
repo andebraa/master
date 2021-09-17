@@ -319,3 +319,8 @@ def extract_displacement(logfile, outfile="bending.txt"):
         "Disp. H=170-185 [Å]\t Disp. H=185-200 [Å]")
 
     savetxt(outfile, data, header=header)
+
+
+if __name__ == '__main__':
+    dumpfile = '../../simulations/sys_or100_hi110/relax/sim_temp2300_force0.001_time500_seed41149'
+    count_coord(dumpfile)

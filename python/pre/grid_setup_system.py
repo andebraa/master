@@ -1,7 +1,7 @@
 """
 Crystal Aging Project
 
-Script for generating intial system
+Script for generating intial system, standard is tiny system
 
 This project is distributed under the GNU General Public License v3.
 For more information, see the LICENSE file in the top-level dictionary.
