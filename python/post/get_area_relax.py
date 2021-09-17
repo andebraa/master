@@ -8,16 +8,18 @@ This project is distributed under the GNU General Public License v3.
 For more information, see the LICENSE file in the top-level dictionary.
 """
 
+
 import re
 from glob import glob
-from post_utils import get_contact_area, count_coord
+from post_utils import get_contact_area
+from post_utils import count_coord
 
 # user input
 orientation = "100"
 height = 200  # Å
 force = 0.001 # eV/Å
 time = 5000   # ps
-
+#grid = (3,3)
 
 # paths
 project_dir = '../../'

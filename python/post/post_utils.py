@@ -36,6 +36,7 @@ def get_contact_area(dumpfile, outfile="area.txt", delta=None,
     init_time : float
         initial time given in ns
     """
+    print('start of get-conctact_area')
     if delta is None:
         warnings.warn(r"No $\Delta t$ is given, setting $\Delta t=1$")
         delta = 1
@@ -83,7 +84,7 @@ def get_contact_area(dumpfile, outfile="area.txt", delta=None,
               "time [ns]\t\t # contact atoms\t contact area [nm^2]")
 
     savetxt(outfile, asarray([times, nums, areas], dtype=float).T, header=header)
-
+    print('end of get contact area')
     return times, nums, areas
 
 
