@@ -21,7 +21,7 @@ force = 0.001
 height = 110
 orientation = "100"
 #grid = (3,3) 
-
+grid = False
 seed = np.random.randint(10000, 100000)
 
 
