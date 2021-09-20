@@ -16,9 +16,9 @@ from post_utils import count_coord
 
 # user input
 orientation = "100"
-height = 200  # Å
+height = 110  # Å
 force = 0.001 # eV/Å
-time = 5000   # ps
+time = 500   # ps
 #grid = (3,3)
 
 # paths
@@ -32,7 +32,7 @@ template_area = area_relax_dir + 'areas_temp{}_force{}_55_hi{}_seed{}.txt'
 template_coord = coordination_dir + 'coordination_temp{}_force{}_hi{}_seed{}.txt'
 
 
-temps = [2200, 2400]  # range(2000, 2500, 50)
+temps = [2300]  # range(2000, 2500, 50)
 for temp in temps:
     dumpfiles = glob(template_dump.format(orientation, height, temp, force, time))
     for dumpfile in dumpfiles:

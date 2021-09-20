@@ -322,5 +322,5 @@ def extract_displacement(logfile, outfile="bending.txt"):
 
 
 if __name__ == '__main__':
-    dumpfile = '../../simulations/sys_or100_hi110/relax/sim_temp2300_force0.001_time500_seed41149'
+    dumpfile = '../../simulations/sys_or100_hi110/relax/sim_temp2300_force0.001_time500_seed66342/dump.bin'
     count_coord(dumpfile)
