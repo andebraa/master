@@ -22,12 +22,12 @@ plt.rcParams['figure.figsize'] = 7, 5
 
 
 # user input
-temps = range(2000, 2500, 50)
-temps = [2000, 2150, 2300, 2450]
+#temps = range(2000, 2500, 50)
+temps = [2300]
 force = 0.001
 orientation = "100"
 height = 200
-save = False
+save = True
 
 
 # paths
@@ -158,6 +158,8 @@ if save:
     plt.savefig(fig_dir + 'pgf/area_num_2000_2150_2300_2450.pgf')
 plt.show()
 
+
+"""
 
 #################################
 ### INDEPENDENT REGRESSION
@@ -526,3 +528,5 @@ plt.savefig(fig_dir + 'png/num_time_collapse_2000_2150_2300_2450.png')
 plt.savefig(fig_dir + 'pgf/num_time_collapse_2000_2150_2300_2450.pgf')
 
 plt.show()
+
+"""

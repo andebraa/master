@@ -52,6 +52,7 @@ def get_contact_area(dumpfile, outfile="area.txt", delta=None,
 
     # Cluster analysis:
     pipeline.modifiers.append(ClusterAnalysisModifier(sort_by_size=True))
+    
 
     # Expression selection:
     pipeline.modifiers.append(ExpressionSelectionModifier(expression='Cluster!=1'))
@@ -61,7 +62,7 @@ def get_contact_area(dumpfile, outfile="area.txt", delta=None,
 
     # Construct surface mesh:
     pipeline.modifiers.append(ConstructSurfaceModifier(radius=20.0, identify_regions=True))
-
+    
     # Output surface area as a function of time
     times, nums, areas = [], [], []
     for i in trange(pipeline.source.num_frames):
