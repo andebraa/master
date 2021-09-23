@@ -15,8 +15,8 @@ from lammps_simulator.computer import GPU, CPU, SlurmGPU
 
 
 # User input
-temp = 2300
-simtime = 500
+temp = 2500
+simtime = 1000
 force = 0.001
 height = 110
 orientation = "100"
