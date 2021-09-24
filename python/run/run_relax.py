@@ -51,7 +51,7 @@ if grid:
 else:
     sim = Simulator(directory=relax_dir + f"sim_temp{temp}_force{force}_time{simtime}_seed{seed}", overwrite=True)
 
-sim = Simulator(directory=relax_dir + f"sim_temp{temp}_force{force}_time{simtime}_seed{seed}", overwrite=True)
+#sim = Simulator(directory=relax_dir + f"sim_temp{temp}_force{force}_time{simtime}_seed{seed}", overwrite=True)
 sim.copy_to_wd(datafile, lammps_dir + "SiC.vashishta")
 sim.set_input_script(lammps_dir + "in.relax", **var)
 

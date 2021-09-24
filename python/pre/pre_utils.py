@@ -224,6 +224,7 @@ def gen_grid_system(lx=99.9, ly=100, ax=50, ay=50, hl=50, hu=60, hup=2,
     """
     system = 0
     systems = Atoms()
+    
     for i in range(grid[0]):
         for j in range(grid[1]):
             system = gen_system(lx, ly, ax, ay, hl, hu, hup, octa_d, dode_d, lower_orient,
