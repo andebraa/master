@@ -16,12 +16,12 @@ ly = 100        # system length y-dir
 ax = 50         # initial x-coordinate of asperity
 ay = 50         # initial y-coordinate of asperity
 hl = 50         # height of lower surface/plate
-hu = 60         # height of upper surface
+hu = 65         # height of upper surface
 hup = 2         # height of upper plate
 lz = hl + hu    #total system height
 octa_d = 1 * 39.0 #The multiplyer has to be an integer
 dode_d = 1 * 37.3
-grid = (3,3)
+grid = (2,2)
 
 lower_orient = "100"
 remove_atoms = True
@@ -31,7 +31,7 @@ remove_atoms = True
 #regular path
 path = '../../initial_system/'
 system = gen_grid_system(lx, ly, ax, ay, hl, hu, hup, octa_d, dode_d, lower_orient,
-                         remove_atoms, path, grid=(3,3))
+                         remove_atoms, path, grid=grid)
 
 
 system.set_cell(np.diag(np.max(system.positions, axis=0)))

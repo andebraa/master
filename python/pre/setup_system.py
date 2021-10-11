@@ -28,7 +28,7 @@ ly = 100        # system length y-dir
 ax = 50         # initial x-coordinate of asperity
 ay = 50         # initial y-coordinate of asperity
 hl = 50         # height of lower surface/plate
-hu = 60         # height of upper surface
+hu = 65         # height of upper surface
 hup = 2         # height of upper plate
 
 
