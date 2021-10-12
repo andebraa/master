@@ -16,12 +16,12 @@ from lammps_simulator.computer import GPU, CPU, SlurmGPU
 
 # User input
 temp = 2300
-simtime = 1000
+simtime = 100
 force = 0.001
 height = 115
 orientation = "100"
-#grid = (2,2) 
-grid = False
+grid = (2,2) 
+#grid = False
 seed = np.random.randint(10000, 100000)
 
 
