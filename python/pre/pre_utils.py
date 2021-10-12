@@ -230,10 +230,14 @@ def gen_grid_system(lx=99.9, ly=100, ax=50, ay=50, hl=50, hu=60, hup=2,
             system = gen_system(lx, ly, ax, ay, hl, hu, hup, octa_d, dode_d, lower_orient,
                                 remove_atoms, path) 
             
-            lx_actual, ly_actual, lz_actual = system.get_cell()[0]
-            print(lx_actual)
-            print(type(lx_actual))
+            shape = np.asarray(system.get_cell())
+            print(i, j)
+            xy = np.array((1,1,0))
             print(system.get_cell())
+            lx_actual, ly_actual, lz_actual = shape
+            print(lx_actual, ly_actual, lz_actual)
+            print(system.get_cell())
+            print('here')
             system.positions += ((lx_actual+tolerance)*i, (ly_actual+tolerance)*j, 0) #atoms.position from ASE 
             systems += system 
     
