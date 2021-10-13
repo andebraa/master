@@ -18,7 +18,7 @@ Equilibrium Shapes of SiC Nanoparticles
 This project is distributed under the GNU General Public License v3.
 For more information, see the LICENSE file in the top-level dictionary.
 """
-
+import re
 import numpy as np
 from molecular_builder import create_bulk_crystal, carve_geometry
 from molecular_builder.geometry import PlaneGeometry, BoxGeometry, OctahedronGeometry, DodecahedronGeometry, ProceduralSurfaceGeometry
@@ -222,6 +222,7 @@ def gen_grid_system(lx=99.9, ly=100, ax=50, ay=50, hl=50, hu=60, hup=2,
     grid : tuple 
         size of asperities
     """
+    #cell\(\[(?:(\d+.\d+),\w{0,1}){3}\]\) 
     system = 0
     systems = Atoms()
     tolerance = 0 #add a little extra space, to avvoid crashing 
@@ -229,7 +230,8 @@ def gen_grid_system(lx=99.9, ly=100, ax=50, ay=50, hl=50, hu=60, hup=2,
         for j in range(grid[1]):
             system = gen_system(lx, ly, ax, ay, hl, hu, hup, octa_d, dode_d, lower_orient,
                                 remove_atoms, path) 
-            
+            print(str(system.get_cell()))
+            size = re.search(' ', str(system.get_cell()))
             lx_actual, ly_actual, lz_actual = system.get_cell()[0]
             print(lx_actual)
             print(type(lx_actual))
