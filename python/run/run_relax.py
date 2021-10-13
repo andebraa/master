@@ -20,8 +20,11 @@ simtime = 100
 force = 0.001
 height = 115
 orientation = "100"
-grid = (2,2) 
+grid = (1,1) 
 #grid = False
+
+gpu = False
+
 seed = np.random.randint(10000, 100000)
 
 
@@ -51,16 +54,20 @@ if grid:
 else:
     sim = Simulator(directory=relax_dir + f"sim_temp{temp}_force{force}_time{simtime}_seed{seed}", overwrite=True)
 
-#sim = Simulator(directory=relax_dir + f"sim_temp{temp}_force{force}_time{simtime}_seed{seed}", overwrite=True)
 sim.copy_to_wd(datafile, lammps_dir + "SiC.vashishta")
 sim.set_input_script(lammps_dir + "in.relax", **var)
-"""
+
 if grid:
-    sim.run(computer=SlurmGPU(lmp_exec="lmp_python", slurm_args={'job-name': f'N{int(temp/100)}_{int(force*1000)}_{seed}_grid{grid[0]}_{grid[1]}'}, lmp_args={'-pk': 'kokkos newton on neigh full'}))
+    if gpu:
+        sim.run(computer=SlurmGPU(lmp_exec="lmp_python", slurm_args={'job-name': f'N{int(temp/100)}_{int(force*1000)}_{seed}_grid{grid[0]}_{grid[1]}'}, lmp_args={'-pk': 'kokkos newton on neigh full'}))
+    else:
+        sim.run(computer=CPU(num_procs=4, lmp_exec="lmp"), stdout=None)
 
 else:
-    sim.run(computer=SlurmGPU(lmp_exec="lmp_python", slurm_args={'job-name': f'N{int(temp/100)}_{int(force*1000)}_{seed}'}, lmp_args={'-pk': 'kokkos newton on neigh full'}))
-"""
-sim.run(computer=CPU(num_procs=4, lmp_exec="lmp"), stdout=None)
-#sim.run(computer=GPU(lmp_exec="lmp_python"), stdout=None)
+    if gpu:
+        sim.run(computer=SlurmGPU(lmp_exec="lmp_python", slurm_args={'job-name': f'N{int(temp/100)}_{int(force*1000)}_{seed}'}, lmp_args={'-pk': 'kokkos newton on neigh full'}))
+    else:
+        sim.run(computer=CPU(num_procs=4, lmp_exec="lmp"), stdout=None)
 
+#sim.run(computer=CPU(num_procs=4, lmp_exec="lmp"), stdout=None)
+#sim.run(computer=GPU(lmp_exec="lmp_python"), stdout=None)

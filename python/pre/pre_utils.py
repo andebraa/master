@@ -156,7 +156,7 @@ def gen_system(lx=300, ly=300, ax=150, ay=150, hl=50, hu=150, hup=2,
     carve_geometry(asperity, geometry, side='out')
     geometry = PlaneGeometry((0, 0, hl + 2), (0, 0, -1))
     carve_geometry(asperity, geometry, side="out")
-    #asperity.write(path + f"asperity_or{lower_orient}_hi{lz}.data", format="lammps-data") why write asperity and lower?
+
 
     # cut asperity and attach to upper plate
     geometry = PlaneGeometry((0, 0, lz - hup - 2), (0, 0, 1))
@@ -174,7 +174,7 @@ def gen_system(lx=300, ly=300, ax=150, ay=150, hl=50, hu=150, hup=2,
                                              repeat=True)
         carve_geometry(lower, geometry, side="out")
 
-    #lower.write(path + f"lower_or{lower_orient}_hi{lz}.data", format="lammps-data") Can i just return system?
+    
 
     system = asperity + lower + upper
     
