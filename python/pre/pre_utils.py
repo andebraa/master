@@ -18,7 +18,7 @@ Equilibrium Shapes of SiC Nanoparticles
 This project is distributed under the GNU General Public License v3.
 For more information, see the LICENSE file in the top-level dictionary.
 """
-
+import re
 import numpy as np
 from molecular_builder import create_bulk_crystal, carve_geometry
 from molecular_builder.geometry import PlaneGeometry, BoxGeometry, OctahedronGeometry, DodecahedronGeometry, ProceduralSurfaceGeometry
@@ -230,14 +230,12 @@ def gen_grid_system(lx=99.9, ly=100, ax=50, ay=50, hl=50, hu=60, hup=2,
             system = gen_system(lx, ly, ax, ay, hl, hu, hup, octa_d, dode_d, lower_orient,
                                 remove_atoms, path) 
             
-            shape = np.asarray(system.get_cell())
-            print(i, j)
+            shape = re.findall(r'Cell\(\[(\d+\.\d+), (\d+\.\d+), (\d+\.\d+)\]\)', str(system.get_cell()))
+            shape = [float(shape[0][0]), float(shape[0][1]), float(shape[0][2])] 
             xy = np.array((1,1,0))
-            print(system.get_cell())
+            
             lx_actual, ly_actual, lz_actual = shape
-            print(lx_actual, ly_actual, lz_actual)
-            print(system.get_cell())
-            print('here')
+            
             system.positions += ((lx_actual+tolerance)*i, (ly_actual+tolerance)*j, 0) #atoms.position from ASE 
             systems += system 
     
