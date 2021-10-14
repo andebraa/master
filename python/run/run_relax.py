@@ -23,7 +23,7 @@ orientation = "100"
 grid = (1,1) 
 #grid = False
 
-gpu = False
+gpu = True
 
 seed = np.random.randint(10000, 100000)
 
