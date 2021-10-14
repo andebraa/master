@@ -61,7 +61,7 @@ if grid:
     if gpu:
         sim.run(computer=SlurmGPU(lmp_exec="lmp_python", slurm_args={'job-name': f'N{int(temp/100)}_{int(force*1000)}_{seed}_grid{grid[0]}_{grid[1]}'}, lmp_args={'-pk': 'kokkos newton on neigh full'}))
     else:
-        sim.run(computer=CPU(num_procs=4, lmp_exec="lmp"), stdout=None)
+        sim.run(computer=CPU(num_procs=2, lmp_exec="lmp"), stdout=None)
 
 else:
     if gpu:
