@@ -6,7 +6,7 @@ Script for generating intial system, standard is tiny system
 This project is distributed under the GNU General Public License v3.
 For more information, see the LICENSE file in the top-level dictionary.
 """
-
+from molecular_builder import write
 from pre_utils import gen_grid_system
 import numpy as np
 
@@ -37,6 +37,7 @@ system = gen_grid_system(lx, ly, ax, ay, hl, hu, hup, octa_d, dode_d, lower_orie
 system.set_cell(np.diag(np.max(system.positions, axis=0)))
 system.wrap()
 system_file = path + f"system_or{lower_orient}_hi{lz}_grid{grid[0]}_{grid[1]}.data"
-system.write(system_file, format="lammps-data")
+write(system, system_file)
+#system.write(system_file, format="lammps-data")
 print("System written to: ", system_file)
 
