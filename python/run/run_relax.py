@@ -72,7 +72,7 @@ else:
         sim.run(computer=CPU(num_procs=2, lmp_exec="lmp"), stdout=None)
 """
 
-sim.run(computer=CPU(num_procs=3, lmp_exec="lmp"), stdout=None)
-#sim.run(computer=GPU(lmp_exec="lmp_python"), stdout=None)
+#sim.run(computer=CPU(num_procs=3, lmp_exec="lmp"), stdout=None)
+sim.run(computer=GPU(lmp_exec="lmp_python"), stdout=None)
 
 
