@@ -6,7 +6,7 @@ Script for generating intial system
 This project is distributed under the GNU General Public License v3.
 For more information, see the LICENSE file in the top-level dictionary.
 """
-
+from molecular_builder import write 
 from pre_utils import gen_system
 
 # user-input
@@ -50,6 +50,7 @@ system = gen_system(lx, ly, ax, ay, hl, hu, hup, octa_d, dode_d, lower_orient,
 
 system_file = path + f"system_or{lower_orient}_hi{lz}.data"
 system.write(system_file, format="lammps-data")
+#write(system, system_file)
 print("System written to: ", system_file)
 
 
