@@ -21,11 +21,8 @@ hup = 2         # height of upper plate
 lz = hl + hu    #total system height
 octa_d = 1 * 39.0 #The multiplyer has to be an integer
 dode_d = 1 * 37.3
-<<<<<<< HEAD
-grid = (2,2)
-=======
-grid = (3,3)
->>>>>>> 9c2c758be1a4e32926b08a4eb857bab32b08f713
+
+grid = (1,1)
 
 lower_orient = "100"
 remove_atoms = True
@@ -37,11 +34,11 @@ path = '../../initial_system/'
 system = gen_grid_system(lx, ly, ax, ay, hl, hu, hup, octa_d, dode_d, lower_orient,
                          remove_atoms, path, grid=grid)
 
-
-system.set_cell(np.diag(np.max(system.positions, axis=0)))
-system.wrap()
+#print(system)
+#system.set_cell(np.diag(np.max(system.positions, axis=0)))
+#system.wrap()
 system_file = path + f"system_or{lower_orient}_hi{lz}_grid{grid[0]}_{grid[1]}.data"
-write(system, system_file)
-#system.write(system_file, format="lammps-data")
+#write(system, system_file)
+system.write(system_file, format="lammps-data")
 print("System written to: ", system_file)
 
