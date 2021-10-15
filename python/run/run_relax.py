@@ -23,7 +23,7 @@ orientation = "100"
 grid = (2,2) 
 #grid = False
 
-gpu = False
+gpu = True
 
 seed = np.random.randint(10000, 100000)
 
@@ -56,6 +56,7 @@ else:
 
 sim.copy_to_wd(datafile, lammps_dir + "SiC.vashishta")
 sim.set_input_script(lammps_dir + "in.relax", **var)
+
 """
 if grid:
     if gpu:
@@ -67,8 +68,11 @@ else:
     if gpu:
         sim.run(computer=SlurmGPU(lmp_exec="lmp_python", slurm_args={'job-name': f'N{int(temp/100)}_{int(force*1000)}_{seed}'}, lmp_args={'-pk': 'kokkos newton on neigh full'}))
     else:
+<<<<<<< HEAD
         sim.run(computer=CPU(num_procs=2, lmp_exec="lmp"), stdout=None)
 """
 
 sim.run(computer=CPU(num_procs=3, lmp_exec="lmp"), stdout=None)
 #sim.run(computer=GPU(lmp_exec="lmp_python"), stdout=None)
+
+

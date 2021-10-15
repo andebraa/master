@@ -21,7 +21,11 @@ hup = 2         # height of upper plate
 lz = hl + hu    #total system height
 octa_d = 1 * 39.0 #The multiplyer has to be an integer
 dode_d = 1 * 37.3
+<<<<<<< HEAD
 grid = (2,2)
+=======
+grid = (3,3)
+>>>>>>> 9c2c758be1a4e32926b08a4eb857bab32b08f713
 
 lower_orient = "100"
 remove_atoms = True
