@@ -293,6 +293,32 @@ def gen_grid_system(lx=300, ly=300, ax=150, ay=150, hl=50, hu=150, hup=2,
 
     return system
 
+def erratic_system(lx=99.9, ly=100, ax=50, ay=50, hl=50, hu=60, hup=2,
+               octa_d=39.0, dode_d=37.3, lower_orient="100", remove_atoms=True,
+               path='../../initial_system/', grid = (3,3)):
+
+    
+
+    system = 0
+    systems = Atoms()
+    tolerance = 1 #add a little extra space, to avvoid crashing 
+    for i in range(grid[0]):
+        for j in range(grid[1]):
+            system = gen_system(lx, ly, ax, ay, hl, hu, hup, octa_d, dode_d, lower_orient,
+                                remove_atoms, path)
+
+            shape = re.findall(r'Cell\(\[(\d+\.\d+), (\d+\.\d+), (\d+\.\d+)\]\)', str(system.get_cell()))
+            shape = [float(shape[0][0]), float(shape[0][1]), float(shape[0][2])]
+            xy = np.array((1,1,0))
+
+            lx_actual, ly_actual, lz_actual = shape
+
+            system.positions += ((lx_actual+tolerance)*i, (ly_actual+tolerance)*j, 0) #atoms.position from ASE 
+            systems += system
+
+    
+    
+
 
 
 if __name__ == "__main__":
