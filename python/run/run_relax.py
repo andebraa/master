@@ -48,7 +48,7 @@ var = {'datafile': datafile.split("/")[-1],
        'seed': seed,
        'force': force,
        'simtime': simtime,
-       'freq': simtime, #timesteps
+       'freq': simtime/0.002, #timesteps
        'height': height}
 if grid:
     sim = Simulator(directory=relax_dir + f"sim_temp{temp}_force{force}_time{simtime}_seed{seed}_grid{grid[0]}_{grid[1]}", overwrite=True)

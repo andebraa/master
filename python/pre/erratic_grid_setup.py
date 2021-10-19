@@ -23,22 +23,22 @@ octa_d = 1 * 39.0 #The multiplyer has to be an integer
 dode_d = 1 * 37.3
 
 grid = (4,4)
+asperity_grid = np.random.randint(0,2, size=grid) 
+print(asperity_grid)
 
 lower_orient = "100"
 remove_atoms = True
 
-#beefboy path
-#path = '/run/user/1004/initial_system/andebraa_masterdata/'
-#regular path
 path = '../../initial_system/'
-system = gen_grid_system(lx, ly, ax, ay, hl, hu, hup, octa_d, dode_d, lower_orient,
-                         remove_atoms, path, grid=grid)
+##system = gen_grid_system(lx, ly, ax, ay, hl, hu, hup, octa_d, dode_d, lower_orient,
+##                         remove_atoms, path, grid=grid)
 
 #print(system)
 #system.set_cell(np.diag(np.max(system.positions, axis=0)))
 #system.wrap()
-system_file = path + f"system_or{lower_orient}_hi{lz}_grid{grid[0]}_{grid[1]}.data"
+##system_file = path + f"system_or{lower_orient}_hi{lz}_grid{grid[0]}_{grid[1]}.data"
 #write(system, system_file)
-system.write(system_file, format="lammps-data")
-print("System written to: ", system_file)
+##system.write(system_file, format="lammps-data")
+##print("System written to: ", system_file)
+
 

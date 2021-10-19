@@ -7,7 +7,7 @@ constant velocity after relaxation.
 This project is distributed under the GNU General Public License v3.
 For more information, see the LICENSE file in the top-level dictionary.
 """
-
+import os 
 import numpy as np
 from lammps_simulator import Simulator
 from lammps_simulator.computer import SlurmGPU, GPU
@@ -38,7 +38,7 @@ if grid:
 else:
     relax_dir = project_dir + f"simulations/sys_or{orientation}_hi{height}/relax/"
     push_dir = project_dir + f"simulations/sys_or{orientation}_hi{height}/push/"
-
+print(os.listdir(relax_dir))
 
 # push asperity
 relax_time = 100000
