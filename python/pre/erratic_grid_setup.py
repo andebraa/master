@@ -23,16 +23,15 @@ lz = hl + hu    #total system height
 octa_d = 1 * 39.0 #The multiplyer has to be an integer
 dode_d = 1 * 37.3
 
-#grid = (4,4)
-grid = 'erratic' 
+grid = (4,4) 
 
 lower_orient = "100"
 remove_atoms = True
-
+erratic = True
 
 path = '../../initial_system/'
 
-if grid.isinstance(str):
+if erratic:
     system = erratic_setup(lx, ly, ax, ay, hl, hu, hup, octa_d, dode_d, lower_orient,
                            remove_atoms, path, grid=grid)
 
@@ -46,7 +45,7 @@ if grid.isinstance(str):
     #system.write(system_file, format="lammps-data") #alternate write method that fixes error?
     print("System written to: ", system_file)
 
-elif grid.isinstance(tuple):
+else:
     system = gen_grid_system(lx, ly, ax, ay, hl, hu, hup, octa_d, dode_d, lower_orient,
                              remove_atoms, path, grid=grid)
 

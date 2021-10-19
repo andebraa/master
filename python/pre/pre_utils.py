@@ -181,31 +181,59 @@ def gen_system(lx=300, ly=300, ax=150, ay=150, hl=50, hu=150, hup=2,
 
     return system#, asperity, lower
 
-def gen_grid_system_archive(lx=99.9, ly=100, ax=50, ay=50, hl=50, hu=60, hup=2,
-               octa_d=39.0, dode_d=37.3, lower_orient="100", remove_atoms=True,
-               path='../../initial_system/', grid = (3,3)):
-    
-    #cell\(\[(?:(\d+.\d+),\w{0,1}){3}\]\) 
-    system = 0
-    systems = Atoms()
-    tolerance = 1 #add a little extra space, to avvoid crashing 
-    for i in range(grid[0]):
-        for j in range(grid[1]):
-            system = gen_system(lx, ly, ax, ay, hl, hu, hup, octa_d, dode_d, lower_orient,
-                                remove_atoms, path) 
-            
-            shape = re.findall(r'Cell\(\[(\d+\.\d+), (\d+\.\d+), (\d+\.\d+)\]\)', str(system.get_cell()))
-            shape = [float(shape[0][0]), float(shape[0][1]), float(shape[0][2])] 
-            xy = np.array((1,1,0))
-            
-            lx_actual, ly_actual, lz_actual = shape
-            
-            system.positions += ((lx_actual+tolerance)*i, (ly_actual+tolerance)*j, 0) #atoms.position from ASE 
-            systems += system 
+
+
+def emtpy_square(lx=300, ly=300, ax=150, ay=150, hl=50, hu=150, hup=2,
+               octa_d=3, dode_d=3, lower_orient="100", remove_atoms=True,
+               path='../../initial_system/'):
+
+    """
+    Same as gen_system. produces a tile without an asperity. 
+    """
+    # total system height
+    lz = hl + hu
+
+    # create lower surface
+    if lower_orient == "100":
+        lower = create_bulk_crystal("silicon_carbide_3c", (lx, ly, hl))
+    elif lower_orient == "110":
+        lower = orient_110("silicon_carbide_3c", (lx, ly, hl))
+    else:
+        raise NotImplementedError
+
+    #Can i just hash this out and it'll still work?
+    # carve out asperity
+    asperity = create_bulk_crystal("silicon_carbide_3c", (lx, ly, lz + 5))
+    geometry = OctahedronGeometry(octa_d, (ax, ay, lz - 10))  # d=n*3.90nm
+    carve_geometry(asperity, geometry, side='out')
+    geometry = DodecahedronGeometry(dode_d, (ax, ay, lz - 10))  # d=n*3.73nm
+    carve_geometry(asperity, geometry, side='out')
+    geometry = PlaneGeometry((0, 0, hl + 2), (0, 0, -1))
+    carve_geometry(asperity, geometry, side="out")
     
 
-    return systems
+    # cut asperity and attach to upper plate
+    geometry = PlaneGeometry((0, 0, lz - hup - 2), (0, 0, 1))
+    carve_geometry(asperity, geometry, side="out")
+    upper = create_bulk_crystal("silicon_carbide_3c", (lx, ly, hup))
+    upper.positions += (0, 0, lz - hup - 2)
 
+    if remove_atoms:
+        geometry = ProceduralSurfaceGeometry(point=(0, 0, hl + 2),
+                                             normal=(0, 0, 1),
+                                             thickness=5,
+                                             scale=100,
+                                             method='simplex',
+                                             threshold=-0.1,
+                                             repeat=True)
+        carve_geometry(lower, geometry, side="out")
+
+
+
+    system = lower + upper
+
+
+    return system#, asperity, lower
 
 
 def gen_grid_system(lx=300, ly=300, ax=150, ay=150, hl=50, hu=150, hup=2,
@@ -297,15 +325,27 @@ def erratic_system(lx=99.9, ly=100, ax=50, ay=50, hl=50, hu=60, hup=2,
                octa_d=39.0, dode_d=37.3, lower_orient="100", remove_atoms=True,
                path='../../initial_system/', grid = (3,3)):
 
-    
+    """
+    script for generating a system with squares of asperities and without. grid input is in this
+    instance a boolean array which describes the location of asperities.
+    """
+
+    grid = np.random.randint(0,2,size=grid)
 
     system = 0
     systems = Atoms()
     tolerance = 1 #add a little extra space, to avvoid crashing 
     for i in range(grid[0]):
         for j in range(grid[1]):
-            system = gen_system(lx, ly, ax, ay, hl, hu, hup, octa_d, dode_d, lower_orient,
-                                remove_atoms, path)
+            
+            
+            if grid[i,j]:
+                system = empty_square(lx, ly, ax, ay, hl, hu, hup, octa_d, dode_d, lower_orient,
+                                      remove_atoms, path)
+
+            else:
+                system = gen_system(lx, ly, ax, ay, hl, hu, hup, octa_d, dode_d, lower_orient,
+                                    remove_atoms, path)
 
             shape = re.findall(r'Cell\(\[(\d+\.\d+), (\d+\.\d+), (\d+\.\d+)\]\)', str(system.get_cell()))
             shape = [float(shape[0][0]), float(shape[0][1]), float(shape[0][2])]
