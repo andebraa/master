@@ -13,17 +13,18 @@ import numpy as np
 from lammps_simulator import Simulator
 from lammps_simulator.computer import GPU, CPU, SlurmGPU
 
-
+#dt = 0.002
+#number of timesteps is simtime/dt
 # User input
 temp = 2300
-simtime = 100
+simtime = 10000 #picosekunder
 force = 0.001
 height = 115
 orientation = "100"
 
 grid = (1,1) 
-slurm = False
-gpu = False
+slurm = True
+gpu = True
 
 seed = np.random.randint(10000, 100000)
 
@@ -47,7 +48,7 @@ var = {'datafile': datafile.split("/")[-1],
        'seed': seed,
        'force': force,
        'simtime': simtime,
-       'freq': 5000,
+       'freq': simtime, #timesteps
        'height': height}
 if grid:
     sim = Simulator(directory=relax_dir + f"sim_temp{temp}_force{force}_time{simtime}_seed{seed}_grid{grid[0]}_{grid[1]}", overwrite=True)
@@ -76,14 +77,5 @@ else:
 
     else:
         sim.run(computer=CPU(num_procs=2, lmp_exec="lmp"), stdout=None)
-
-<<<<<<< HEAD
-#sim.run(computer=CPU(num_procs=3, lmp_exec="lmp"), stdout=None)
-sim.run(computer=GPU(lmp_exec="lmp_python"), stdout=None)
-=======
-
-#sim.run(computer=CPU(num_procs=3, lmp_exec="lmp"), stdout=None)
-#sim.run(computer=GPU(lmp_exec="lmp_python"), stdout=None)
->>>>>>> 14e9beab6f30b4a8fad285a7be804876db5daf21
 
 
