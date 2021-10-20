@@ -29,7 +29,7 @@ grid = (4,4)
 
 lower_orient = "100"
 remove_atoms = True
-erratic = False
+erratic = True
 
 path = '../../initial_system/'
 

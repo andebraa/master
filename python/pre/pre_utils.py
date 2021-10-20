@@ -238,7 +238,7 @@ def empty_square(lx=300, ly=300, ax=150, ay=150, hl=50, hu=150, hup=2,
 
 def gen_grid_system(lx=300, ly=300, ax=150, ay=150, hl=50, hu=150, hup=2,
                octa_d=3, dode_d=3, lower_orient="100", remove_atoms=True,
-               path='../../initial_system/', grid = (3,3)):
+               path='../../initial_system/', grid = (3,3), erratic = False):
     """Generate system. Default parameters correspond to large aging system.
     All lengths are given in units of Å.
 
@@ -315,9 +315,15 @@ def gen_grid_system(lx=300, ly=300, ax=150, ay=150, hl=50, hu=150, hup=2,
 
     #lower.write(path + f"lower_or{lower_orient}_hi{lz}.data", format="lammps-data")
 
+
+    if erratic: #seperate lower, upper and asperity, so removal of asperities is easier
+        asperity_system = asperity.repeat((grid[0], grid[1], 1)) 
+        lower_upper_system = lower + upper 
+        lower_upper_system = lower_upper_system.repeat((grid[0], grid[1], 1)) 
+        return lower_upper_system, asperity_system
     system = asperity + lower + upper
     system = system.repeat((grid[0], grid[1], 1))
-    
+
 
     return system
 
@@ -329,18 +335,57 @@ def erratic_setup(lx=99.9, ly=100, ax=50, ay=50, hl=50, hu=60, hup=2,
     script for generating a system with squares of asperities and without. grid input is in this
     instance a boolean array which describes the location of asperities.
     """
+    # total system height
+    lz = hl + hu
 
-    grid = np.random.randint(0,2,size=grid).astype(tuple)
-    print(grid)
-    print(grid[:,0])
+    bool_grid = np.random.randint(0,2,size=grid).astype(tuple)
+    
+
     system = 0
     systems = Atoms()
     tolerance = 0 #add a little extra space, to avvoid crashing 
-    for i in range(len(grid[0])):
-        for j in range(len(grid[:,0])):
+     
+
+    #we call a nXn grid, and then remove asperities that we don't want
+    top_bot_system, asperity_system = gen_grid_system(lx=99.9, ly=100, ax=50, ay=50, hl=50, hu=60, hup=2,
+                                                      octa_d=39.0, dode_d=37.3, lower_orient="100", remove_atoms=True,
+                                                      path='../../initial_system/', grid = grid)
+
+    #finding the size of the system, and then dividing this into grid cells
+    shape = re.findall(r'Cell\(\[(\d+\.\d+), (\d+\.\d+), (\d+\.\d+)\]\)', str(system.get_cell()))
+    shape = [float(shape[0][0]), float(shape[0][1]), float(shape[0][2])]
+
+    sys_lx, sys_ly, sys_lz = shape #the size of the whole system
+    lx_actual, ly_actual = sys_lx/grid[0], sys_ly/grid[1] #the size of one partition
+
+    print(lx_actual, ly_actual)    
+    #divide the system into squares nXn. linspace(start, stop, num)
+    partition = (np.linspace(0,lx_actual, grid[0]), np.linspace(0,ly_actual, grid[1])) 
+    
+
+    #TODO seperate asperities from lower and upper, i.e return lower and upper in one system, and asperity in another,
+    # this way you can remove asperities witout worrying about upper and lower
+    # modify gen_grid_system to perhaps take this as an argument
+
+    for i in range(len(partition[0])):
+        for j in range(len(partition[1])):
             
-            print(grid[i,j])
-            if grid[i,j]:
+            if not bool_grid[i,j]: #if bool_grid == false , remove asperity
+                #lx_actual is midpoint of partition, then it jumps the length of a partition to find next midpoint
+                #OctahedronGeometry(d, center = [0,0,0]) 
+                #geometry = OctahedronGeometry(octa_d, ((lx_actual/2 + lx_actual*i), ly_actual/2 + ly_actual*i, lz -10)) 
+                geometry = BoxGeometry(center=((lx_actual/2 + lx_actual*i), ly_actual/2 + ly_actual*i, lz -10), 
+                                       length = (lx_actual, ly_actual, lz))                                         
+                carve_geometry(system, geometry, side = 'in') #carve inverse of when it was created
+            else:
+                pass #keep asperity
+        
+    """ #keeping for archive pourposes
+    for i in range(len(bool_grid[0])):
+        for j in range(len(bool_grid[:,0])):
+            
+            print(bool_grid[i,j])
+            if bool_grid[i,j]:
                 system = empty_square(lx, ly, ax, ay, hl, hu, hup, octa_d, dode_d, lower_orient,
                                       remove_atoms, path)
 
@@ -357,8 +402,8 @@ def erratic_setup(lx=99.9, ly=100, ax=50, ay=50, hl=50, hu=60, hup=2,
             system.positions += ((lx_actual+tolerance)*i, (ly_actual+tolerance)*j, 0) #atoms.position from ASE 
             systems += system
 
-    
-    return systems 
+    """
+    return system
 
 
 
