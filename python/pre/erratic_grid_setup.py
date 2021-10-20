@@ -43,8 +43,8 @@ if erratic:
     system_file = path + f"erratic/system_or{lower_orient}_hi{lz}_errgrid{grid[0]}_{grid[1]}.data"
 
 
-    write(system, system_file)
-    #system.write(system_file, format="lammps-data") #alternate write method that fixes error?
+    #write(system, system_file)
+    system.write(system_file, format="lammps-data") #alternate write method that fixes error?
     print("System written to: ", system_file)
 
 elif grid:

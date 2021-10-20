@@ -23,8 +23,8 @@ height = 115
 orientation = "100"
 
 grid = (4,4) 
-slurm = True
-gpu = True
+slurm = False
+gpu = False
 erratic = True
 seed = np.random.randint(10000, 100000)
 
