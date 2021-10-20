@@ -8,7 +8,7 @@ For more information, see the LICENSE file in the top-level dictionary.
 """
 #TODO can this script replace or merge with grid setup0?
 from molecular_builder import write
-from pre_utils import gen_grid_system, erratic_setup
+from pre_utils import gen_system, gen_grid_system, erratic_setup
 import argparse
 import numpy as np
 
@@ -29,12 +29,12 @@ grid = (4,4)
 
 lower_orient = "100"
 remove_atoms = True
-erratic = True
+erratic = False
 
 path = '../../initial_system/'
 
 
-if erratic:
+if erratic and grid:
     system = erratic_setup(lx, ly, ax, ay, hl, hu, hup, octa_d, dode_d, lower_orient,
                            remove_atoms, path, grid=grid)
 
