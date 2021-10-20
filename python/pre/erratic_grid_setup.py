@@ -9,8 +9,10 @@ For more information, see the LICENSE file in the top-level dictionary.
 #TODO can this script replace or merge with grid setup0?
 from molecular_builder import write
 from pre_utils import gen_grid_system, erratic_setup
+import argparse
 import numpy as np
 
+parser = argparse.ArgumentParser()
 # user-input
 lx = 99.9       # system length x-dir
 ly = 100        # system length y-dir
@@ -43,8 +45,8 @@ if erratic:
     system_file = path + f"erratic/system_or{lower_orient}_hi{lz}_errgrid{grid[0]}_{grid[1]}.data"
 
 
-    write(system, system_file)
-    #system.write(system_file, format="lammps-data") #alternate write method that fixes error?
+    write(system, system_file, atom_style = 'atomic')
+    #system.write(system_file, format="lammps-data", atom_style = 'atomic') #alternate write method that fixes error?
     print("System written to: ", system_file)
 
 elif grid:
@@ -52,7 +54,7 @@ elif grid:
                              remove_atoms, path, grid=grid)
 
     system_file = path + f"grid/system_or{lower_orient}_hi{lz}_grid{grid[0]}_{grid[1]}.data"
-    system.write(system_file, format="lammps-data")
+    system.write(system_file, format="lammps-data", atom_style = 'atomic')
     print("System written to: ", system_file)
 
 else:
@@ -61,7 +63,7 @@ else:
                         remove_atoms, path)
 
     system_file = path + f"system_or{lower_orient}_hi{lz}.data"
-    system.write(system_file, format="lammps-data")
+    system.write(system_file, format="lammps-data", atom_style = 'atomic')
     #write(system, system_file)
     print("System written to: ", system_file)
 
