@@ -8,7 +8,7 @@ For more information, see the LICENSE file in the top-level dictionary.
 """
 #TODO can this script replace or merge with grid setup0?
 from molecular_builder import write
-from pre_utils import gen_grid_system
+from pre_utils import gen_grid_system, erratic_setup
 import numpy as np
 
 # user-input
@@ -31,26 +31,38 @@ erratic = True
 
 path = '../../initial_system/'
 
+
 if erratic:
     system = erratic_setup(lx, ly, ax, ay, hl, hu, hup, octa_d, dode_d, lower_orient,
                            remove_atoms, path, grid=grid)
 
+    print(system)
     system.set_cell(np.diag(np.max(system.positions, axis=0)))
     system.wrap()
 
-    system_file = path + f"erradic/system_or{lower_orient}_hi{lz}_grid{grid[0]}_{grid[1]}.data"
+    system_file = path + f"erratic/system_or{lower_orient}_hi{lz}_errgrid{grid[0]}_{grid[1]}.data"
 
 
     write(system, system_file)
     #system.write(system_file, format="lammps-data") #alternate write method that fixes error?
     print("System written to: ", system_file)
 
-else:
+elif grid:
     system = gen_grid_system(lx, ly, ax, ay, hl, hu, hup, octa_d, dode_d, lower_orient,
                              remove_atoms, path, grid=grid)
 
     system_file = path + f"grid/system_or{lower_orient}_hi{lz}_grid{grid[0]}_{grid[1]}.data"
     system.write(system_file, format="lammps-data")
+    print("System written to: ", system_file)
+
+else:
+    
+    system = gen_system(lx, ly, ax, ay, hl, hu, hup, octa_d, dode_d, lower_orient,
+                        remove_atoms, path)
+
+    system_file = path + f"system_or{lower_orient}_hi{lz}.data"
+    system.write(system_file, format="lammps-data")
+    #write(system, system_file)
     print("System written to: ", system_file)
 
 

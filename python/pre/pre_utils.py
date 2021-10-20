@@ -183,7 +183,7 @@ def gen_system(lx=300, ly=300, ax=150, ay=150, hl=50, hu=150, hup=2,
 
 
 
-def emtpy_square(lx=300, ly=300, ax=150, ay=150, hl=50, hu=150, hup=2,
+def empty_square(lx=300, ly=300, ax=150, ay=150, hl=50, hu=150, hup=2,
                octa_d=3, dode_d=3, lower_orient="100", remove_atoms=True,
                path='../../initial_system/'):
 
@@ -321,7 +321,7 @@ def gen_grid_system(lx=300, ly=300, ax=150, ay=150, hl=50, hu=150, hup=2,
 
     return system
 
-def erratic_system(lx=99.9, ly=100, ax=50, ay=50, hl=50, hu=60, hup=2,
+def erratic_setup(lx=99.9, ly=100, ax=50, ay=50, hl=50, hu=60, hup=2,
                octa_d=39.0, dode_d=37.3, lower_orient="100", remove_atoms=True,
                path='../../initial_system/', grid = (3,3)):
 
@@ -330,15 +330,16 @@ def erratic_system(lx=99.9, ly=100, ax=50, ay=50, hl=50, hu=60, hup=2,
     instance a boolean array which describes the location of asperities.
     """
 
-    grid = np.random.randint(0,2,size=grid)
-
+    grid = np.random.randint(0,2,size=grid).astype(tuple)
+    print(grid)
+    print(grid[:,0])
     system = 0
     systems = Atoms()
-    tolerance = 1 #add a little extra space, to avvoid crashing 
-    for i in range(grid[0]):
-        for j in range(grid[1]):
+    tolerance = 0 #add a little extra space, to avvoid crashing 
+    for i in range(len(grid[0])):
+        for j in range(len(grid[:,0])):
             
-            
+            print(grid[i,j])
             if grid[i,j]:
                 system = empty_square(lx, ly, ax, ay, hl, hu, hup, octa_d, dode_d, lower_orient,
                                       remove_atoms, path)
@@ -357,7 +358,7 @@ def erratic_system(lx=99.9, ly=100, ax=50, ay=50, hl=50, hu=60, hup=2,
             systems += system
 
     
-    
+    return systems 
 
 
 
