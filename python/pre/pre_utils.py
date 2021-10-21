@@ -274,6 +274,9 @@ def gen_grid_system(lx=300, ly=300, ax=150, ay=150, hl=50, hu=150, hup=2,
         path to where the initial system should be stored
     grid : tuple
         shape of the system as asperities are copied in a grid
+    erratic: bool
+        If erratic, the function will return top and bottom plate seperate from
+        asperities, for use in erratic grid where asperites are edited
     """
 
     # total system height
@@ -376,9 +379,10 @@ def erratic_setup(lx=99.9, ly=100, ax=50, ay=50, hl=50, hu=60, hup=2,
                 #geometry = OctahedronGeometry(octa_d, ((lx_actual/2 + lx_actual*i), ly_actual/2 + ly_actual*i, lz -10)) 
                 geometry = BoxGeometry(center=((lx_actual/2 + lx_actual*i), ly_actual/2 + ly_actual*i, lz -10), 
                                        length = (lx_actual, ly_actual, lz))                                         
-                carve_geometry(system, geometry, side = 'in') #carve inverse of when it was created
+                carve_geometry(asperity_system, geometry, side = 'in') #carve inverse of when it was created
             else:
                 pass #keep asperity
+    system = top_bot_system + asperity_system #combine now edited asperities and top and bottom
         
     """ #keeping for archive pourposes
     for i in range(len(bool_grid[0])):
