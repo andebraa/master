@@ -352,10 +352,10 @@ def erratic_setup(lx=99.9, ly=100, ax=50, ay=50, hl=50, hu=60, hup=2,
     #we call a nXn grid, and then remove asperities that we don't want
     top_bot_system, asperity_system = gen_grid_system(lx=99.9, ly=100, ax=50, ay=50, hl=50, hu=60, hup=2,
                                                       octa_d=39.0, dode_d=37.3, lower_orient="100", remove_atoms=True,
-                                                      path='../../initial_system/', grid = grid)
+                                                      path='../../initial_system/', grid = grid, erratic = True)
 
     #finding the size of the system, and then dividing this into grid cells
-    shape = re.findall(r'Cell\(\[(\d+\.\d+), (\d+\.\d+), (\d+\.\d+)\]\)', str(system.get_cell()))
+    shape = re.findall(r'Cell\(\[(\d+\.\d+), (\d+\.\d+), (\d+\.\d+)\]\)', str(top_bot_system.get_cell()))
     shape = [float(shape[0][0]), float(shape[0][1]), float(shape[0][2])]
 
     sys_lx, sys_ly, sys_lz = shape #the size of the whole system
