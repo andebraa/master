@@ -342,7 +342,8 @@ def erratic_setup(lx=99.9, ly=100, ax=50, ay=50, hl=50, hu=60, hup=2,
     lz = hl + hu
 
     bool_grid = np.random.randint(0,2,size=grid).astype(tuple)
-    
+   
+    print(bool_grid)
 
     system = 0
     systems = Atoms()
