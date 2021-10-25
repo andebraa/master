@@ -341,7 +341,7 @@ def erratic_setup(lx=99.9, ly=100, ax=50, ay=50, hl=50, hu=60, hup=2,
     # total system height
     lz = hl + hu
 
-    bool_grid = np.random.randint(0,2,size=grid).astype(tuple)
+    bool_grid = gen_grid(grid, 5)
    
     print(bool_grid)
 
@@ -373,12 +373,13 @@ def erratic_setup(lx=99.9, ly=100, ax=50, ay=50, hl=50, hu=60, hup=2,
 
     for i in range(len(partition[0])):
         for j in range(len(partition[1])):
-            
+            print(bool_grid[i,j])
+            print('twat')
             if not bool_grid[i,j]: #if bool_grid == false , remove asperity
                 #lx_actual is midpoint of partition, then it jumps the length of a partition to find next midpoint
                 #OctahedronGeometry(d, center = [0,0,0]) 
                 #geometry = OctahedronGeometry(octa_d, ((lx_actual/2 + lx_actual*i), ly_actual/2 + ly_actual*i, lz -10)) 
-                geometry = BoxGeometry(center=((lx_actual/2 + lx_actual*i), ly_actual/2 + ly_actual*i, lz -10), 
+                geometry = BoxGeometry(center=((lx_actual/2 + lx_actual*i), ly_actual/2 + ly_actual*j, lz -10), 
                                        length = (lx_actual, ly_actual, lz))                                         
                 carve_geometry(asperity_system, geometry, side = 'in') #carve inverse of when it was created
             else:
@@ -410,6 +411,31 @@ def erratic_setup(lx=99.9, ly=100, ax=50, ay=50, hl=50, hu=60, hup=2,
     """
     return system
 
+def gen_grid(grid, num_asperities):
+    """
+    simple function that makes a grid = nxn with num_pores amount of asperites. 
+    It simply loops over randomly generated systems, so this scales HORRIBLY. 
+    
+    parameters
+    --------
+    grid: tuple
+        size of grid to be generated
+    num_asperities: int 
+        number of asperities
+
+    returns 
+    --------
+    bool_grid: numpy array 
+        boolean grid with shape nxn. np.sum(bool_grid) = num_asperities
+
+    """
+
+    bool_grid = np.random.randint(0,2,size=grid).astype(tuple)
+    print(np.sum(bool_grid)) 
+    #print(len(grid.flatten())) 
+    while np.sum(bool_grid) != num_asperities:
+        bool_grid = np.random.randint(0,2,size=grid).astype(tuple)
+    return bool_grid
 
 
 if __name__ == "__main__":
