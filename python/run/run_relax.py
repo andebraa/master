@@ -37,12 +37,15 @@ relax_dir = project_dir + f"simulations/sys_or{orientation}_hi{height}/relax/"
 
 if erratic:
     datafile = project_dir + f"initial_system/erratic/system_or{orientation}_hi{height}_errgrid{grid[0]}_{grid[1]}.data"
+    print(datafile)
 
 elif grid:
     datafile = project_dir + f"initial_system/grid/system_or{orientation}_hi{height}_grid{grid[0]}_{grid[1]}.data"
+    print(datafile)
+
 else:
     datafile = project_dir + f"initial_system/system_or{orientation}_hi{height}.data"
-
+    print(datafile)    
 
 # run relaxation
 var = {'datafile': datafile.split("/")[-1],

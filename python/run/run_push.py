@@ -29,9 +29,9 @@ seed = 19970
 height = 115
 orientation = "100"
 
-grid = (3,3)
-slurm = True
-gpu = True
+grid = (4,4)
+slurm = False
+gpu = False
 erratic = True
 
 # paths
@@ -62,7 +62,7 @@ for seed in [41162]:
         restartfile = relax_dir + f"sim_temp{temp}_force{force}_time{relax_time}_seed{seed}_grid{grid[0]}_{grid[1]}/time.{relax_time_restart}.restart"
 
     elif erratic:
-        restartfile = relax_dir + f"sim_temp{temp}_force{force}_time{relax_time}_seed{seed}_errgrid{grid[0}_{grid[1]}/time.{relax_time_restart}.restart"
+        restartfile = relax_dir + f"sim_temp{temp}_force{force}_time{relax_time}_seed{seed}_errgrid{grid[0]}_{grid[1]}/time.{relax_time_restart}.restart"
 
     else:
         restartfile = relax_dir + f"sim_temp{temp}_force{force}_time{relax_time}_seed{seed}/time.{relax_time_restart}.restart"

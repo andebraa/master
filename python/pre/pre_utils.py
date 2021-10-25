@@ -342,8 +342,6 @@ def erratic_setup(lx=99.9, ly=100, ax=50, ay=50, hl=50, hu=60, hup=2,
     lz = hl + hu
 
     bool_grid = gen_grid(grid, 5)
-   
-    print(bool_grid)
 
     system = 0
     systems = Atoms()
@@ -362,19 +360,14 @@ def erratic_setup(lx=99.9, ly=100, ax=50, ay=50, hl=50, hu=60, hup=2,
     sys_lx, sys_ly, sys_lz = shape #the size of the whole system
     lx_actual, ly_actual = sys_lx/grid[0], sys_ly/grid[1] #the size of one partition
 
-    print(lx_actual, ly_actual)    
+    
     #divide the system into squares nXn. linspace(start, stop, num)
     partition = (np.linspace(0,lx_actual, grid[0]), np.linspace(0,ly_actual, grid[1])) 
     
 
-    #TODO seperate asperities from lower and upper, i.e return lower and upper in one system, and asperity in another,
-    # this way you can remove asperities witout worrying about upper and lower
-    # modify gen_grid_system to perhaps take this as an argument
-
     for i in range(len(partition[0])):
         for j in range(len(partition[1])):
             print(bool_grid[i,j])
-            print('twat')
             if not bool_grid[i,j]: #if bool_grid == false , remove asperity
                 #lx_actual is midpoint of partition, then it jumps the length of a partition to find next midpoint
                 #OctahedronGeometry(d, center = [0,0,0]) 
@@ -386,29 +379,7 @@ def erratic_setup(lx=99.9, ly=100, ax=50, ay=50, hl=50, hu=60, hup=2,
                 pass #keep asperity
     system = top_bot_system + asperity_system #combine now edited asperities and top and bottom
         
-    """ #keeping for archive pourposes
-    for i in range(len(bool_grid[0])):
-        for j in range(len(bool_grid[:,0])):
-            
-            print(bool_grid[i,j])
-            if bool_grid[i,j]:
-                system = empty_square(lx, ly, ax, ay, hl, hu, hup, octa_d, dode_d, lower_orient,
-                                      remove_atoms, path)
-
-            else:
-                system = gen_system(lx, ly, ax, ay, hl, hu, hup, octa_d, dode_d, lower_orient,
-                                    remove_atoms, path)
-
-            shape = re.findall(r'Cell\(\[(\d+\.\d+), (\d+\.\d+), (\d+\.\d+)\]\)', str(system.get_cell()))
-            shape = [float(shape[0][0]), float(shape[0][1]), float(shape[0][2])]
-            xy = np.array((1,1,0))
-
-            lx_actual, ly_actual, lz_actual = shape
-
-            system.positions += ((lx_actual+tolerance)*i, (ly_actual+tolerance)*j, 0) #atoms.position from ASE 
-            systems += system
-
-    """
+    
     return system
 
 def gen_grid(grid, num_asperities):
@@ -431,8 +402,7 @@ def gen_grid(grid, num_asperities):
     """
 
     bool_grid = np.random.randint(0,2,size=grid).astype(tuple)
-    print(np.sum(bool_grid)) 
-    #print(len(grid.flatten())) 
+
     while np.sum(bool_grid) != num_asperities:
         bool_grid = np.random.randint(0,2,size=grid).astype(tuple)
     return bool_grid
