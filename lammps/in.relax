@@ -20,8 +20,7 @@
 
 # general simulation setup
 units metal
-#boundary p p fm                     # lower z-boundary is fixed, upper z-boundary will be reflective p: periodic, f: fixed, m: non-                                      periodic and shrink-wrapped with a minimum value
-boundary p p p
+boundary p p m                     # lower z-boundary is fixed, upper z-boundary will be reflective p: periodic, f: fixed, m: non-                                      periodic and shrink-wrapped with a minimum value
 atom_style atomic
 read_data ${datafile}
 pair_style vashishta
