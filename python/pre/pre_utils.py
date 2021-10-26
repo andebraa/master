@@ -352,7 +352,7 @@ def erratic_setup(lx=99.9, ly=100, ax=50, ay=50, hl=50, hu=60, hup=2,
     top_bot_system, asperity_system = gen_grid_system(lx=99.9, ly=100, ax=50, ay=50, hl=50, hu=60, hup=2,
                                                       octa_d=39.0, dode_d=37.3, lower_orient="100", remove_atoms=True,
                                                       path='../../initial_system/', grid = grid, erratic = True)
-
+    system = top_bot_system + asperity_system
     #finding the size of the system, and then dividing this into grid cells
     shape = re.findall(r'Cell\(\[(\d+\.\d+), (\d+\.\d+), (\d+\.\d+)\]\)', str(top_bot_system.get_cell()))
     shape = [float(shape[0][0]), float(shape[0][1]), float(shape[0][2])]
@@ -365,6 +365,7 @@ def erratic_setup(lx=99.9, ly=100, ax=50, ay=50, hl=50, hu=60, hup=2,
     partition = (np.linspace(0,lx_actual, grid[0]), np.linspace(0,ly_actual, grid[1])) 
     
 
+    """
     for i in range(len(partition[0])):
         for j in range(len(partition[1])):
             print(bool_grid[i,j])
@@ -372,13 +373,21 @@ def erratic_setup(lx=99.9, ly=100, ax=50, ay=50, hl=50, hu=60, hup=2,
                 #lx_actual is midpoint of partition, then it jumps the length of a partition to find next midpoint
                 #OctahedronGeometry(d, center = [0,0,0]) 
                 #geometry = OctahedronGeometry(octa_d, ((lx_actual/2 + lx_actual*i), ly_actual/2 + ly_actual*i, lz -10)) 
-                geometry = BoxGeometry(center=((lx_actual/2 + lx_actual*i), ly_actual/2 + ly_actual*j, lz -10), 
-                                       length = (lx_actual, ly_actual, lz))                                         
+                geometry = BoxGeometry(lo_corner=(0,0,hl+2), hi_corner = (lx, ly, lx)) 
+                #geometry = BoxGeometry(center=((lx_actual/2 + lx_actual*i), ly_actual/2 + ly_actual*j, lz -10), 
+                #                       length = (lx_actual, ly_actual, lz))                                         
+                
                 carve_geometry(asperity_system, geometry, side = 'in') #carve inverse of when it was created
             else:
                 pass #keep asperity
     system = top_bot_system + asperity_system #combine now edited asperities and top and bottom
         
+    """
+    geometry = BoxGeometry(lo_corner=(0,0,hl+2), hi_corner = (lx, ly, lx)) 
+                                                   
+                 
+    carve_geometry(system, geometry, side = 'in') #carve inverse of when it was created
+
     
     return system
 
