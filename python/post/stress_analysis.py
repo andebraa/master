@@ -21,6 +21,7 @@ def anal_stress(dumpfile, outfile="area.txt", delta=None,
     
     grid (touple): number of asperities in grid. default is one asperity (1,1)
     """
+    
     if delta is None:
         warnings.warn(r"No $\Delta t$ is given, setting $\Delta t=1$")
         delta = 1
