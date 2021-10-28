@@ -19,11 +19,11 @@ from lammps_simulator.computer import GPU, CPU, SlurmGPU
 temp = 2300
 simtime = 10000 #picosekunder
 force = 0.001
-height = 115
+height = 200
 orientation = "100"
 
-grid = (4,4) 
-slurm = False
+grid = (2,2) 
+slurm = True
 gpu = False
 erratic = True
 seed = np.random.randint(10000, 100000)
@@ -36,7 +36,9 @@ lammps_dir = project_dir + "lammps/"
 relax_dir = project_dir + f"simulations/sys_or{orientation}_hi{height}/relax/"
 
 if erratic:
-    datafile = project_dir + f"initial_system/erratic/system_or{orientation}_hi{height}_errgrid{grid[0]}_{grid[1]}.data"
+    #datafile = project_dir + f"initial_system/erratic/system_or{orientation}_hi{height}_errgrid{grid[0]}_{grid[1]}.data"
+    datafile = project_dir + f"initial_system/erratic/system_or{orientation}_hi{height}_rep{grid[0]}{grid[1]}_removed00.data"
+
     print(datafile)
 
 elif grid:
