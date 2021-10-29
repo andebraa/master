@@ -333,7 +333,7 @@ def gen_grid_system(lx=300, ly=300, ax=150, ay=150, hl=50, hu=150, hup=2,
 
 def gen_erratic_system(lx=99.9, ly=100, ax=50, ay=50, hl=50, hu=60, hup=2,
                octa_d=39.0, dode_d=37.3, lower_orient="100", remove_atoms=True,
-               path='../../initial_system/', grid = (3,3)):
+               path='../../initial_system/', grid = (3,3), asperities = 1):
 
     # total system height
     lz = hl + hu
@@ -354,7 +354,6 @@ def gen_erratic_system(lx=99.9, ly=100, ax=50, ay=50, hl=50, hu=60, hup=2,
     carve_geometry(asperity, geometry, side='out')
     geometry = PlaneGeometry((0, 0, hl + 2), (0, 0, -1))
     carve_geometry(asperity, geometry, side="out")
-    #asperity.write(path + f"asperity_or{lower_orient}_hi{lz}.data", format="lammps-data")
 
     # cut asperity and attach to upper plate
     geometry = PlaneGeometry((0, 0, lz - hup - 2), (0, 0, 1))
@@ -391,7 +390,7 @@ def gen_erratic_system(lx=99.9, ly=100, ax=50, ay=50, hl=50, hu=60, hup=2,
 
 
     #asperity removal
-    bool_grid = gen_grid(grid, 2)
+    bool_grid = gen_grid(grid, asperities)
 
 
     print(bool_grid)
@@ -400,9 +399,6 @@ def gen_erratic_system(lx=99.9, ly=100, ax=50, ay=50, hl=50, hu=60, hup=2,
             print(bool_grid[i,j])
             if not bool_grid[i,j]: #if bool_grid == false , remove asperity
                 #lx_actual is midpoint of partition, then it jumps the length of a partition to find next midpoint
-                #OctahedronGeometry(d, center = [0,0,0])
-
-                #geometry = BoxGeometry(lo_corner=(0,0,hl+2), hi_corner = (lx, ly, lz-hup-8))
                 
                 geometry = BoxGeometry(center=((lx_actual/2 + lx_actual*i), ly_actual/2 + ly_actual*j, lz -10),
                                        length = (lx_actual, ly_actual, lz))
