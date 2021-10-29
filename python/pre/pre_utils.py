@@ -331,66 +331,97 @@ def gen_grid_system(lx=300, ly=300, ax=150, ay=150, hl=50, hu=150, hup=2,
 
     return system
 
-def erratic_setup(lx=99.9, ly=100, ax=50, ay=50, hl=50, hu=60, hup=2,
+def gen_erratic_system(lx=99.9, ly=100, ax=50, ay=50, hl=50, hu=60, hup=2,
                octa_d=39.0, dode_d=37.3, lower_orient="100", remove_atoms=True,
                path='../../initial_system/', grid = (3,3)):
 
-    """
-    script for generating a system with squares of asperities and without. grid input is in this
-    instance a boolean array which describes the location of asperities.
-    """
     # total system height
     lz = hl + hu
 
-    bool_grid = gen_grid(grid, 2)
+    # create lower surface
+    if lower_orient == "100":
+        lower = create_bulk_crystal("silicon_carbide_3c", (lx, ly, hl))
+    elif lower_orient == "110":
+        lower = orient_110("silicon_carbide_3c", (lx, ly, hl))
+    else:
+        raise NotImplementedError
 
-    system = 0
-    systems = Atoms()
-    tolerance = 0 #add a little extra space, to avvoid crashing 
-     
+    # carve out asperity
+    asperity = create_bulk_crystal("silicon_carbide_3c", (lx, ly, lz + 5))
+    geometry = OctahedronGeometry(octa_d, (ax, ay, lz - 10))  # d=n*3.90nm
+    carve_geometry(asperity, geometry, side='out')
+    geometry = DodecahedronGeometry(dode_d, (ax, ay, lz - 10))  # d=n*3.73nm
+    carve_geometry(asperity, geometry, side='out')
+    geometry = PlaneGeometry((0, 0, hl + 2), (0, 0, -1))
+    carve_geometry(asperity, geometry, side="out")
+    #asperity.write(path + f"asperity_or{lower_orient}_hi{lz}.data", format="lammps-data")
 
-    #we call a nXn grid, and then remove asperities that we don't want
-    top_bot_system, asperity_system = gen_grid_system(lx=99.9, ly=100, ax=50, ay=50, hl=50, hu=60, hup=2,
-                                                      octa_d=39.0, dode_d=37.3, lower_orient="100", remove_atoms=True,
-                                                      path='../../initial_system/', grid = grid, erratic = True)
-    #system = top_bot_system + asperity_system
+    # cut asperity and attach to upper plate
+    geometry = PlaneGeometry((0, 0, lz - hup - 2), (0, 0, 1))
+    carve_geometry(asperity, geometry, side="out")
+    upper = create_bulk_crystal("silicon_carbide_3c", (lx, ly, hup))
+    upper.positions += (0, 0, lz - hup - 2)
+
+    if remove_atoms:
+        geometry = ProceduralSurfaceGeometry(point=(0, 0, hl + 2),
+                                             normal=(0, 0, 1),
+                                             thickness=5,
+                                             scale=100,
+                                             method='simplex',
+                                             threshold=-0.1,
+                                             repeat=True)
+        carve_geometry(lower, geometry, side="out")
+
+    # replicate system
+    asperity = asperity.repeat((grid[0], grid[1], 1)) 
+    lower = lower.repeat((grid[0], grid[1], 1)) 
+    upper = upper.repeat((grid[0], grid[1], 1))
     
+
     #finding the size of the system, and then dividing this into grid cells
-    shape = re.findall(r'Cell\(\[(\d+\.\d+), (\d+\.\d+), (\d+\.\d+)\]\)', str(top_bot_system.get_cell()))
-    shape = [float(shape[0][0]), float(shape[0][1]), float(shape[0][2])]
+    shape = re.findall(r'Cell\(\[(\d+\.\d+), (\d+\.\d+), (\d+\.\d+)\]\)', str(asperity.get_cell()))
+    shape = [float(shape[0][0]), float(shape[0][1]), float(shape[0][2])] #x,y,z
 
     sys_lx, sys_ly, sys_lz = shape #the size of the whole system
     lx_actual, ly_actual = sys_lx/grid[0], sys_ly/grid[1] #the size of one partition
 
-    
-    #divide the system into squares nXn. linspace(start, stop, num)
-    partition = (np.linspace(0,lx_actual, grid[0]), np.linspace(0,ly_actual, grid[1])) 
-    
-    
 
-    print(bool_grid) 
+    #divide the system into squares nXn. linspace(start, stop, num)
+    partition = (np.linspace(0,lx_actual, grid[0]), np.linspace(0,ly_actual, grid[1]))
+
+
+    #asperity removal
+    bool_grid = gen_grid(grid, 2)
+
+
+    print(bool_grid)
     for i in range(len(partition[0])):
         for j in range(len(partition[1])):
             print(bool_grid[i,j])
             if not bool_grid[i,j]: #if bool_grid == false , remove asperity
                 #lx_actual is midpoint of partition, then it jumps the length of a partition to find next midpoint
-                #OctahedronGeometry(d, center = [0,0,0]) 
-                #geometry = OctahedronGeometry(octa_d, ((lx_actual/2 + lx_actual*i), ly_actual/2 + ly_actual*i, lz -10)) 
-                geometry = BoxGeometry(lo_corner=(0,0,hl+2), hi_corner = (lx, ly, lz-hup-8)) 
-                #geometry = BoxGeometry(center=((lx_actual/2 + lx_actual*i), ly_actual/2 + ly_actual*j, lz -10), 
-                #                       length = (lx_actual, ly_actual, lz))                                         
+                #OctahedronGeometry(d, center = [0,0,0])
+
+                #geometry = BoxGeometry(lo_corner=(0,0,hl+2), hi_corner = (lx, ly, lz-hup-8))
                 
-                carve_geometry(asperity_system, geometry, side = 'in') #carve inverse of when it was created
+                geometry = BoxGeometry(center=((lx_actual/2 + lx_actual*i), ly_actual/2 + ly_actual*j, lz -10),
+                                       length = (lx_actual, ly_actual, lz))
+
+                carve_geometry(asperity, geometry, side = 'in') #carve inverse of when it was created
             else:
                 pass #keep asperity
-    system = top_bot_system + asperity_system #combine now edited asperities and top and bottom
-        
-    
-    #geometry = BoxGeometry(lo_corner=(0,0,hl+2), hi_corner = (lx+3, ly+3, lz-hup-8))              
-    #carve_geometry(system, geometry, side = 'in') #carve inverse of when it was created
+
+
+    system = asperity + lower + upper 
+
+
+
+    return system
+
 
     
-    return system
+
+
 
 def gen_grid(grid, num_asperities):
     """
