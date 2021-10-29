@@ -24,8 +24,8 @@ dode_d = 1 * 37.3
 lower_orient = "100"
 remove_atoms = True
 
-#path = '../../initial_system/'
-path = ""
+path = '../../initial_system/'
+#path = ""
 
 gen_system(lx, ly, ax, ay, hl, hu, hup, octa_d, dode_d, lower_orient,
            remove_atoms, path)

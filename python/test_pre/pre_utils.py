@@ -179,13 +179,14 @@ def gen_system(lx=300, ly=300, ax=150, ay=150, hl=50, hu=150, hup=2,
     system = asperity + lower + upper
 
     # replicate system
-    system = system.repeat((2, 2, 1))
+    grid = (2,2)
+    system = system.repeat((grid[0], grid[1], 1))
 
     # remove asperity at (0, 0)
     geometry = BoxGeometry(lo_corner=(0, 0, hl + 2), hi_corner=(lx, ly, lz - hup - 3))
     carve_geometry(system, geometry, side='in')
 
-    system_file = path + f"system_or{lower_orient}_hi{lz}.data"
+    system_file = path + f"system_or{lower_orient}_hi{lz}_rep{grid[0]}{grid[1]}_removed00.data"
     system.write(system_file, format="lammps-data")
     print("System written to: ", system_file)
 
