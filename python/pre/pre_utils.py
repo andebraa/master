@@ -318,13 +318,13 @@ def gen_grid_system(lx=300, ly=300, ax=150, ay=150, hl=50, hu=150, hup=2,
 
     #lower.write(path + f"lower_or{lower_orient}_hi{lz}.data", format="lammps-data")
 
-    """
+    
     if erratic: #seperate lower, upper and asperity, so removal of asperities is easier
         asperity_system = asperity.repeat((grid[0], grid[1], 1)) 
         lower_upper_system = lower + upper 
         lower_upper_system = lower_upper_system.repeat((grid[0], grid[1], 1)) 
         return lower_upper_system, asperity_system
-    """
+    
     system = asperity + lower + upper
     system = system.repeat((grid[0], grid[1], 1))
 
@@ -350,11 +350,10 @@ def erratic_setup(lx=99.9, ly=100, ax=50, ay=50, hl=50, hu=60, hup=2,
      
 
     #we call a nXn grid, and then remove asperities that we don't want
-    system = gen_grid_system(lx=99.9, ly=100, ax=50, ay=50, hl=50, hu=60, hup=2,
+    top_bot_system, asperity_system = gen_grid_system(lx=99.9, ly=100, ax=50, ay=50, hl=50, hu=60, hup=2,
                                                       octa_d=39.0, dode_d=37.3, lower_orient="100", remove_atoms=True,
                                                       path='../../initial_system/', grid = grid, erratic = True)
-    """
-    system = top_bot_system + asperity_system
+    #system = top_bot_system + asperity_system
     
     #finding the size of the system, and then dividing this into grid cells
     shape = re.findall(r'Cell\(\[(\d+\.\d+), (\d+\.\d+), (\d+\.\d+)\]\)', str(top_bot_system.get_cell()))
@@ -367,9 +366,9 @@ def erratic_setup(lx=99.9, ly=100, ax=50, ay=50, hl=50, hu=60, hup=2,
     #divide the system into squares nXn. linspace(start, stop, num)
     partition = (np.linspace(0,lx_actual, grid[0]), np.linspace(0,ly_actual, grid[1])) 
     
-    """
+    
 
-    """
+    print(bool_grid) 
     for i in range(len(partition[0])):
         for j in range(len(partition[1])):
             print(bool_grid[i,j])
@@ -377,7 +376,7 @@ def erratic_setup(lx=99.9, ly=100, ax=50, ay=50, hl=50, hu=60, hup=2,
                 #lx_actual is midpoint of partition, then it jumps the length of a partition to find next midpoint
                 #OctahedronGeometry(d, center = [0,0,0]) 
                 #geometry = OctahedronGeometry(octa_d, ((lx_actual/2 + lx_actual*i), ly_actual/2 + ly_actual*i, lz -10)) 
-                geometry = BoxGeometry(lo_corner=(0,0,hl+2), hi_corner = (lx, ly, lx)) 
+                geometry = BoxGeometry(lo_corner=(0,0,hl+2), hi_corner = (lx, ly, lz-hup-8)) 
                 #geometry = BoxGeometry(center=((lx_actual/2 + lx_actual*i), ly_actual/2 + ly_actual*j, lz -10), 
                 #                       length = (lx_actual, ly_actual, lz))                                         
                 
@@ -386,11 +385,9 @@ def erratic_setup(lx=99.9, ly=100, ax=50, ay=50, hl=50, hu=60, hup=2,
                 pass #keep asperity
     system = top_bot_system + asperity_system #combine now edited asperities and top and bottom
         
-    """
-    geometry = BoxGeometry(lo_corner=(0,0,hl+2), hi_corner = (lx, ly, lz-hup)) 
-                                                   
-                 
-    carve_geometry(system, geometry, side = 'in') #carve inverse of when it was created
+    
+    #geometry = BoxGeometry(lo_corner=(0,0,hl+2), hi_corner = (lx+3, ly+3, lz-hup-8))              
+    #carve_geometry(system, geometry, side = 'in') #carve inverse of when it was created
 
     
     return system
