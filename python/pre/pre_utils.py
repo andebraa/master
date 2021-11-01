@@ -183,58 +183,6 @@ def gen_system(lx=300, ly=300, ax=150, ay=150, hl=50, hu=150, hup=2,
 
 
 
-def empty_square(lx=300, ly=300, ax=150, ay=150, hl=50, hu=150, hup=2,
-               octa_d=3, dode_d=3, lower_orient="100", remove_atoms=True,
-               path='../../initial_system/'):
-
-    """
-    Same as gen_system. produces a tile without an asperity. 
-    """
-    # total system height
-    lz = hl + hu
-
-    # create lower surface
-    if lower_orient == "100":
-        lower = create_bulk_crystal("silicon_carbide_3c", (lx, ly, hl))
-    elif lower_orient == "110":
-        lower = orient_110("silicon_carbide_3c", (lx, ly, hl))
-    else:
-        raise NotImplementedError
-
-    #Can i just hash this out and it'll still work?
-    # carve out asperity
-    asperity = create_bulk_crystal("silicon_carbide_3c", (lx, ly, lz + 5))
-    geometry = OctahedronGeometry(octa_d, (ax, ay, lz - 10))  # d=n*3.90nm
-    carve_geometry(asperity, geometry, side='out')
-    geometry = DodecahedronGeometry(dode_d, (ax, ay, lz - 10))  # d=n*3.73nm
-    carve_geometry(asperity, geometry, side='out')
-    geometry = PlaneGeometry((0, 0, hl + 2), (0, 0, -1))
-    carve_geometry(asperity, geometry, side="out")
-    
-
-    # cut asperity and attach to upper plate
-    geometry = PlaneGeometry((0, 0, lz - hup - 2), (0, 0, 1))
-    carve_geometry(asperity, geometry, side="out")
-    upper = create_bulk_crystal("silicon_carbide_3c", (lx, ly, hup))
-    upper.positions += (0, 0, lz - hup - 2)
-
-    if remove_atoms:
-        geometry = ProceduralSurfaceGeometry(point=(0, 0, hl + 2),
-                                             normal=(0, 0, 1),
-                                             thickness=5,
-                                             scale=100,
-                                             method='simplex',
-                                             threshold=-0.1,
-                                             repeat=True)
-        carve_geometry(lower, geometry, side="out")
-
-
-
-    system = lower + upper
-
-
-    return system#, asperity, lower
-
 
 def gen_grid_system(lx=300, ly=300, ax=150, ay=150, hl=50, hu=150, hup=2,
                octa_d=3, dode_d=3, lower_orient="100", remove_atoms=True,
@@ -334,6 +282,11 @@ def gen_grid_system(lx=300, ly=300, ax=150, ay=150, hl=50, hu=150, hup=2,
 def gen_erratic_system(lx=99.9, ly=100, ax=50, ay=50, hl=50, hu=60, hup=2,
                octa_d=39.0, dode_d=37.3, lower_orient="100", remove_atoms=True,
                path='../../initial_system/', grid = (3,3), asperities = 1):
+    """
+    Based on grid system. Makes a nXn grid with asperitites. Then calls gen_grid which
+    returns a boolean grid which describes the positions of the asperities. Then removes
+    the boolean not postitions of asperities.
+    """
 
     # total system height
     lz = hl + hu

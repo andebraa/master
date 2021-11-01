@@ -25,8 +25,8 @@ lz = hl + hu    #total system height
 octa_d = 1 * 39.0 #The multiplyer has to be an integer
 dode_d = 1 * 37.3
 
-grid = (4,4) 
-asperities = 5
+grid = (3,3) 
+asperities = 4
 
 lower_orient = "100"
 remove_atoms = True
