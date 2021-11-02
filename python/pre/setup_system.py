@@ -11,6 +11,7 @@ from molecular_builder import write
 from pre_utils import gen_system, gen_grid_system, gen_erratic_system
 import argparse
 import numpy as np
+import json
 
 parser = argparse.ArgumentParser()
 # user-input
@@ -30,27 +31,38 @@ asperities = 2
 
 lower_orient = "100"
 remove_atoms = True
-erratic = True
+erratic = False
 
 path = '../../initial_system/'
 
+args = {'lx': lx, 'ly':ly, 'ax':ax, 'ay':ay, 'hl':hl, 'hu': hu, 'hup': hup, 'grid': grid, 'asperities':asperities,
+        'lower_orient': lower_orient, 'erratic': erratic}
 
 if erratic and grid:
     system = gen_erratic_system(lx, ly, ax, ay, hl, hu, hup, octa_d, dode_d, lower_orient,
                                 remove_atoms, path, grid=grid, asperities = asperities)
 
-    system_file = path + f"erratic/system_or{lower_orient}_hi{lz}_errgrid{grid[0]}_{grid[1]}.data"
+    system_file = path + f"erratic/system_or{lower_orient}_hi{lz}_errgrid{grid[0]}_{grid[1]}"
 
-    system.write(system_file, format="lammps-data", atom_style = 'atomic') #alternate write method that fixes error?
-    print("System written to: ", system_file)
+    system.write(system_file +'.data', format="lammps-data", atom_style = 'atomic') #alternate write method that fixes error?
+    print("System written to: ", system_file+'.data')
+    with open (system_file +'_auxiliary.json', 'w') as outfile:
+        json.dump(args, outfile)
+    print('auxiliary datafile written to: ' ,system_file+'_auxiliary.json')  
 
 elif grid:
     system = gen_grid_system(lx, ly, ax, ay, hl, hu, hup, octa_d, dode_d, lower_orient,
                              remove_atoms, path, grid=grid)
 
-    system_file = path + f"grid/system_or{lower_orient}_hi{lz}_grid{grid[0]}_{grid[1]}.data"
-    system.write(system_file, format="lammps-data", atom_style = 'atomic')
-    print("System written to: ", system_file)
+    system_file = path + f"grid/system_or{lower_orient}_hi{lz}_grid{grid[0]}_{grid[1]}"
+    system.write(system_file +'.data', format="lammps-data", atom_style = 'atomic')
+
+    print("System written to: ", system_file+'.data')
+    with open (system_file +'_auxiliary.json', 'w') as outfile:
+        json.dump(args, outfile)
+    print('auxiliary datafile written to: ' ,system_file+'_auxiliary.json')
+
+
 
 else:
     
