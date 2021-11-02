@@ -132,6 +132,10 @@ dmypy.json
 /*/*.png
 /*/*.txt
 
+initial_system/*/*.json
+initial_system/*.json
+*.json
+
 fig/*
 txt/*
 slides/*
