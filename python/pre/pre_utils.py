@@ -24,6 +24,18 @@ from molecular_builder import create_bulk_crystal, carve_geometry
 from molecular_builder.geometry import PlaneGeometry, BoxGeometry, OctahedronGeometry, DodecahedronGeometry, ProceduralSurfaceGeometry
 from ase import Atoms 
 import json
+from json import JSONEncoder
+
+class NumpyArrayEncoder(JSONEncoder):
+    """
+    class from https://pynative.com/python-serialize-numpy-ndarray-into-json/ 
+    attempt to fix json type files not accepting arrays
+    """
+    def default(self, obj):
+        if isinstance(obj, np.ndarray):
+            return obj.tolist() 
+        return JSONEncoder.default(self,obj)
+
 
 def orient_110(name, size):
     """Orient crystal such that (110) point along z-axis
@@ -281,7 +293,7 @@ def gen_grid_system(lx=300, ly=300, ax=150, ay=150, hl=50, hu=150, hup=2,
     #Adding variables to args dict and writing to json for use in post processing
 
     args = {'lx': lx_actual, 'ly':ly_actual, 'sys_lx': sys_lx, 'sys_ly': sys_ly, 'ax':ax, 'ay':ay, 'hl':hl,
-    'hu': hu, 'hup': hup, 'grid': grid, 'asperities':asperities,'lower_orient': lower_orient, 'erratic': True}
+    'hu': hu, 'hup': hup, 'grid': grid, 'asperities':asperities,'lower_orient': lower_orient, 'erratic': False}
 
     with open (aux_path, 'w') as outfile:
         json.dump(args, outfile)
@@ -375,12 +387,14 @@ def gen_erratic_system(lx=99.9, ly=100, ax=50, ay=50, hl=50, hu=60, hup=2,
     system = asperity + lower + upper 
 
     args = {'lx': lx_actual, 'ly':ly_actual, 'sys_lx': sys_lx, 'sys_ly': sys_ly, 'ax':ax, 'ay':ay, 'hl':hl, 
-    'hu': hu, 'hup': hup, 'grid': grid, 'asperities':asperities,'lower_orient': lower_orient, 'erratic': True}
+    'hu': hu, 'hup': hup, 'grid': grid, 'asperities':asperities,'lower_orient': lower_orient, 'erratic': bool_grid}
 
-
+    bg = {'grid': bool_grid}
     with open (aux_path, 'w') as outfile:
-        json.dump(args, outfile)
+        json.dump(args, outfile, cls=NumpyArrayEncoder)
+        #json.dump(bg, outfile, cls=NumpyArrayEncoder)
     print('auxiliary datafile written to: ' , aux_path)
+
 
     return system
 
