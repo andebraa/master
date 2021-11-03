@@ -278,6 +278,7 @@ def gen_grid_system(lx=300, ly=300, ax=150, ay=150, hl=50, hu=150, hup=2,
     lx_actual, ly_actual = sys_lx/grid[0], sys_ly/grid[1] #the size of one partition
 
 
+    #Adding variables to args dict and writing to json for use in post processing
 
     args = {'lx': lx_actual, 'ly':ly_actual, 'sys_lx': sys_lx, 'sys_ly': sys_ly, 'ax':ax, 'ay':ay, 'hl':hl,
     'hu': hu, 'hup': hup, 'grid': grid, 'asperities':asperities,'lower_orient': lower_orient, 'erratic': True}
