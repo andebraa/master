@@ -26,6 +26,7 @@ def anal_stress(dumpfile, outfile="area.txt", delta=None,
         warnings.warn(r"No $\Delta t$ is given, setting $\Delta t=1$")
         delta = 1
 
+    
     pipeline = import_file(dumpfile, multiple_frames = True)
     
     #slice through each asperity, fairly high up to avvoid bending and other factors 
