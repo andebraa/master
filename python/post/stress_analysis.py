@@ -34,7 +34,7 @@ def anal_stress(dumpfile, outfile="area.txt", delta=None,
         for j in range(grid[1]):
             pipeline.append(SliceModifier(
                 distance = 60, #this is the height of the slice, should be high up, MODIFY
-                normal = (0.0, 0.0, 1.0),
+                normal = (0.0, 1.0, 0.0),
                 slab_width = 0.0) #unsure about this too.
                                   #If zero, the modifier cuts away everything on one side of the cutting plane.
 
