@@ -29,9 +29,9 @@ seed = 19970
 height = 115
 orientation = "100"
 
-grid = (4,4)
-slurm = False
-gpu = False
+grid = (3,3)
+slurm = True
+gpu = True
 erratic = True
 
 # paths
