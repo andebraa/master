@@ -17,6 +17,111 @@ from scipy.constants import value
 from lammps_logfile import File, running_mean
 import warnings
 
+def get_erratic_contact_area(pipeline, outfile="area.txt", delta=None,
+                             init_time=0, asperity = 1):
+    """Get contact area and number of atoms in the 
+    contact region as a function of time. Utilizing
+    Ovito. This script takes a cut out block containing an asperity 
+    from stress_analysis.py. 
+    writes a txt for each asperity, numbered from 0
+
+    Parameters
+    ----------
+    pipeline : ovito object? 
+        pipeline that has cut out the single asperity
+    outfile : str
+        file to write the contact area to
+    delta : float
+        time difference between two frames in ns
+        (assume constant delta)
+    init_time : float
+        initial time given in ns
+    asperity : int 
+        the number of the asperity
+    """
+    print('start of get-conctact_area')
+    if delta is None:
+        warnings.warn(r"No $\Delta t$ is given, setting $\Delta t=1$")
+        delta = 1
+    
+    # Slice:
+    pipeline.modifiers.append(SliceModifier(
+        distance = 55, 
+        normal = (0.0, 0.0, 1.0), 
+        slab_width = 2.0))
+
+    # Cluster analysis:
+    pipeline.modifiers.append(ClusterAnalysisModifier(sort_by_size=True))
+    # Expression selection:
+    pipeline.modifiers.append(ExpressionSelectionModifier(expression='Cluster!=1'))
+
+    # Delete selected:
+    pipeline.modifiers.append(DeleteSelectedModifier())
+
+    # Construct surface mesh:
+    pipeline.modifiers.append(ConstructSurfaceModifier(radius=20.0, identify_regions=True))
+
+    # Output surface area as a function of time
+    times, nums, areas = [], [], []
+    for i in trange(pipeline.source.num_frames):
+        data = pipeline.compute(frame=i)
+        nums.append(data.attributes['ClusterAnalysis.largest_size'])
+        # divid area by 2 to find area of one surface and by 100 to go from Å² to nm²
+        areas.append(data.attributes['ConstructSurfaceMesh.surface_area'] / 200)
+
+        time = i * delta + init_time
+        times.append(time)
+    del pipeline
+
+    outfile_ = outfile +'_asperity'+str(asperity)+'.txt'
+
+    header = ("Crystal Aging Project \n"
+              "Author: Even Marius Nordhageni & Anders Bråte \n"
+              "\n"
+              "Contact area between asperity and lower surface and \n"
+              "number of particles in the contact region.  \n"
+              "\n"
+              "time [ns]\t\t # contact atoms\t contact area [nm^2]\n"
+              "number of this asperity: "+str(asperity))
+
+    savetxt(outfile_, asarray([times, nums, areas], dtype=float).T, header=header)
+    print('end of get contact area')
+    return times, nums, areas
+
+def count_coord_erratic(pipeline, outfile="coord.txt", asperity = 1):
+    """Count number of particles with different coordination numbers.
+    Utilizing Ovito.
+    
+    Parameters
+    ----------
+    pipeline : ovito object
+        a slica slice of the original system, has only one asperity
+    outfile : str
+        file to write the contact area to
+    """
+
+    # Coordination analysis:
+    pipeline.modifiers.append(CoordinationAnalysisModifier(cutoff=2.39))
+
+    # Color coding:
+    pipeline.modifiers.append(ColorCodingModifier(
+        property='Coordination',
+        start_value=1.0,
+        end_value=4.0))
+
+    # Histogram:
+    pipeline.modifiers.append(HistogramModifier(
+        operate_on='particles:particles',
+        property='Coordination',
+        bin_count=20))
+
+    outfile_ = outfile +'_asperity'+str(asperity)+'.txt'
+
+    # Output number of adatoms, kinks, surface and bulk atoms as a function of time
+    export_file(pipeline, outfile_, "txt/table", key="histogram[Coordination]", multiple_frames=True)
+    del pipeline
+
+
 
 def get_contact_area(dumpfile, outfile="area.txt", delta=None,
                      init_time=0):

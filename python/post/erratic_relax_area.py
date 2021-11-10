@@ -18,16 +18,17 @@ from lammps_logfile import File, running_mean
 import warnings
 
 
-def anal_stress(dumpfile, outfile="area.txt", delta=None,
-                     init_time=0, grid = (1,1))):
+def anal_stress():
     """
     
     grid (touple): number of asperities in grid. default is one asperity (1,1)
+    
+
     """
     orientation = '115' 
     height = 200 # Å 
     force = 0.001 #eV/Å
-    
+    grid = (2,2)
 
 
     # paths
@@ -37,10 +38,10 @@ def anal_stress(dumpfile, outfile="area.txt", delta=None,
     coordination_dir = project_dir + 'txt/coordination/'
 
 
-    template_dump = relax_dir + 'sim_temp{}_force{}_time{}_seed*/dump.bin'
+    template_dump = relax_dir + 'sim_temp{}_force{}_time{}_seed*_errgrid{}_{}/dump.bin'
     auxiliary_dir = project_dir + 'initial_system/erratic/aux/system_or{}_hi{}_errgrid{}_{}_auxiliary.json'
-    template_area = area_relax_dir + 'areas_temp{}_force{}_55_hi{}_seed{}.txt'
-    template_coord = coordination_dir + 'coordination_temp{}_force{}_hi{}_seed{}.txt'
+    template_area = area_relax_dir + 'areas_temp{}_force{}_55_hi{}_seed{}_erratic{grid[0]}_{grid[1]}'#add the txt in count_coord
+    template_coord = coordination_dir + 'coordination_temp{}_force{}_hi{}_seed{}_erratic{grid[0]}_{grid[1]}'
 
 
     with open(auxiliary_dir.format(orientation, height, grid[0], grid[1])) as auxfile:
@@ -55,37 +56,45 @@ def anal_stress(dumpfile, outfile="area.txt", delta=None,
     bool_grid = np.array(args['erratic']) 
 
     pipeline = import_file(dumpfile, multiple_frames = True)
-     
-    for i in range(grid[0]):
-        for j in range(grid[1]):
-            if bool_grid[i,j]: #is boo_grid is 1, we have an asperity
-            
+    asperity = 0
+    temps = [2300]
+    for temp in temps:
+        dumpfiles = glob(template_dump.format(orientation, height, temp, force, time, grid[0], grid[1]))
+        for dumpfile in dumpfiles: 
+            for i in range(grid[0]):
+                for j in range(grid[1]):
+                    if bool_grid[i,j]: #is boo_grid is 1, we have an asperity
+                        
 
-                # first outward slice X direction
-                pipeline.modifiers.append(SliceModifier(
-                distance = (i+1)*lx, 
-                normal = (1.0, 0.0, 0.0)))
+                        # first outward slice X direction
+                        pipeline.modifiers.append(SliceModifier(
+                        distance = (i+1)*lx, 
+                        normal = (1.0, 0.0, 0.0)))
 
-                # first inward slice X direction
-                pipeline.modifiers.append(SliceModifier(
-                distance = (i)*lx,
-                normal = (1.0, 0.0, 0.0)),
-                inverse = True)
+                        # first inward slice X direction
+                        pipeline.modifiers.append(SliceModifier(
+                        distance = (i)*lx,
+                        normal = (1.0, 0.0, 0.0)),
+                        inverse = True)
 
-                # first outward slice Y direction
-                pipeline.modifiers.append(SliceModifier(
-                distance = (i+1)*lx,
-                normal = (0.0, 1.0, 0.0)))
+                        # first outward slice Y direction
+                        pipeline.modifiers.append(SliceModifier(
+                        distance = (i+1)*lx,
+                        normal = (0.0, 1.0, 0.0)))
 
-                # first outward slice Y direction
-                pipeline.modifiers.append(SliceModifier(
-                distance = (i+1)*lx,
-                normal = (0.0, 1.0, 0.0)))
+                        # first outward slice Y direction
+                        pipeline.modifiers.append(SliceModifier(
+                        distance = (i)*lx,
+                        normal = (0.0, 1.0, 0.0)), 
+                        inverse = True)
 
-                #cutting out slab etc is handled in post_utils
-                get_contact_area(pipeline, template_coord.format(temp, 
-                                                                 force, 
-                                                                 height, 
-                                                                 seed), delta=time/1e6)
-                #TODO: make get_contact_area take the pipeline we've already made as an argument
-                #Have get_contact_area write the files so that the asperit in question is recognizable.
+                        #cutting out slab etc is handled in post_utils
+                        get_erratic_contact_area(pipeline, template_coord.format(temp, force, height, seed), 
+                                                 delta=time/1e6, asperity = asperity)
+                        #count_coord_erratic(pipeline, template_coord.format(temp, force, height, seed))
+                        
+                        #TODO: make get_contact_area take the pipeline we've already made as an argument
+                        #Have get_contact_area write the files so that the asperit in question is recognizable.
+
+if __name__ == '__main__':
+    anal_stress()
