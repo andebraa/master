@@ -5,11 +5,12 @@ Largely based on Even's crystal aging project get_contact_area
 """
 import json 
 import numpy as np
-
+import re
+from post_utils import get_erratic_contact_area
 from ovito.io import import_file, export_file
 from ovito.modifiers import *
 from ovito.pipeline import *
-
+from glob import glob
 from numpy import savetxt, asarray
 from tqdm import trange
 from scipy.signal import find_peaks
@@ -18,18 +19,19 @@ from lammps_logfile import File, running_mean
 import warnings
 
 
-def anal_stress():
+def erratic_relax_size():
     """
     
     grid (touple): number of asperities in grid. default is one asperity (1,1)
     
 
     """
-    orientation = '115' 
-    height = 200 # Å 
+    orientation = 100 
+    height = 115 # Å 
     force = 0.001 #eV/Å
     grid = (2,2)
-
+    time = 1000 #ps
+    delta = time/1e6    
 
     # paths
     project_dir = '../../'
@@ -55,17 +57,19 @@ def anal_stress():
 
     bool_grid = np.array(args['erratic']) 
 
-    pipeline = import_file(dumpfile, multiple_frames = True)
+
     asperity = 0
     temps = [2300]
     for temp in temps:
         dumpfiles = glob(template_dump.format(orientation, height, temp, force, time, grid[0], grid[1]))
         for dumpfile in dumpfiles: 
+            pipeline = import_file(dumpfile, multiple_frames = True)
+
             for i in range(grid[0]):
                 for j in range(grid[1]):
                     if bool_grid[i,j]: #is boo_grid is 1, we have an asperity
-                        
-
+                        seed = re.findall('\d+', dumpfile)[-1]                       
+ 
                         # first outward slice X direction
                         pipeline.modifiers.append(SliceModifier(
                         distance = (i+1)*lx, 
@@ -74,8 +78,8 @@ def anal_stress():
                         # first inward slice X direction
                         pipeline.modifiers.append(SliceModifier(
                         distance = (i)*lx,
-                        normal = (1.0, 0.0, 0.0)),
-                        inverse = True)
+                        normal = (1.0, 0.0, 0.0),
+                        inverse = True))
 
                         # first outward slice Y direction
                         pipeline.modifiers.append(SliceModifier(
@@ -85,16 +89,18 @@ def anal_stress():
                         # first outward slice Y direction
                         pipeline.modifiers.append(SliceModifier(
                         distance = (i)*lx,
-                        normal = (0.0, 1.0, 0.0)), 
-                        inverse = True)
+                        normal = (0.0, 1.0, 0.0), 
+                        inverse = True))
 
                         #cutting out slab etc is handled in post_utils
-                        get_erratic_contact_area(pipeline, template_coord.format(temp, force, height, seed), 
+                        get_erratic_contact_area(pipeline, 
+                                                 template_coord.format(temp, force, height, seed), 
                                                  delta=time/1e6, asperity = asperity)
-                        #count_coord_erratic(pipeline, template_coord.format(temp, force, height, seed))
+                        #count_coord_erratic(pipeline, 
+                        #                     template_coord.format(temp, force, height, seed))
                         
-                        #TODO: make get_contact_area take the pipeline we've already made as an argument
-                        #Have get_contact_area write the files so that the asperit in question is recognizable.
+                        
+
 
 if __name__ == '__main__':
-    anal_stress()
+    erratic_relax_size()
