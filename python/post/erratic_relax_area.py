@@ -95,7 +95,7 @@ def erratic_relax_size():
                         #cutting out slab etc is handled in post_utils
                         get_erratic_contact_area(pipeline, 
                                                  template_coord.format(temp, force, height, seed), 
-                                                 delta=time/1e6, asperity = asperity)
+                                                 delta=time/1e6, asperity = asperity, grid = grid)
                         #count_coord_erratic(pipeline, 
                         #                     template_coord.format(temp, force, height, seed))
                         

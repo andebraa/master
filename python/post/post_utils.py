@@ -18,7 +18,7 @@ from lammps_logfile import File, running_mean
 import warnings
 
 def get_erratic_contact_area(pipeline, outfile="area.txt", delta=None,
-                             init_time=0, asperity = 1):
+                             init_time=0, asperity = 1, grid = (1,1)):
     """Get contact area and number of atoms in the 
     contact region as a function of time. Utilizing
     Ovito. This script takes a cut out block containing an asperity 
