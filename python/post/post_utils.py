@@ -39,6 +39,8 @@ def get_erratic_contact_area(pipeline, outfile="area.txt", delta=None,
     asperity : int 
         the number of the asperity
     """
+
+    export_file(pipeline, 'tet_blocl-data', 'lammps/data', atom_style = 'atomic')
     print('start of get-conctact_area')
     if delta is None:
         warnings.warn(r"No $\Delta t$ is given, setting $\Delta t=1$")

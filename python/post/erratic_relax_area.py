@@ -42,8 +42,8 @@ def erratic_relax_size():
 
     template_dump = relax_dir + 'sim_temp{}_force{}_time{}_seed*_errgrid{}_{}/dump.bin'
     auxiliary_dir = project_dir + 'initial_system/erratic/aux/system_or{}_hi{}_errgrid{}_{}_auxiliary.json'
-    template_area = area_relax_dir + 'areas_temp{}_force{}_55_hi{}_seed{}_erratic{grid[0]}_{grid[1]}'#add the txt in count_coord
-    template_coord = coordination_dir + 'coordination_temp{}_force{}_hi{}_seed{}_erratic{grid[0]}_{grid[1]}'
+    template_area = area_relax_dir + 'areas_temp{}_force{}_55_hi{}_seed{}_erratic{}_{}'#add the txt in count_coord
+    template_coord = coordination_dir + 'coordination_temp{}_force{}_hi{}_seed{}_erratic{}_{}'
 
 
     with open(auxiliary_dir.format(orientation, height, grid[0], grid[1])) as auxfile:
@@ -94,7 +94,7 @@ def erratic_relax_size():
 
                         #cutting out slab etc is handled in post_utils
                         get_erratic_contact_area(pipeline, 
-                                                 template_coord.format(temp, force, height, seed), 
+                                                 template_area.format(temp, force, height, seed, grid[0], grid[1]), 
                                                  delta=time/1e6, asperity = asperity, grid = grid)
                         #count_coord_erratic(pipeline, 
                         #                     template_coord.format(temp, force, height, seed))
