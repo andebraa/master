@@ -22,7 +22,7 @@ force = 0.001
 height = 115
 orientation = "100"
 
-grid = (2,2) 
+grid = (3,3) 
 slurm = True
 gpu = True
 erratic = True

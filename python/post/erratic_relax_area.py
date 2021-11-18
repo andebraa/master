@@ -29,7 +29,7 @@ def erratic_relax_size():
     orientation = 100 
     height = 115 # Å 
     force = 0.001 #eV/Å
-    grid = (2,2)
+    grid = (3,3)
     time = 1000 #ps
     delta = time/1e6    
 
@@ -57,7 +57,9 @@ def erratic_relax_size():
 
     bool_grid = np.array(args['erratic']) 
 
-
+    num_asperities = np.sum(args['grid']) 
+    print(args)
+    print(num_asperities)
     asperity = 0
     temps = [2300]
     for temp in temps:
@@ -83,12 +85,12 @@ def erratic_relax_size():
 
                         # first outward slice Y direction
                         pipeline.modifiers.append(SliceModifier(
-                        distance = (i+1)*lx,
+                        distance = (j+1)*lx,
                         normal = (0.0, 1.0, 0.0)))
 
                         # first outward slice Y direction
                         pipeline.modifiers.append(SliceModifier(
-                        distance = (i)*lx,
+                        distance = (j)*lx,
                         normal = (0.0, 1.0, 0.0), 
                         inverse = True))
 
@@ -98,7 +100,7 @@ def erratic_relax_size():
                                                  delta=time/1e6, asperity = asperity, grid = grid)
                         #count_coord_erratic(pipeline, 
                         #                     template_coord.format(temp, force, height, seed))
-                        
+                        asperity += 1
                         
 
 
