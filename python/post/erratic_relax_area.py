@@ -70,6 +70,7 @@ def erratic_relax_size():
             for i in range(grid[0]):
                 for j in range(grid[1]):
                     if bool_grid[i,j]: #is boo_grid is 1, we have an asperity
+                        print('asperity at', i,j)
                         seed = re.findall('\d+', dumpfile)[-1]                       
  
                         # first outward slice X direction
