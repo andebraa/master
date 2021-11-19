@@ -40,7 +40,7 @@ def get_erratic_contact_area(pipeline, outfile="area.txt", delta=None,
         the number of the asperity
     """
 
-    export_file(pipeline, 'tet_blocl-data', 'lammps/data', atom_style = 'atomic')
+    export_file(pipeline, 'test_block_asperity{}'.format(asperity), 'lammps/data', atom_style = 'atomic')
     print('start of get-conctact_area')
     if delta is None:
         warnings.warn(r"No $\Delta t$ is given, setting $\Delta t=1$")
@@ -89,39 +89,6 @@ def get_erratic_contact_area(pipeline, outfile="area.txt", delta=None,
     savetxt(outfile_, asarray([times, nums, areas], dtype=float).T, header=header)
     print('end of get contact area')
     return times, nums, areas
-
-def count_coord_erratic(pipeline, outfile="coord.txt", asperity = 1):
-    """Count number of particles with different coordination numbers.
-    Utilizing Ovito.
-    
-    Parameters
-    ----------
-    pipeline : ovito object
-        a slica slice of the original system, has only one asperity
-    outfile : str
-        file to write the contact area to
-    """
-
-    # Coordination analysis:
-    pipeline.modifiers.append(CoordinationAnalysisModifier(cutoff=2.39))
-
-    # Color coding:
-    pipeline.modifiers.append(ColorCodingModifier(
-        property='Coordination',
-        start_value=1.0,
-        end_value=4.0))
-
-    # Histogram:
-    pipeline.modifiers.append(HistogramModifier(
-        operate_on='particles:particles',
-        property='Coordination',
-        bin_count=20))
-
-    outfile_ = outfile +'_asperity'+str(asperity)+'.txt'
-
-    # Output number of adatoms, kinks, surface and bulk atoms as a function of time
-    export_file(pipeline, outfile_, "txt/table", key="histogram[Coordination]", multiple_frames=True)
-    del pipeline
 
 
 

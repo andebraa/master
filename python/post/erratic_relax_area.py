@@ -57,43 +57,50 @@ def erratic_relax_size():
 
     bool_grid = np.array(args['erratic']) 
 
-    num_asperities = np.sum(args['grid']) 
     print(args)
     print(num_asperities)
     asperity = 0
     temps = [2300]
     for temp in temps:
         dumpfiles = glob(template_dump.format(orientation, height, temp, force, time, grid[0], grid[1]))
-        for dumpfile in dumpfiles: 
+        auxiliary_files = glob(auxiliary_dir.format(orientation, height, grid[0], grid[1])
+        for dumpfile in dumpfiles:
+            
             pipeline = import_file(dumpfile, multiple_frames = True)
 
             for i in range(grid[0]):
                 for j in range(grid[1]):
                     if bool_grid[i,j]: #is boo_grid is 1, we have an asperity
                         print('asperity at', i,j)
+                        print('lx, ly:', lx, ly)
                         seed = re.findall('\d+', dumpfile)[-1]                       
- 
+                        print(seed)
+
                         # first outward slice X direction
                         pipeline.modifiers.append(SliceModifier(
-                        distance = (i+1)*lx, 
+                        distance = (i+1)*lx,
                         normal = (1.0, 0.0, 0.0)))
+                        print('i+1 *lx=', (i+1)*lx)
 
                         # first inward slice X direction
                         pipeline.modifiers.append(SliceModifier(
                         distance = (i)*lx,
                         normal = (1.0, 0.0, 0.0),
                         inverse = True))
+                        print('i *lx=', (i)*lx)
 
                         # first outward slice Y direction
                         pipeline.modifiers.append(SliceModifier(
-                        distance = (j+1)*lx,
+                        distance = (j+1)*ly,
                         normal = (0.0, 1.0, 0.0)))
+                        print('j+1 *ly=', (j+1)*ly)
 
                         # first outward slice Y direction
                         pipeline.modifiers.append(SliceModifier(
-                        distance = (j)*lx,
+                        distance = (j)*ly,
                         normal = (0.0, 1.0, 0.0), 
                         inverse = True))
+                        print('j *ly=', (j)*ly)
 
                         #cutting out slab etc is handled in post_utils
                         get_erratic_contact_area(pipeline, 
