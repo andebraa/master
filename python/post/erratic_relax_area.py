@@ -19,7 +19,7 @@ from lammps_logfile import File, running_mean
 import warnings
 
 
-def erratic_relax_size():
+def erratic_relax_area():
     """
     
     grid (touple): number of asperities in grid. default is one asperity (1,1)
@@ -57,13 +57,11 @@ def erratic_relax_size():
 
     bool_grid = np.array(args['erratic']) 
 
-    print(args)
-    print(num_asperities)
     asperity = 0
     temps = [2300]
     for temp in temps:
         dumpfiles = glob(template_dump.format(orientation, height, temp, force, time, grid[0], grid[1]))
-        auxiliary_files = glob(auxiliary_dir.format(orientation, height, grid[0], grid[1])
+        auxiliary_files = glob(auxiliary_dir.format(orientation, height, grid[0], grid[1]))
         for dumpfile in dumpfiles:
             
             pipeline = import_file(dumpfile, multiple_frames = True)
@@ -113,4 +111,4 @@ def erratic_relax_size():
 
 
 if __name__ == '__main__':
-    erratic_relax_size()
+    erratic_relax_area()
