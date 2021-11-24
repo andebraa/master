@@ -4,8 +4,69 @@ from ovito.modifiers import *
 from ovito.pipeline import *
 from ovito.vis import *
 
+import json
+import numpy as np
+import re
+from post_utils import get_erratic_contact_area
+from ovito.io import import_file, export_file
+from ovito.modifiers import *
+from ovito.pipeline import *
+from glob import glob
+from numpy import savetxt, asarray
+from tqdm import trange
+from scipy.signal import find_peaks
+from scipy.constants import value
+from lammps_logfile import File, running_mean
+import warnings
+import json
+import numpy as np
+
+
+orientation = 100
+height = 115 # Å 
+force = 0.001 #eV/Å
+grid = (3,3)
+time = 1000 #ps
+delta = time/1e6
+
+temp = 2300
+asperity = 1
+grid = (3,3)
+
+
+# paths
+project_dir = '../../'
+relax_dir = project_dir + 'simulations/sys_or{}_hi{}/relax/'
+area_relax_dir = project_dir + 'txt/area_relax/'
+coordination_dir = project_dir + 'txt/coordination/'
+
+
+template_dump = relax_dir + 'sim_temp{}_force{}_time{}_seed*_errgrid{}_{}/dump.bin'
+auxiliary_dir = project_dir + 'initial_system/erratic/aux/system_or{}_hi{}_errgrid{}_{}_auxiliary.json'
+template_area = area_relax_dir + 'areas_temp{}_force{}_55_hi{}_seed{}_erratic{}_{}'#add the txt in count_coord
+template_coord = coordination_dir + 'coordination_temp{}_force{}_hi{}_seed{}_erratic{}_{}'
+
+
+with open(auxiliary_dir.format(orientation, height, grid[0], grid[1])) as auxfile:
+    data = auxfile.read()
+args = json.loads(data)
+
+lx, ly = args['lx'], args['ly'] #size of one grid
+if delta is None:
+    warnings.warn(r"No $\Delta t$ is given, setting $\Delta t=1$")
+    delta = 1
+
+bool_grid = np.array(args['erratic'])
+
+asperity = 0
+temps = [2300]
+
+dumpfile = glob(template_dump.format(orientation, height, temp, force, time, grid[0], grid[1]))
+pipeline = import_file(dumpfile, multiple_frames = True)#, atom_style = 'atomic')
+
+
 # Data import:
-pipeline = import_file('/home/andebraa/master/initial_system/erratic/system_or100_hi115_errgrid3_*.data', atom_style = 'atomic')
+#pipeline = import_file('/home/andebraa/master/initial_system/erratic/system_or100_hi115_errgrid3_*.data', atom_style = 'atomic')
 pipeline.add_to_scene()
 
 # Slice:
@@ -18,12 +79,11 @@ pipeline.modifiers.append(SliceModifier(
     distance = 100.40620000000001, 
     normal = (0.0, 1.0, 0.0)))
 
-# Viewport setup:
-vp = Viewport(
-    type = Viewport.Type.Ortho, 
-    fov = 107.77779497713433, 
-    camera_dir = (0.4940508840141648, 0.8471859907837395, -0.1954216493242139), 
-    camera_pos = (215.5508800663772, 110.87863062339056, 56.959484272606296))
+#seed = re.findall('\d+', dumpfile)[-1]
+seed = 69
 
-# Rendering:
-vp.render_image(filename='image.png', size=(640, 480))
+
+get_erratic_contact_area(pipeline,
+         template_area.format(temp, force, height, seed, grid[0], grid[1]),
+         delta=time/1e6, asperity = asperity, grid = grid)
+

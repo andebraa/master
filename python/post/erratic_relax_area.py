@@ -17,6 +17,7 @@ from scipy.signal import find_peaks
 from scipy.constants import value
 from lammps_logfile import File, running_mean
 import warnings
+import json
 
 
 def erratic_relax_area():
@@ -107,8 +108,8 @@ def erratic_relax_area():
                         #count_coord_erratic(pipeline, 
                         #                     template_coord.format(temp, force, height, seed))
                         asperity += 1
-                        
-
+                        del pipeline.modifiers
+                        #pipeline.clear()
 
 if __name__ == '__main__':
     erratic_relax_area()
