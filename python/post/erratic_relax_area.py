@@ -74,42 +74,50 @@ def erratic_relax_area():
                         print('lx, ly:', lx, ly)
                         seed = re.findall('\d+', dumpfile)[-1]                       
                         print(seed)
-
-                        # first outward slice X direction
-                        pipeline.modifiers.append(SliceModifier(
-                        distance = (i+1)*lx,
-                        normal = (1.0, 0.0, 0.0)))
-                        print('i+1 *lx=', (i+1)*lx)
-
-                        # first inward slice X direction
-                        pipeline.modifiers.append(SliceModifier(
-                        distance = (i)*lx,
-                        normal = (1.0, 0.0, 0.0),
-                        inverse = True))
-                        print('i *lx=', (i)*lx)
-
-                        # first outward slice Y direction
-                        pipeline.modifiers.append(SliceModifier(
-                        distance = (j+1)*ly,
-                        normal = (0.0, 1.0, 0.0)))
-                        print('j+1 *ly=', (j+1)*ly)
-
-                        # first outward slice Y direction
-                        pipeline.modifiers.append(SliceModifier(
-                        distance = (j)*ly,
-                        normal = (0.0, 1.0, 0.0), 
-                        inverse = True))
-                        print('j *ly=', (j)*ly)
-
+    
+                        pipeline = slicer_dicer(pipeline, i, j, lx, ly)
                         #cutting out slab etc is handled in post_utils
                         get_erratic_contact_area(pipeline, 
                                                  template_area.format(temp, force, height, seed, grid[0], grid[1]), 
                                                  delta=time/1e6, asperity = asperity, grid = grid)
                         #count_coord_erratic(pipeline, 
                         #                     template_coord.format(temp, force, height, seed))
+                        export_file(pipeline, 'test_block_asperity{}'.format(asperity), 'lammps/data', atom_style = 'atomic')
+
                         asperity += 1
                         del pipeline.modifiers
                         #pipeline.clear()
+
+
+def slicer_dicer(pipeline, i, j, lx, ly):
+
+    # first outward slice X direction
+    pipeline.modifiers.append(SliceModifier(
+    distance = (i+1)*lx,
+    normal = (1.0, 0.0, 0.0)))
+    print('i+1 *lx=', (i+1)*lx)
+
+    # first inward slice X direction
+    pipeline.modifiers.append(SliceModifier(
+    distance = (i)*lx,
+    normal = (1.0, 0.0, 0.0),
+    inverse = True))
+    print('i *lx=', (i)*lx)
+
+    # first outward slice Y direction
+    pipeline.modifiers.append(SliceModifier(
+    distance = (j+1)*ly,
+    normal = (0.0, 1.0, 0.0)))
+    print('j+1 *ly=', (j+1)*ly)
+
+    # first outward slice Y direction
+    pipeline.modifiers.append(SliceModifier(
+    distance = (j)*ly,
+    normal = (0.0, 1.0, 0.0),
+    inverse = True))
+    print('j *ly=', (j)*ly)
+
+
 
 if __name__ == '__main__':
     erratic_relax_area()

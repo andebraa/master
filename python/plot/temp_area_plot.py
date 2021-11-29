@@ -32,4 +32,5 @@ num3 = num3[max_ind:]; area3 = area3[max_ind:]; time3 = time3[max_ind:]
 plt.plot(time1, area1, label='asperity 1')
 plt.plot(time2, area2, label='asperity 2')
 plt.plot(time3, area3, label='asperity 3')
+plt.legend()
 plt.savefig('temp_asperities.png') 
