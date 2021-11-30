@@ -198,14 +198,17 @@ def count_coord(dumpfile, outfile="coord.txt"):
     del pipeline
 
 
-def extract_load_curves(logfiles, delta=None, init_time=0, window=1,
+def extract_load_curves(logfile, delta=None, init_time=0, window=1,
                         outfile_load_curves="load_curves.txt",
                         outfile_max_static="max_static.txt",
-                        prominence=0.05):
-    """Extract load curves (-v_fx) from multiple log files and
+                        prominence=0.05, asperity = False):
+    """Extract load curves (-v_fx) from log file and
     save the load curves as text files. Also, find the maximum
     static friction across the log files and save them in one 
     file.
+
+    IF asperity, then the system is either a grid or erratic,
+    outputfile wil be numbered accordingly
 
     Parameters
     ----------
@@ -221,6 +224,9 @@ def extract_load_curves(logfiles, delta=None, init_time=0, window=1,
         where to save the load curves
     outfiles_max_static : str
         where to save the maximum static friction force
+    asperity: int or False
+        is the logfile part of an asperity? if so gives
+        the output a numbered name
     """
     if delta is None:
         warnings.warn("Time different between log files is not given, setting Dt=1")
@@ -251,6 +257,15 @@ def extract_load_curves(logfiles, delta=None, init_time=0, window=1,
           "# time [ns]\t max friction force [mN] \n")
 
     # open files
+    if asperity:
+        outfile_load_curves = outfile_load_curves.split('.')
+        outifle_load_curves[0]+f'_asperity{asperity}' 
+        outfile_load_curves.join() 
+
+        outfile_max_static = outfile_max_static.split('.')
+        outifle_max_static[0]+f'_asperity{asperity}' 
+        outfile_max_static.join() 
+    
     f_lc = open(outfile_load_curves, 'w')
     f_ms = open(outfile_max_static, 'w+')
     f_lc.write(header_load_curves)
