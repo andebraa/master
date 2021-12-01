@@ -71,16 +71,13 @@ pipeline.add_to_scene()
 
 # Slice:
 pipeline.modifiers.append(SliceModifier(
-    distance = 200.4062, 
-    inverse = True))
-
-# Slice:
-pipeline.modifiers.append(SliceModifier(
-    distance = 100.40620000000001, 
+    distance = 100.4062, 
     normal = (0.0, 1.0, 0.0)))
 
-#seed = re.findall('\d+', dumpfile)[-1]
-seed = 69
+# Slice:
+pipeline.modifiers.append(SliceModifier(distance = 100.4062))
+
+seed = 420
 
 
 get_erratic_contact_area(pipeline,
