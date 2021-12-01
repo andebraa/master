@@ -291,7 +291,7 @@ def gen_grid_system(lx=300, ly=300, ax=150, ay=150, hl=50, hu=150, hup=2,
 
 
     #Adding variables to args dict and writing to json for use in post processing
-
+    asperities = False #this is grid system
     args = {'lx': lx_actual, 'ly':ly_actual, 'sys_lx': sys_lx, 'sys_ly': sys_ly, 'ax':ax, 'ay':ay, 'hl':hl,
     'hu': hu, 'hup': hup, 'grid': grid, 'asperities':asperities,'lower_orient': lower_orient, 'erratic': False}
 

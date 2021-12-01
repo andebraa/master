@@ -34,7 +34,7 @@ asperities = int(grid[0]*grid[1]*porosity)
 
 lower_orient = "100"
 remove_atoms = True
-erratic = True
+erratic = False
 
 path = '../../initial_system/'
 
@@ -54,8 +54,8 @@ if erratic and grid:
     print("System written to: ", system_file+'.data')
 
 elif grid:
-    system_file = path + f"erratic/system_or{lower_orient}_hi{lz}_errgrid{grid[0]}_{grid[1]}"
-    aux_path = path + "grid/aux/system_or{lower_orient}_hi{lz}_errgrid{grid[0]}_{grid[1]}_auxiliary.json"
+    system_file = path + f"grid/system_or{lower_orient}_hi{lz}_grid{grid[0]}_{grid[1]}"
+    aux_path = path + f"grid/aux/system_or{lower_orient}_hi{lz}_grid{grid[0]}_{grid[1]}_auxiliary.json"
 
     system = gen_grid_system(lx, ly, ax, ay, hl, hu, hup, octa_d, dode_d, lower_orient,
                              remove_atoms, aux_path=aux_path, grid=grid)
