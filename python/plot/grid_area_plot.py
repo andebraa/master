@@ -1,6 +1,6 @@
 """
 Rewrite of even chrystal aging project.
-Assumes erratic system, with corresponding auxiliary file.
+Assumes grid system, where asperities are labeled from 0 to grid[0]*grid[1]
 
 """
 
@@ -62,7 +62,7 @@ fig, ax = plt.subplots(nrows = asperities, ncols = 1)
 # read area files
 times, nums, areas = [], [], []
 for temp in temps:
-    for asperity in range():
+    for asperity in range(grid[0]*grid[1]):
         print(template_area.format(temp, force, height, seed, grid[0], grid[1], asperity))
         files = glob(template_area.format(temp, force, height, seed, grid[0], grid[1], asperity)))
         print(files)
