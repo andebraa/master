@@ -22,8 +22,11 @@ plt.rcParams['figure.figsize'] = 7, 5
 temps = [2300]
 force = 0.001
 orientation = "100"
-height = 110
+height = 115
 save = True
+seed = 420
+grid = (3,3)
+
 
 project_dir = '../../'
 fig_dir = project_dir + 'fig/'
@@ -38,25 +41,8 @@ template_area = area_relax_dir + 'areas_temp{}_force{}_55_hi{}_seed{}_erratic{}_
 template_coord = coordination_dir + 'coordination_temp{}_force{}_hi{}_seed{}_erratic{}_{}'
 
 
-with open(auxiliary_dir.format(orientation, height, grid[0], grid[1])) as auxfile:
-    data = auxfile.read()
-args = json.loads(data)
 
-
-##################################
-### READ FILES
-##################################
-
-
-# plot number of contact atoms, colorbar plot
-#if asperities % 2 == 0:
-#    nrows = asperities/2
-#    ncols = asperities/2
-#else:
-#    nrows = asperities
-#    ncols = 1
-
-fig, ax = plt.subplots(nrows = asperities, ncols = 1)
+fig, ax = plt.subplots(nrows =1 , ncols = 1)
 
 
 # read area files
@@ -64,7 +50,7 @@ times, nums, areas = [], [], []
 for temp in temps:
     for asperity in range(grid[0]*grid[1]):
         print(template_area.format(temp, force, height, seed, grid[0], grid[1], asperity))
-        files = glob(template_area.format(temp, force, height, seed, grid[0], grid[1], asperity)))
+        files = glob(template_area.format(temp, force, height, seed, grid[0], grid[1], asperity))
         print(files)
         if files == []:
             raise AssertionError("no files found")
@@ -82,8 +68,8 @@ for temp in temps:
             area = area[max_ind:]
             time = time[max_ind:]
             print(time)
-            ax[asperity].plot(time, area, label='asperity {}'.format(asperity))
-            ax[asperity].plot(time, num, label = 'num') 
+            ax.plot(time, area, label='asperity {}'.format(asperity))
+            #ax[asperity].plot(time, num, label = 'num') 
 
             nums_temp.append(num)
             areas_temp.append(area)
@@ -92,9 +78,9 @@ for temp in temps:
         areas.append(np.asarray(areas_temp).mean(axis=0))
         times.append(time)
         
-        if save:
-            plt.savefig(fig_dir + 'png/area_temp{}_force{}_hi{}_seed{}_erratic{}_{}.png'.format(temp,
-                                                       force, height, seed, grid[0], grid[1])
+        #if save:
+        #    plt.savefig(fig_dir + 'png/area_temp{}_force{}_hi{}_seed{}_erratic{}_{}.png'.format(temp,
+        #                                               force, height, seed, grid[0], grid[1])
 
 
 nums = np.asarray(nums)
@@ -113,7 +99,7 @@ plt.ylabel(r'$N(t)$')
 plt.tight_layout()
 if save:
     plt.savefig(fig_dir + 'png/area_temp{}_force{}_hi{}_seed{}_erratic{}_{}.png'.format(temp, 
-                                                       force, height, seed, grid[0], grid[1])
+                                                       force, height, seed, grid[0], grid[1]))
 #plt.show()
 #stop
 

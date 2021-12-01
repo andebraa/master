@@ -30,7 +30,6 @@ time = 1000 #ps
 delta = time/1e6
 
 temp = 2300
-asperity = 1
 grid = (3,3)
 
 
@@ -58,7 +57,7 @@ if delta is None:
 
 bool_grid = np.array(args['erratic'])
 
-asperity = 0
+asperity = 8
 temps = [2300]
 
 dumpfile = glob(template_dump.format(orientation, height, temp, force, time, grid[0], grid[1]))
@@ -71,11 +70,22 @@ pipeline.add_to_scene()
 
 # Slice:
 pipeline.modifiers.append(SliceModifier(
-    distance = 100.4062, 
+    distance = 300.4062, 
     normal = (0.0, 1.0, 0.0)))
 
 # Slice:
-pipeline.modifiers.append(SliceModifier(distance = 100.4062))
+pipeline.modifiers.append(SliceModifier(
+    distance = 200.4062, 
+    inverse = True))
+
+# Slice:
+pipeline.modifiers.append(SliceModifier(
+    distance = 200.0, 
+    normal = (0.0, 1.0, 0.0), 
+    inverse = True))
+
+# Slice:
+pipeline.modifiers.append(SliceModifier(distance = 300.4062))
 
 seed = 420
 
