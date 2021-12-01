@@ -62,7 +62,6 @@ def erratic_relax_area():
     temps = [2300]
     for temp in temps:
         dumpfiles = glob(template_dump.format(orientation, height, temp, force, time, grid[0], grid[1]))
-        auxiliary_files = glob(auxiliary_dir.format(orientation, height, grid[0], grid[1]))
         for dumpfile in dumpfiles:
             
             pipeline = import_file(dumpfile, multiple_frames = True)

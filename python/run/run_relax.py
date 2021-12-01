@@ -22,15 +22,11 @@ force = 0.001
 height = 115
 orientation = "100"
 
-<<<<<<< HEAD
+
 grid = (3,3) 
 slurm = True
-=======
-grid = (2,2) 
-slurm = False
->>>>>>> 157a309111da8e121c68cf3f9d340d391747645d
 gpu = True
-erratic = True
+erratic = False
 seed = np.random.randint(10000, 100000)
 
 
