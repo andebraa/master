@@ -142,3 +142,5 @@ slides/*
 simulations/*
 *.data
 python/post/*.txt
+
+test_block*
