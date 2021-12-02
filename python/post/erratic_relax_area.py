@@ -65,26 +65,39 @@ def erratic_relax_area():
         for dumpfile in dumpfiles:
             
             pipeline = import_file(dumpfile, multiple_frames = True)
-            pipeline.add_to_scene()
+            export_file(pipeline, f'full_system', 'lammps/data', atom_style = 'atomic')
+            #pipeline.add_to_scene()
             for i in range(grid[0]):
                 for j in range(grid[1]):
                     if bool_grid[i,j]: #is boo_grid is 1, we have an asperity
-                        print('asperity at', i,j)
+                        print('asperity at', j,i)
                         print('lx, ly:', lx, ly)
                         seed = re.findall('\d+', dumpfile)[-1]                       
-                        print(seed)
-    
+                        
+                        """ #my old method, doesn't work, but maybe use data= pipeline.copute and 
+                        # data.apply(slice(etc etc))?
+
                         pipeline = slicer_dicer(pipeline, j, i, lx, ly)
                         #cutting out slab etc is handled in post_utils
-                        get_erratic_contact_area(pipeline, 
-                                                 template_area.format(temp, force, height, seed, grid[0], grid[1]), 
-                                                 delta=time/1e6, asperity = asperity, grid = grid)
+                        """
+                        data = pipeline.compute()
+                        expression = f"Position.X >= {i*lx} && Position.X < {(i+1)*lx} && Position.Y >= {j*ly} && Position.Y < {(j+1)*ly}"
+                        print('j*lx', j*lx)
+                        print('j+1*lx', (j+1)*lx)
+                        print('i*lx', i*lx)
+                        print('(i+1)*lx', (i+1)*lx)
+                        data.apply(ExpressionSelectionModifier(expression = expression))
+                        data.apply(InvertSelectionModifier())
+                        data.apply(DeleteSelectedModifier())
+                        export_file(data, f'test_block{i}{j}.data', 'lammps/data', atom_style = 'atomic')
+                        
+                        #get_erratic_contact_area(pipeline, 
+                        #                         template_area.format(temp, force, height, seed, grid[0], grid[1]), 
+                        #                         delta=time/1e6, asperity = asperity, grid = grid)
                         #count_coord_erratic(pipeline, 
                         #                     template_coord.format(temp, force, height, seed))
-                        export_file(pipeline, 'test_block_asperity{}'.format(asperity), 'lammps/data', atom_style = 'atomic')
-
+                        #export_file(pipeline, 'test_block_asperity{}'.format(asperity), 'lammps/data', atom_style = 'atomic')
                         asperity += 1
-                        del pipeline.modifiers
                         #pipeline.clear()
 
 

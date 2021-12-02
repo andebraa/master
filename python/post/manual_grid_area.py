@@ -40,7 +40,7 @@ area_relax_dir = project_dir + 'txt/area_relax/'
 coordination_dir = project_dir + 'txt/coordination/'
 
 
-template_dump = relax_dir + 'sim_temp{}_force{}_time{}_seed*_errgrid{}_{}/dump.bin'
+template_dump = relax_dir + 'sim_temp{}_force{}_time{}_seed*_grid{}_{}/dump.bin'
 auxiliary_dir = project_dir + 'initial_system/erratic/aux/system_or{}_hi{}_errgrid{}_{}_auxiliary.json'
 template_area = area_relax_dir + 'areas_temp{}_force{}_55_hi{}_seed{}_erratic{}_{}'#add the txt in count_coord
 template_coord = coordination_dir + 'coordination_temp{}_force{}_hi{}_seed{}_erratic{}_{}'
@@ -57,7 +57,7 @@ if delta is None:
 
 bool_grid = np.array(args['erratic'])
 
-asperity = 8
+asperity = 0
 temps = [2300]
 
 dumpfile = glob(template_dump.format(orientation, height, temp, force, time, grid[0], grid[1]))
@@ -70,25 +70,26 @@ pipeline.add_to_scene()
 
 # Slice:
 pipeline.modifiers.append(SliceModifier(
-    distance = 300.4062, 
-    normal = (0.0, 1.0, 0.0)))
-
-# Slice:
-pipeline.modifiers.append(SliceModifier(
-    distance = 200.4062, 
-    inverse = True))
-
-# Slice:
-pipeline.modifiers.append(SliceModifier(
-    distance = 200.0, 
+    distance = 0.0, 
     normal = (0.0, 1.0, 0.0), 
     inverse = True))
 
 # Slice:
-pipeline.modifiers.append(SliceModifier(distance = 300.4062))
+pipeline.modifiers.append(SliceModifier(
+    distance = 100.4062, 
+    normal = (0.0, 1.0, 0.0)))
+
+# Slice:
+pipeline.modifiers.append(SliceModifier(
+    distance = 0.0, 
+    inverse = True))
+
+# Slice:
+pipeline.modifiers.append(SliceModifier(distance = 100.4062))
 
 seed = 420
 
+export_file(pipeline, 'manual_test_block_asperity{}'.format(asperity), 'lammps/data', atom_style = 'atomic')
 
 get_erratic_contact_area(pipeline,
          template_area.format(temp, force, height, seed, grid[0], grid[1]),
