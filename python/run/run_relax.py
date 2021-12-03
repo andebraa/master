@@ -26,7 +26,7 @@ orientation = "100"
 grid = (3,3) 
 slurm = True
 gpu = True
-erratic = False
+erratic = True
 seed = np.random.randint(10000, 100000)
 
 
@@ -108,3 +108,19 @@ else:
         sim.run(computer=CPU(num_procs=2, lmp_exec="lmp"), stdout=None)
 
 
+#Copying the auxiliary file into the sim folder so it doesn't get lost in case i make a new initial system
+auxiliary_dir = project_dir + 'initial_system/erratic/aux/system_or{}_hi{}_errgrid{}_{}_auxiliary.json'
+
+
+with open(auxiliary_dir.format(orientation, height, grid[0], grid[1])) as auxfile:
+    data = auxfile.read()
+args = json.loads(data)
+
+
+aux_path = directory=relax_dir + \
+            f"sim_temp{temp}_force{force}_time{simtime}_seed{seed}_errgrid{grid[0]}_{grid[1]}"
+
+
+with open (aux_path, 'w') as outfile:
+    json.dump(args, outfile)
+print('auxiliary datafile written to: ' , aux_path)
