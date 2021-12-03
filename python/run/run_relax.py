@@ -8,7 +8,8 @@ This project is distributed under the GNU General Public License v3.
 For more information, see the LICENSE file in the top-level dictionary.
 units metal
 """
-
+import time
+import json
 import numpy as np
 from lammps_simulator import Simulator
 from lammps_simulator.computer import GPU, CPU, SlurmGPU
@@ -21,12 +22,12 @@ simtime = 1000 #picosekunder
 force = 0.001
 height = 115
 orientation = "100"
+num_restart_points = 5
 
-
-grid = (3,3) 
+grid = (2,2) 
 slurm = True
 gpu = True
-erratic = True
+erratic = False
 seed = np.random.randint(10000, 100000)
 
 
@@ -57,7 +58,7 @@ var = {'datafile': datafile.split("/")[-1],
        'seed': seed,
        'force': force,
        'simtime': simtime,
-       'freq': int(simtime/0.002), #timesteps
+       'freq': int(int(simtime/0.002)/num_restart_points), #timesteps
        'height': height}
 if erratic:
     sim = Simulator(directory=relax_dir + \
@@ -106,7 +107,8 @@ else:
 
     else:
         sim.run(computer=CPU(num_procs=2, lmp_exec="lmp"), stdout=None)
-
+"""
+time.sleep(10)
 
 #Copying the auxiliary file into the sim folder so it doesn't get lost in case i make a new initial system
 auxiliary_dir = project_dir + 'initial_system/erratic/aux/system_or{}_hi{}_errgrid{}_{}_auxiliary.json'
@@ -124,3 +126,4 @@ aux_path = directory=relax_dir + \
 with open (aux_path, 'w') as outfile:
     json.dump(args, outfile)
 print('auxiliary datafile written to: ' , aux_path)
+"""
