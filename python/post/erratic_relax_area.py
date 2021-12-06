@@ -74,12 +74,6 @@ def erratic_relax_area():
                         print('lx, ly:', lx, ly)
                         seed = re.findall('\d+', dumpfile)[-1]                       
                         
-                        """ #my old method, doesn't work, but maybe use data= pipeline.copute and 
-                        # data.apply(slice(etc etc))?
-
-                        pipeline = slicer_dicer(pipeline, j, i, lx, ly)
-                        #cutting out slab etc is handled in post_utils
-                        """
                         data = pipeline.compute()
                         expression = f"Position.X >= {i*lx} && Position.X < {(i+1)*lx} && Position.Y >= {j*ly} && Position.Y < {(j+1)*ly}"
                         print('j*lx', j*lx)
@@ -101,38 +95,6 @@ def erratic_relax_area():
                         #pipeline.clear()
 
 
-def slicer_dicer(pipeline, i, j, lx, ly):
-
-    # first outward slice X direction
-    pipeline.modifiers.append(SliceModifier(
-    distance = (i+1)*lx,
-    normal = (1.0, 0.0, 0.0)))
-    print('first, 1,0,0')
-    print('i+1 *lx=', (i+1)*lx)
-    
-    #pipeline.add_to_scene()
-    # first inward slice X direction
-    pipeline.modifiers.append(SliceModifier(
-    distance = (i)*lx,
-    normal = (1.0, 0.0, 0.0),
-    inverse = True))
-    print('second, inverse, 1,0,0')
-    print('i *lx=', (i)*lx)
-
-    # first outward slice Y direction
-    pipeline.modifiers.append(SliceModifier(
-    distance = (j+1)*ly,
-    normal = (0.0, 1.0, 0.0)))
-    print('third, 0,1,0')
-    print('j+1 *ly=', (j+1)*ly)
-
-    # first outward slice Y direction
-    pipeline.modifiers.append(SliceModifier(
-    distance = (j)*ly,
-    normal = (0.0, 1.0, 0.0),
-    inverse = True))
-    print('fourth, inverse, 0,1,0')
-    print('j *ly=', (j)*ly)
 
 
 def get_erratic_contact_area(pipeline, outfile="area.txt", delta=None,
@@ -158,7 +120,6 @@ def get_erratic_contact_area(pipeline, outfile="area.txt", delta=None,
         the number of the asperity
     """
 
-    export_file(pipeline, 'test_block_asperity{}'.format(asperity), 'lammps/data', atom_style = 'atomic')
     print('start of get-conctact_area')
     if delta is None:
         warnings.warn(r"No $\Delta t$ is given, setting $\Delta t=1$")
@@ -207,6 +168,42 @@ def get_erratic_contact_area(pipeline, outfile="area.txt", delta=None,
     savetxt(outfile_, asarray([times, nums, areas], dtype=float).T, header=header)
     print('end of get contact area')
     return times, nums, areas
+
+
+
+
+def slicer_dicer(pipeline, j, i, lx, ly):
+
+    # first outward slice X direction
+    pipeline.modifiers.append(SliceModifier(
+    distance = (i+1)*lx,
+    normal = (1.0, 0.0, 0.0)))
+    print('first, 1,0,0')
+    print('i+1 *lx=', (i+1)*lx)
+    
+    #pipeline.add_to_scene()
+    # first inward slice X direction
+    pipeline.modifiers.append(SliceModifier(
+    distance = (i)*lx,
+    normal = (1.0, 0.0, 0.0),
+    inverse = True))
+    print('second, inverse, 1,0,0')
+    print('i *lx=', (i)*lx)
+
+    # first outward slice Y direction
+    pipeline.modifiers.append(SliceModifier(
+    distance = (j+1)*ly,
+    normal = (0.0, 1.0, 0.0)))
+    print('third, 0,1,0')
+    print('j+1 *ly=', (j+1)*ly)
+
+    # first outward slice Y direction
+    pipeline.modifiers.append(SliceModifier(
+    distance = (j)*ly,
+    normal = (0.0, 1.0, 0.0),
+    inverse = True))
+    print('fourth, inverse, 0,1,0')
+    print('j *ly=', (j)*ly)
 
 
 
