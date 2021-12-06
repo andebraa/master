@@ -3,7 +3,7 @@ Rewrite of even chrystal aging project.
 Assumes erratic system, with corresponding auxiliary file.
 
 """
-
+import json
 import numpy as np
 import matplotlib.pyplot as plt
 from glob import glob
@@ -22,8 +22,10 @@ plt.rcParams['figure.figsize'] = 7, 5
 temps = [2300]
 force = 0.001
 orientation = "100"
-height = 110
+height = 115
 save = True
+grid = (3,3)
+seed = 3
 
 project_dir = '../../'
 fig_dir = project_dir + 'fig/'
@@ -56,20 +58,23 @@ args = json.loads(data)
 #    nrows = asperities
 #    ncols = 1
 
-fig, ax = plt.subplots(nrows = asperities, ncols = 1)
+asperities = args['asperities']
+
+fig, ax = plt.subplots(nrows = 1, ncols = 1)
 
 
 # read area files
 times, nums, areas = [], [], []
 for temp in temps:
+    
     for asperity in range(args['asperities']):
-        print(template_area.format(temp, force, height, seed, grid[0], grid[1], asperity))
-        files = glob(template_area.format(temp, force, height, seed, grid[0], grid[1], asperity)))
-        print(files)
+        files = glob(template_area.format(temp, force, height, seed, grid[0], grid[1], asperity))
+        
         if files == []:
             raise AssertionError("no files found")
         # average simulations with same parameters but different seeds
         nums_temp, areas_temp = [], []
+        
         for file in files:
             print(file)
             data = np.loadtxt(file)
@@ -81,20 +86,24 @@ for temp in temps:
             num = num[max_ind:]
             area = area[max_ind:]
             time = time[max_ind:]
-            print(time)
-            ax[asperity].plot(time, area, label='asperity {}'.format(asperity))
-            ax[asperity].plot(time, num, label = 'num') 
+            
+            ax.plot(time, area, label='asperity {}'.format(asperity))
+            #ax[asperity].plot(time, area, label='asperity {}'.format(asperity))
+            #ax[asperity].plot(time, num, label = 'num') 
+            print(asperity)            
+            
 
             nums_temp.append(num)
             areas_temp.append(area)
+            
 
         nums.append(np.asarray(nums_temp).mean(axis=0))
         areas.append(np.asarray(areas_temp).mean(axis=0))
         times.append(time)
         
-        if save:
-            plt.savefig(fig_dir + 'png/area_temp{}_force{}_hi{}_seed{}_erratic{}_{}.png'.format(temp,
-                                                       force, height, seed, grid[0], grid[1])
+        #if save:
+        #    plt.savefig(fig_dir + 'png/area_temp{}_force{}_hi{}_seed{}_erratic{}_{}.png'.format(temp,
+        #                                               force, height, seed, grid[0], grid[1]))
 
 
 nums = np.asarray(nums)
@@ -113,7 +122,7 @@ plt.ylabel(r'$N(t)$')
 plt.tight_layout()
 if save:
     plt.savefig(fig_dir + 'png/area_temp{}_force{}_hi{}_seed{}_erratic{}_{}.png'.format(temp, 
-                                                       force, height, seed, grid[0], grid[1])
+                                                       force, height, seed, grid[0], grid[1]))
 #plt.show()
 #stop
 

@@ -91,9 +91,9 @@ def erratic_relax_area():
                         data.apply(DeleteSelectedModifier())
                         export_file(data, f'test_block{i}{j}.data', 'lammps/data', atom_style = 'atomic')
                         
-                        #get_erratic_contact_area(pipeline, 
-                        #                         template_area.format(temp, force, height, seed, grid[0], grid[1]), 
-                        #                         delta=time/1e6, asperity = asperity, grid = grid)
+                        get_erratic_contact_area(pipeline, 
+                                                 template_area.format(temp, force, height, seed, grid[0], grid[1]), 
+                                                 delta=time/1e6, asperity = asperity, grid = grid)
                         #count_coord_erratic(pipeline, 
                         #                     template_coord.format(temp, force, height, seed))
                         #export_file(pipeline, 'test_block_asperity{}'.format(asperity), 'lammps/data', atom_style = 'atomic')
