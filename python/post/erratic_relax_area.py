@@ -65,7 +65,6 @@ def erratic_relax_area():
         for dumpfile in dumpfiles:
             
             pipeline = import_file(dumpfile, multiple_frames = True)
-            export_file(pipeline, f'full_system', 'lammps/data', atom_style = 'atomic')
             #pipeline.add_to_scene()
             for i in range(grid[0]):
                 for j in range(grid[1]):
