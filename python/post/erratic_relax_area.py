@@ -65,7 +65,6 @@ def erratic_relax_area():
         for dumpfile in dumpfiles:
             
             pipeline = import_file(dumpfile, multiple_frames = True)
-            export_file(pipeline, f'full_system', 'lammps/data', atom_style = 'atomic')
             #pipeline.add_to_scene()
             for i in range(grid[0]):
                 for j in range(grid[1]):
@@ -158,7 +157,6 @@ def get_erratic_contact_area(pipeline, outfile="area.txt", delta=None,
         the number of the asperity
     """
 
-    export_file(pipeline, 'test_block_asperity{}'.format(asperity), 'lammps/data', atom_style = 'atomic')
     print('start of get-conctact_area')
     if delta is None:
         warnings.warn(r"No $\Delta t$ is given, setting $\Delta t=1$")
