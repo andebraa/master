@@ -30,7 +30,7 @@ seed = 3
 project_dir = '../../'
 fig_dir = project_dir + 'fig/'
 relax_dir = project_dir + 'simulations/sys_or{}_hi{}/relax/'
-area_relax_dir = project_dir + 'txt/area_relax/'
+area_relax_dir = project_dir + 'txt/area_relax/erratic/'
 coordination_dir = project_dir + 'txt/coordination/'
 
 
