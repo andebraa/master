@@ -94,11 +94,13 @@ areas = np.asarray(areas)
 #axcb = fig.colorbar(lc, ax=ax)
 #axcb.set_label(r"$T$ [K]")
 
+plt.title('Area of grid asperities')
+plt.legend()
 plt.xlabel(r'$t$ [ns]')
 plt.ylabel(r'$N(t)$')
 plt.tight_layout()
 if save:
-    plt.savefig(fig_dir + 'png/area_temp{}_force{}_hi{}_seed{}_erratic{}_{}.png'.format(temp, 
+    plt.savefig(fig_dir + 'png/area_temp{}_force{}_hi{}_seed{}_grid{}_{}.png'.format(temp, 
                                                        force, height, seed, grid[0], grid[1]))
 #plt.show()
 #stop
