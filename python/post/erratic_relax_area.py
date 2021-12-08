@@ -64,25 +64,36 @@ def erratic_relax_area():
         dumpfiles = glob(template_dump.format(orientation, height, temp, force, time, grid[0], grid[1]))
         for dumpfile in dumpfiles:
             
-            pipeline = import_file(dumpfile, multiple_frames = True)
             
             for i in range(grid[0]):
                 for j in range(grid[1]):
                     if bool_grid[i,j]: #is boo_grid is 1, we have an asperity
+                        
+                        pipeline = import_file(dumpfile, multiple_frames = True)
+
                         print('asperity at', j,i)
                         print('lx, ly:', lx, ly)
                         seed = re.findall('\d+', dumpfile)[-1]                       
                         
-                        data = pipeline.compute()
+                        #data = pipeline.compute()
                         expression = f"Position.X >= {i*lx} && Position.X < {(i+1)*lx} && Position.Y >= {j*ly} && Position.Y < {(j+1)*ly}"
                         print('j*lx', j*lx)
                         print('j+1*lx', (j+1)*lx)
                         print('i*lx', i*lx)
                         print('(i+1)*lx', (i+1)*lx)
-                        data.apply(ExpressionSelectionModifier(expression = expression))
-                        data.apply(InvertSelectionModifier())
-                        data.apply(DeleteSelectedModifier())
-                        export_file(data, f'test_block{i}{j}.data', 'lammps/data', atom_style = 'atomic')
+                        
+                        #ovito lady code on pipeline istead
+                        #pipeline.modifiers.append(ExpressionSelectionModifier(expression=expression))
+                        #pipeline.compute()
+                        
+                        #ovito lady 
+                        #data.apply(ExpressionSelectionModifier(expression = expression))
+                        #data.apply(InvertSelectionModifier())
+                        #data.apply(DeleteSelectedModifier())
+                        
+                        pipeline = alt_slicer_dicer(pipeline, i, j, lx, ly)
+                        
+                        export_file(pipeline, f'test_block{i}{j}.data', 'lammps/data', atom_style = 'atomic')
                         
                         get_erratic_contact_area(pipeline, 
                                                  template_area.format(temp, 
@@ -94,7 +105,7 @@ def erratic_relax_area():
                                                  delta=time/1e6, asperity = asperity, grid = grid)
                         asperity += 1
 
-                        del(data)
+                        #del(data)
 
 
 def get_erratic_contact_area(pipeline, outfile="area.txt", delta=None,
@@ -157,7 +168,7 @@ def get_erratic_contact_area(pipeline, outfile="area.txt", delta=None,
     outfile_ = outfile +'_asperity'+str(asperity)+'.txt'
 
     header = ("Crystal Aging Project \n"
-              "Author: Even Marius Nordhageni & Anders Bråte \n"
+              "Author: Even Marius Nordhageni \n"
               "\n"
               "Contact area between asperity and lower surface and \n"
               "number of particles in the contact region.  \n"
@@ -171,9 +182,38 @@ def get_erratic_contact_area(pipeline, outfile="area.txt", delta=None,
 
 
 
+def alt_slicer_dicer(pipeline, i, j, lx, ly):
+    """
+    Instead of four slices, two inverse, i slice twice with a slice in x and y direction
+    with lx and ly thickness. Original idea from even
+    """
+    # X direction slice
+    pipeline.modifiers.append(SliceModifier(
+    distance = (i)*lx,
+    normal = (1.0, 0.0, 0.0),
+    slab_width = lx))
+    print('first, 1,0,0')
+    print('i *lx=', (i)*lx)
+    
+    
+    # Y direction slice
+    pipeline.modifiers.append(SliceModifier(
+    distance = (j)*ly,
+    normal = (0.0, 1.0, 0.0),
+    inverse = True,
+    slab_width = ly))
+    print('second, inverse, 1,0,0')
+    print('i *lx=', (j)*lx)
 
-def slicer_dicer(pipeline, j, i, lx, ly):
+    return pipeline
 
+
+def slicer_dicer(pipeline, i, j, lx, ly):
+    """
+    my original attempt at slicing away asperity. Even uses a slice with width > 0, maybe 
+    this is an option.
+    This code currently does not work. 
+    """
     # first outward slice X direction
     pipeline.modifiers.append(SliceModifier(
     distance = (i+1)*lx,
@@ -205,7 +245,7 @@ def slicer_dicer(pipeline, j, i, lx, ly):
     print('fourth, inverse, 0,1,0')
     print('j *ly=', (j)*ly)
 
-
+    return pipeline
 
 if __name__ == '__main__':
     erratic_relax_area()
