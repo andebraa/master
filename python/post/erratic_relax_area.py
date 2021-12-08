@@ -182,10 +182,11 @@ def alt_slicer_dicer(pipeline, i, j, lx, ly):
     """
     Instead of four slices, two inverse, i slice twice with a slice in x and y direction
     with lx and ly thickness. Original idea from even
+    Note, slice extends from the middle
     """
     # X direction slice
     pipeline.modifiers.append(SliceModifier(
-    distance = (i)*lx,
+    distance = (i)*lx+ lx/2,
     normal = (1.0, 0.0, 0.0),
     slab_width = lx))
     print('X direction slice ',i*lx,' to ',i*lx + lx)
@@ -193,7 +194,7 @@ def alt_slicer_dicer(pipeline, i, j, lx, ly):
     
     # Y direction slice
     pipeline.modifiers.append(SliceModifier(
-    distance = (j)*ly,
+    distance = (j)*ly+ ly/2,
     normal = (0.0, 1.0, 0.0),
     slab_width = ly))
     print('Y direction slice ',j*ly,' to ',j*ly + ly)
