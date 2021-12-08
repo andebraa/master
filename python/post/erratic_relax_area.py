@@ -41,9 +41,9 @@ def erratic_relax_area():
     coordination_dir = project_dir + 'txt/coordination/'
 
 
-    template_dump = relax_dir + 'sim_temp{}_force{}_time{}_seed*_errgrid{}_{}/dump.bin'
-    auxiliary_dir = project_dir + 'initial_system/erratic/aux/system_or{}_hi{}_errgrid{}_{}_auxiliary.json'
-    template_area = area_relax_dir + 'areas_temp{}_force{}_55_hi{}_seed{}_erratic{}_{}'#add the txt in count_coord
+    template_dump = relax_dir + 'sim_temp{}_force{}_time{}_seed*_erratic{}_{}/dump.bin'
+    auxiliary_dir = project_dir + 'initial_system/erratic/aux/system_or{}_hi{}_erratic{}_{}_auxiliary.json'
+    template_area = area_relax_dir + 'grid/areas_temp{}_force{}_55_hi{}_seed{}_erratic{}_{}'#add the txt in count_coord
     template_coord = coordination_dir + 'coordination_temp{}_force{}_hi{}_seed{}_erratic{}_{}'
 
 
