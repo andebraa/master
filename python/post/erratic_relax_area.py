@@ -77,10 +77,6 @@ def erratic_relax_area():
                         
                         #data = pipeline.compute()
                         expression = f"Position.X >= {i*lx} && Position.X < {(i+1)*lx} && Position.Y >= {j*ly} && Position.Y < {(j+1)*ly}"
-                        print('j*lx', j*lx)
-                        print('j+1*lx', (j+1)*lx)
-                        print('i*lx', i*lx)
-                        print('(i+1)*lx', (i+1)*lx)
                         
                         #ovito lady code on pipeline istead
                         #pipeline.modifiers.append(ExpressionSelectionModifier(expression=expression))
@@ -192,18 +188,15 @@ def alt_slicer_dicer(pipeline, i, j, lx, ly):
     distance = (i)*lx,
     normal = (1.0, 0.0, 0.0),
     slab_width = lx))
-    print('first, 1,0,0')
-    print('i *lx=', (i)*lx)
+    print('X direction slice ',i*lx,' to ',i*lx + lx)
     
     
     # Y direction slice
     pipeline.modifiers.append(SliceModifier(
     distance = (j)*ly,
     normal = (0.0, 1.0, 0.0),
-    inverse = True,
     slab_width = ly))
-    print('second, inverse, 1,0,0')
-    print('i *lx=', (j)*lx)
+    print('Y direction slice ',j*ly,' to ',j*ly + ly)
 
     return pipeline
 
