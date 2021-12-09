@@ -27,7 +27,6 @@ octa_d = 1 * 39.0 #The multiplyer has to be an integer
 dode_d = 1 * 37.3
 
 grid = (2,2) 
-
 porosity = 0.5
 
 asperities = int(grid[0]*grid[1]*porosity)
@@ -36,6 +35,9 @@ lower_orient = "100"
 remove_atoms = True
 erratic = True
 
+seed = np.random.randint(10000, 100000)
+
+
 path = '../../initial_system/'
 
 args = {'lx': lx, 'ly':ly, 'ax':ax, 'ay':ay, 'hl':hl, 'hu': hu, 'hup': hup, 'grid': grid, 'asperities':asperities,
@@ -43,8 +45,8 @@ args = {'lx': lx, 'ly':ly, 'ax':ax, 'ay':ay, 'hl':hl, 'hu': hu, 'hup': hup, 'gri
 
 if erratic and grid:
     
-    system_file = path + f"erratic/system_or{lower_orient}_hi{lz}_errgrid{grid[0]}_{grid[1]}"
-    aux_path = path + f"erratic/aux/system_or{lower_orient}_hi{lz}_errgrid{grid[0]}_{grid[1]}_auxiliary.json"
+    system_file = path + f"erratic/system_or{lower_orient}_hi{lz}_seed{seed}_errgrid{grid[0]}_{grid[1]}"
+    aux_path = path + f"erratic/aux/system_or{lower_orient}_hi{lz}_seed{seed}_errgrid{grid[0]}_{grid[1]}_auxiliary.json"
 
     system = gen_erratic_system(lx, ly, ax, ay, hl, hu, hup, octa_d, dode_d, lower_orient,
                                 remove_atoms, aux_path=aux_path, grid=grid, asperities = asperities)

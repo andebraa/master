@@ -10,6 +10,8 @@ units metal
 """
 import time
 import json
+import glob
+import re
 import numpy as np
 from lammps_simulator import Simulator
 from lammps_simulator.computer import GPU, CPU, SlurmGPU
@@ -27,27 +29,40 @@ num_restart_points = 5
 grid = (2,2) 
 slurm = True
 gpu = True
-erratic = False
-seed = np.random.randint(10000, 100000)
-
+erratic = True
+ 
 
 # paths
 #project_dir = "/run/user/1004/andebraa_masterdata/"
 project_dir = '../../'
 lammps_dir = project_dir + "lammps/"
 relax_dir = project_dir + f"simulations/sys_or{orientation}_hi{height}/relax/"
+init_dir = project_dir + f"initial_system/"
+
 
 if erratic:
-    datafile = project_dir + f"initial_system/erratic/system_or{orientation}_hi{height}_errgrid{grid[0]}_{grid[1]}.data"
+    #finding all files in directory, printing the seeds and having user write in desired seed
+    template_dump = init_dir +f"erratic/system_or{orientation}_hi{height}_seed*_errgrid{grid[0]}_{grid[1]}.data"
+    seeds = glob.glob(template_dump)
+    
+    for seed in seeds:
+        print(re.findall('\d+', seed)[-3])
+
+    seed = input('select seed ')
+    
+    datafile = project_dir + f"initial_system/erratic/system_or{orientation}_hi{height}_seed{seed}_errgrid{grid[0]}_{grid[1]}.data"
     #datafile = project_dir + f"initial_system/erratic/system_or{orientation}_hi{height}_rep{grid[0]}{grid[1]}_removed00.data"
 
     print(datafile)
 
 elif grid:
+    seed = np.random.randint(10000, 100000)
+
     datafile = project_dir + f"initial_system/grid/system_or{orientation}_hi{height}_grid{grid[0]}_{grid[1]}.data"
     print(datafile)
 
 else:
+    seed = np.random.randint(10000, 100000)
     datafile = project_dir + f"initial_system/system_or{orientation}_hi{height}.data"
     print(datafile)    
 
@@ -107,23 +122,3 @@ else:
 
     else:
         sim.run(computer=CPU(num_procs=2, lmp_exec="lmp"), stdout=None)
-"""
-time.sleep(10)
-
-#Copying the auxiliary file into the sim folder so it doesn't get lost in case i make a new initial system
-auxiliary_dir = project_dir + 'initial_system/erratic/aux/system_or{}_hi{}_errgrid{}_{}_auxiliary.json'
-
-
-with open(auxiliary_dir.format(orientation, height, grid[0], grid[1])) as auxfile:
-    data = auxfile.read()
-args = json.loads(data)
-
-
-aux_path = directory=relax_dir + \
-            f"sim_temp{temp}_force{force}_time{simtime}_seed{seed}_errgrid{grid[0]}_{grid[1]}"
-
-
-with open (aux_path, 'w') as outfile:
-    json.dump(args, outfile)
-print('auxiliary datafile written to: ' , aux_path)
-"""
