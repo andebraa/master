@@ -25,10 +25,10 @@ orientation = "100"
 height = 115
 save = True
 grid = (3,3)
-seed = 3
+seed = 10730
 
 project_dir = '../../'
-fig_dir = project_dir + 'fig/'
+fig_dir = project_dir + 'fig/png/erratic/'
 relax_dir = project_dir + 'simulations/sys_or{}_hi{}/relax/'
 area_relax_dir = project_dir + 'txt/area_relax/erratic/'
 coordination_dir = project_dir + 'txt/coordination/'
@@ -117,11 +117,13 @@ areas = np.asarray(areas)
 #axcb = fig.colorbar(lc, ax=ax)
 #axcb.set_label(r"$T$ [K]")
 
+plt.title('area of erratic asperities {}'.format(args['erratic']))
 plt.xlabel(r'$t$ [ns]')
 plt.ylabel(r'$N(t)$')
+plt.legend()
 plt.tight_layout()
 if save:
-    plt.savefig(fig_dir + 'png/area_temp{}_force{}_hi{}_seed{}_erratic{}_{}.png'.format(temp, 
+    plt.savefig(fig_dir + 'area_temp{}_force{}_hi{}_seed{}_erratic{}_{}.png'.format(temp, 
                                                        force, height, seed, grid[0], grid[1]))
 #plt.show()
 #stop

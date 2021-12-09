@@ -24,21 +24,21 @@ force = 0.001
 orientation = "100"
 height = 115
 save = True
-seed = 420
-grid = (3,3)
+seed = 2
+grid = (2,2)
 
 
 project_dir = '../../'
-fig_dir = project_dir + 'fig/'
+fig_dir = project_dir + 'fig/png/grid/'
 relax_dir = project_dir + 'simulations/sys_or{}_hi{}/relax/'
-area_relax_dir = project_dir + 'txt/area_relax/'
+area_relax_dir = project_dir + 'txt/area_relax/grid/'
 coordination_dir = project_dir + 'txt/coordination/'
 
 
-template_dump = relax_dir + 'sim_temp{}_force{}_time{}_seed*_errgrid{}_{}/dump.bin'
-auxiliary_dir = project_dir + 'initial_system/erratic/aux/system_or{}_hi{}_errgrid{}_{}_auxiliary.json'
-template_area = area_relax_dir + 'areas_temp{}_force{}_55_hi{}_seed{}_erratic{}_{}_asperity{}.txt'
-template_coord = coordination_dir + 'coordination_temp{}_force{}_hi{}_seed{}_erratic{}_{}'
+template_dump = relax_dir + 'sim_temp{}_force{}_time{}_seed*_grid{}_{}/dump.bin'
+auxiliary_dir = project_dir + 'initial_system/erratic/aux/system_or{}_hi{}_grid{}_{}_auxiliary.json'
+template_area = area_relax_dir + 'areas_temp{}_force{}_55_hi{}_seed{}_grid{}_{}_asperity{}.txt'
+template_coord = coordination_dir + 'coordination_temp{}_force{}_hi{}_seed{}_grid{}_{}'
 
 
 
@@ -100,7 +100,7 @@ plt.xlabel(r'$t$ [ns]')
 plt.ylabel(r'$N(t)$')
 plt.tight_layout()
 if save:
-    plt.savefig(fig_dir + 'png/area_temp{}_force{}_hi{}_seed{}_grid{}_{}.png'.format(temp, 
+    plt.savefig(fig_dir + 'area_temp{}_force{}_hi{}_seed{}_grid{}_{}.png'.format(temp, 
                                                        force, height, seed, grid[0], grid[1]))
 #plt.show()
 #stop

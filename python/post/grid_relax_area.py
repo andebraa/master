@@ -30,7 +30,7 @@ def grid_relax_area():
     orientation = 100 
     height = 115 # Å 
     force = 0.001 #eV/Å
-    grid = (3,3)
+    grid = (2,2)
     time = 1000 #ps
     delta = time/1e6    
 
@@ -79,6 +79,8 @@ def grid_relax_area():
                     
                     pipeline = alt_slicer_dicer(pipeline, i, j, lx, ly)
                     
+                    export_file(pipeline, f'test_block{i}{j}.data', 'lammps/data', atom_style = 'atomic')
+
                     get_erratic_contact_area(pipeline, 
                                              template_area.format(temp, 
                                                                   force, 

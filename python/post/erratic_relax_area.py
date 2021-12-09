@@ -73,8 +73,8 @@ def erratic_relax_area():
 
                         print('asperity at', j,i)
                         print('lx, ly:', lx, ly)
-                        seed = re.findall('\d+', dumpfile)[-1]                       
-                        
+                        #seed = re.findall('\d+', dumpfile)[-1] #glod dumfiles is not implemented                     
+                        seed = 10730
                         #data = pipeline.compute()
                         expression = f"Position.X >= {i*lx} && Position.X < {(i+1)*lx} && Position.Y >= {j*ly} && Position.Y < {(j+1)*ly}"
                         
