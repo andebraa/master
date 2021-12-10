@@ -30,7 +30,8 @@ grid = (2,2)
 slurm = True
 gpu = True
 erratic = True
- 
+
+seed = np.random.randint(10000, 100000)
 
 # paths
 #project_dir = "/run/user/1004/andebraa_masterdata/"
@@ -43,26 +44,24 @@ init_dir = project_dir + f"initial_system/"
 if erratic:
     #finding all files in directory, printing the seeds and having user write in desired seed
     template_dump = init_dir +f"erratic/system_or{orientation}_hi{height}_seed*_errgrid{grid[0]}_{grid[1]}.data"
-    seeds = glob.glob(template_dump)
+    init_seeds = glob.glob(template_dump)
     
-    for seed in seeds:
-        print(re.findall('\d+', seed)[-3])
+    for init_seed in init_seeds:
+        print(re.findall('\d+', init_seed)[-3])
 
-    seed = input('select seed ')
+    init_seedseed = input('select seed ')
     
-    datafile = project_dir + f"initial_system/erratic/system_or{orientation}_hi{height}_seed{seed}_errgrid{grid[0]}_{grid[1]}.data"
+    datafile = project_dir + f"initial_system/erratic/system_or{orientation}_hi{height}_seed{init_seed}_errgrid{grid[0]}_{grid[1]}.data"
     #datafile = project_dir + f"initial_system/erratic/system_or{orientation}_hi{height}_rep{grid[0]}{grid[1]}_removed00.data"
 
     print(datafile)
 
 elif grid:
-    seed = np.random.randint(10000, 100000)
 
     datafile = project_dir + f"initial_system/grid/system_or{orientation}_hi{height}_grid{grid[0]}_{grid[1]}.data"
     print(datafile)
 
 else:
-    seed = np.random.randint(10000, 100000)
     datafile = project_dir + f"initial_system/system_or{orientation}_hi{height}.data"
     print(datafile)    
 
