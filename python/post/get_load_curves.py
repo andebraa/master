@@ -50,7 +50,9 @@ def get_load_curves():
 
 
 def get_erratic_load():
-    # user input
+    """
+    Might not be interesting to look at load curves per asperity
+    """
     temp = 2300
     orientation = "100"
     height = 200
@@ -106,4 +108,5 @@ def get_erratic_load():
 #        extract_load_curves(logfiles, None, 0, 5000, 
 #                            template_lc.format(temp, vel, force, orientation, seed),
 #                            template_ms.format(temp, vel, force, orientation, seed))
-
+if __name__ == '__main__':
+    get_load_curves()

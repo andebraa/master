@@ -19,14 +19,14 @@ lx = 99.9       # system length x-dir
 ly = 100        # system length y-dir
 ax = 50         # initial x-coordinate of asperity
 ay = 50         # initial y-coordinate of asperity
-hl = 50         # height of lower surface/plate
+hl = 25         # height of lower surface/plate
 hu = 65         # height of upper surface
 hup = 2         # height of upper plate
 lz = hl + hu    #total system height
 octa_d = 1 * 39.0 #The multiplyer has to be an integer
 dode_d = 1 * 37.3
 
-grid = (2,2) 
+grid = (4,4) 
 porosity = 0.5
 
 asperities = int(grid[0]*grid[1]*porosity)

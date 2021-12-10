@@ -18,11 +18,11 @@ from lammps_simulator.computer import GPU, CPU, SlurmGPU
 temp = 2300
 simtime = 1000 #picosekunder
 force = 0.001
-height = 115
+height = 90
 orientation = "100"
 num_restart_points = 5
 
-grid = (2,2) 
+grid = (4,4) 
 slurm = True
 gpu = True
 erratic = True
@@ -40,12 +40,16 @@ init_dir = project_dir + f"initial_system/"
 if erratic:
     #finding all files in directory, printing the seeds and having user write in desired seed
     template_dump = init_dir +f"erratic/system_or{orientation}_hi{height}_seed*_errgrid{grid[0]}_{grid[1]}.data"
+    print(template_dump)
     init_seeds = glob.glob(template_dump)
+   
+    if not init_seeds:
+        raise IndexError('no files found')
     
     for init_seed in init_seeds:
         print(re.findall('\d+', init_seed)[-3])
 
-    init_seedseed = input('select seed ')
+    init_seed = input('select seed ')
     
     datafile = project_dir + f"initial_system/erratic/system_or{orientation}_hi{height}_seed{init_seed}_errgrid{grid[0]}_{grid[1]}.data"
     #datafile = project_dir + f"initial_system/erratic/system_or{orientation}_hi{height}_rep{grid[0]}{grid[1]}_removed00.data"

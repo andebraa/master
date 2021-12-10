@@ -6,7 +6,7 @@ Largely based on Even's crystal aging project get_contact_area
 import json 
 import numpy as np
 import re
-#from post_utils import get_erratic_contact_area #ovitos doesn't like this, copied erratic_contact area in here instead
+from post_utils import get_erratic_contact_area 
 from ovito.io import import_file, export_file
 from ovito.modifiers import *
 from ovito.pipeline import *
@@ -36,7 +36,7 @@ def erratic_relax_area():
 
     # paths
     project_dir = '../../'
-    relax_dir = project_dir + 'simulations/sys_or{}_hi{}/relax/'
+    relax_dir = project_dir + 'simulations/sys_or{}_hi{}/relax/erratic/'
     area_relax_dir = project_dir + 'txt/area_relax/'
     coordination_dir = project_dir + 'txt/coordination/'
 
@@ -61,7 +61,9 @@ def erratic_relax_area():
     asperity = 0
     temps = [2300]
     for temp in temps:
+        print(template_dump.format(orientation, height, temp, force, time, grid[0], grid[1]))
         dumpfiles = glob(template_dump.format(orientation, height, temp, force, time, grid[0], grid[1]))
+        print(dumpfiles)
         for dumpfile in dumpfiles:
             
             
@@ -75,21 +77,12 @@ def erratic_relax_area():
                         print('lx, ly:', lx, ly)
                         #seed = re.findall('\d+', dumpfile)[-1] #glod dumfiles is not implemented                     
                         seed = 10730
-                        #data = pipeline.compute()
                         expression = f"Position.X >= {i*lx} && Position.X < {(i+1)*lx} && Position.Y >= {j*ly} && Position.Y < {(j+1)*ly}"
                         
-                        #ovito lady code on pipeline istead
-                        #pipeline.modifiers.append(ExpressionSelectionModifier(expression=expression))
-                        #pipeline.compute()
-                        
-                        #ovito lady 
-                        #data.apply(ExpressionSelectionModifier(expression = expression))
-                        #data.apply(InvertSelectionModifier())
-                        #data.apply(DeleteSelectedModifier())
                         
                         pipeline = alt_slicer_dicer(pipeline, i, j, lx, ly)
                         
-                        export_file(pipeline, f'test_block{i}{j}.data', 'lammps/data', atom_style = 'atomic')
+                        #export_file(pipeline, f'test_block{i}{j}.data', 'lammps/data', atom_style = 'atomic')
                         
                         get_erratic_contact_area(pipeline, 
                                                  template_area.format(temp, 
@@ -102,79 +95,6 @@ def erratic_relax_area():
                         asperity += 1
 
                         #del(data)
-
-
-def get_erratic_contact_area(pipeline, outfile="area.txt", delta=None,
-                             init_time=0, asperity = 1, grid = (1,1)):
-    """Get contact area and number of atoms in the
-    contact region as a function of time. Utilizing
-    Ovito. This script takes a cut out block containing an asperity
-    from stress_analysis.py.
-    writes a txt for each asperity, numbered from 0
-
-    Parameters
-    ----------
-    pipeline : ovito object?
-        pipeline that has cut out the single asperity
-    outfile : str
-        file to write the contact area to
-    delta : float
-        time difference between two frames in ns
-        (assume constant delta)
-    init_time : float
-        initial time given in ns
-    asperity : int
-        the number of the asperity
-    """
-
-    print('start of get-conctact_area')
-    if delta is None:
-        warnings.warn(r"No $\Delta t$ is given, setting $\Delta t=1$")
-        delta = 1
-
-    # Slice:
-    pipeline.modifiers.append(SliceModifier(
-        distance = 55,
-        normal = (0.0, 0.0, 1.0),
-        slab_width = 2.0))
-
-    # Cluster analysis:
-    pipeline.modifiers.append(ClusterAnalysisModifier(sort_by_size=True))
-    # Expression selection:
-    pipeline.modifiers.append(ExpressionSelectionModifier(expression='Cluster!=1'))
-
-    # Delete selected:
-    pipeline.modifiers.append(DeleteSelectedModifier())
-
-    # Construct surface mesh:
-    pipeline.modifiers.append(ConstructSurfaceModifier(radius=20.0, identify_regions=True))
-
-    # Output surface area as a function of time
-    times, nums, areas = [], [], []
-    for i in trange(pipeline.source.num_frames):
-        data = pipeline.compute(frame=i)
-        nums.append(data.attributes['ClusterAnalysis.largest_size'])
-        # divid area by 2 to find area of one surface and by 100 to go from Å² to nm²
-        areas.append(data.attributes['ConstructSurfaceMesh.surface_area'] / 200)
-
-        time = i * delta + init_time
-        times.append(time)
-    del pipeline
-
-    outfile_ = outfile +'_asperity'+str(asperity)+'.txt'
-
-    header = ("Crystal Aging Project \n"
-              "Author: Even Marius Nordhageni \n"
-              "\n"
-              "Contact area between asperity and lower surface and \n"
-              "number of particles in the contact region.  \n"
-              "\n"
-              "time [ns]\t\t # contact atoms\t contact area [nm^2]\n"
-              "number of this asperity: "+str(asperity))
-
-    savetxt(outfile_, asarray([times, nums, areas], dtype=float).T, header=header)
-    print('end of get contact area')
-    return times, nums, areas
 
 
 

@@ -376,8 +376,8 @@ def gen_erratic_system(lx=99.9, ly=100, ax=50, ay=50, hl=50, hu=60, hup=2,
             if not bool_grid[i,j]: #if bool_grid == false , remove asperity
                 #lx_actual is midpoint of partition, then it jumps the length of a partition to find next midpoint
                 
-                geometry = BoxGeometry(center=((lx_actual/2 + lx_actual*i), ly_actual/2 + ly_actual*j, lz -10),
-                                       length = (lx_actual, ly_actual, lz))
+                geometry = BoxGeometry(center=((lx_actual/2 + lx_actual*i), ly_actual/2 + ly_actual*j, lz-20),
+                                       length = (lx_actual, ly_actual, lz+20))
 
                 carve_geometry(asperity, geometry, side = 'in') #carve inverse of when it was created
             else:
