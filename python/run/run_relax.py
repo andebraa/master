@@ -1,12 +1,8 @@
 """
-Crystal Aging Project
+Adjust the boolean variables slurm, gpu and erratic. 
+If erratic, the script finds all init files with given grid and asks you to input the seed you want.
 
-This script runs LAMMPS simulations where the system
-is relaxed. 
-
-This project is distributed under the GNU General Public License v3.
-For more information, see the LICENSE file in the top-level dictionary.
-units metal
+Init seeds and run seeds are not the same!
 """
 import time
 import json

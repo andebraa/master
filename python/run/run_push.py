@@ -32,7 +32,7 @@ orientation = "100"
 grid = (3,3)
 slurm = True
 gpu = True
-erratic = False
+erratic = True
 
 # paths
 
@@ -41,11 +41,11 @@ project_dir = "../../"
 lammps_dir = project_dir + "lammps/"
 
 if erratic:
-    relax_dir = project_dir + f"simulations/sys_or{orientation}_hi{height}/relax/"
-    push_dir = project_dir + f"simulations/sys_or{orientation}_hi{height}/push/"    
+    relax_dir = project_dir + f"simulations/sys_or{orientation}_hi{height}/relax/erratic/"
+    push_dir = project_dir + f"simulations/sys_or{orientation}_hi{height}/push/erratic/"    
 elif grid:
-    relax_dir = project_dir + f"simulations/sys_or{orientation}_hi{height}/relax/"
-    push_dir = project_dir + f"simulations/sys_or{orientation}_hi{height}/push/"
+    relax_dir = project_dir + f"simulations/sys_or{orientation}_hi{height}/relax/grid/"
+    push_dir = project_dir + f"simulations/sys_or{orientation}_hi{height}/push/grid/"
 
 else:
     relax_dir = project_dir + f"simulations/sys_or{orientation}_hi{height}/relax/"
