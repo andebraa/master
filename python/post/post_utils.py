@@ -197,7 +197,7 @@ def count_coord(dumpfile, outfile="coord.txt"):
     del pipeline
 
 
-def extract_load_curves(logfile, delta=None, init_time=0, window=1,
+def extract_load_curves(logfiles, delta=None, init_time=0, window=1,
                         outfile_load_curves="load_curves.txt",
                         outfile_max_static="max_static.txt",
                         prominence=0.05, asperity = False):

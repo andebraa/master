@@ -26,10 +26,10 @@ vel = 5
 #pushtime = 500000 #timestep to start pushing
 seed = 19970
 
-height = 115
+height = 90 #90 or 115
 orientation = "100"
 
-grid = (3,3)
+grid = (4,4)
 slurm = True
 gpu = True
 erratic = True
@@ -56,10 +56,10 @@ else:
 # push asperity
 relax_time = 1000 #ps time until we push
 relax_steps = 500000
-push_steps = 25000 # how long we push for (ps maybe, or timesteps)
-push_time = 1000
+#push_steps = 25000 # how long we push for (ps maybe, or timesteps)
+push_time = 500 #piko seconds. breaks around 100 acording to even
 
-for seed in [10730]:
+for seed in [53538]:
     
     if grid:
         if erratic:
@@ -72,7 +72,7 @@ for seed in [10730]:
     else:
         restartfile = relax_dir + f"sim_temp{temp}_force{force}_time{relax_time}_seed{seed}/time.{relax_steps}.restart"
 
-    var = {'restartfile': f"time.{relax_time}.restart",
+    var = {'restartfile': f"time.{relax_steps}.restart",
            'paramfile': "SiC.vashishta",
            'temp': temp,
            'seed': seed,

@@ -22,10 +22,10 @@ height = 90
 orientation = "100"
 num_restart_points = 5
 
-grid = (4,4) 
+grid = (3,3) 
 slurm = True
 gpu = True
-erratic = True
+erratic = False
 
 seed = np.random.randint(10000, 100000)
 
@@ -76,11 +76,11 @@ var = {'datafile': datafile.split("/")[-1],
        'height': height}
 if erratic:
     sim = Simulator(directory=relax_dir + \
-            f"sim_temp{temp}_force{force}_time{simtime}_seed{seed}_errgrid{grid[0]}_{grid[1]}", overwrite=True)
+            f"erratic/sim_temp{temp}_force{force}_time{simtime}_seed{seed}_errgrid{grid[0]}_{grid[1]}", overwrite=True)
 
 elif grid:
     sim = Simulator(directory=relax_dir + \
-            f"sim_temp{temp}_force{force}_time{simtime}_seed{seed}_grid{grid[0]}_{grid[1]}", overwrite=True)
+            f"grid/sim_temp{temp}_force{force}_time{simtime}_seed{seed}_grid{grid[0]}_{grid[1]}", overwrite=True)
 
 else:
     sim = Simulator(directory=relax_dir + f"sim_temp{temp}_force{force}_time{simtime}_seed{seed}", overwrite=True)
