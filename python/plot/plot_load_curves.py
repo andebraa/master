@@ -18,26 +18,40 @@ from multiline import multiline
 temp = 2300
 vel = 5
 force = 0.001
+grid = (4,4)
+erratic = True
 
 
 # paths
 project_dir = '../../'
 fig_dir = project_dir + 'fig/'
-load_curve_dir = project_dir + 'txt/load_curves/'
-max_static_dir = project_dir + 'txt/max_static/'
 
-template_lc = load_curve_dir + 'load_curves_temp{}_vel{}_force{}_seed*.txt'
-template_ms = max_static_dir + 'max_static_temp{}_vel{}_force{}_seed*.txt'
+
+
+if erratic:
+    load_curve_dir = project_dir + 'txt/load_curves/erratic/'
+    max_static_dir = project_dir + 'txt/max_static/erratic/'
+    
+    template_lc = load_curve_dir + 'load_curves_temp{}_vel{}_force{}_seed*_errgrid{}_{}.txt'
+    template_ms = max_static_dir + 'max_static_temp{}_vel{}_force{}_seed*_errgrid{}_{}.txt'
+
+elif grid:
+    load_curve_dir = project_dir + 'txt/load_curves/grid/'
+    max_static_dir = project_dir + 'txt/max_static/grid/'
+
+    template_lc = load_curve_dir + 'load_curves_temp{}_vel{}_force{}_seed*_grid{}_{}.txt'
+    template_ms = max_static_dir + 'max_static_temp{}_vel{}_force{}_seed*_grid{}_{}.txt'
 
 
 # load load curves
-load_curve_files = template_lc.format(temp, vel, force)
+load_curve_files = template_lc.format(temp, vel, force, grid[0], grid[1])
 load_curves_all = []
 for file in glob(load_curve_files):
     print(file)
     load_curves = loadtxt(file)
     load_curves_all.append(load_curves)
-load_curves = mean(load_curves_all, axis=0)
+#load_curves = mean(load_curves_all, axis=0)
+
 load_curves = load_curves.reshape(-1, 1001, 2)   # assuming that all curves have 1001 points
 
 """
@@ -50,7 +64,7 @@ with open(load_curve_file, 'r') as f:
 """
 
 # load max static curves
-max_point_files = template_ms.format(temp, vel, force)
+max_point_files = template_ms.format(temp, vel, force, grid[0], grid[1])
 max_static_all = []
 for file in glob(max_point_files):
     max_static = loadtxt(file)
@@ -66,9 +80,9 @@ axcb = fig.colorbar(lc, ax=ax)
 axcb.set_label(r'$t$ [ns]')
 plt.xlabel(r"$t_p$ [ns]")
 plt.ylabel(r"$f$ [$\mu$N]")
-#plt.savefig(fig_dir + 'png/load_curves_2450_all.png')
-#plt.savefig(fig_dir + 'pgf/load_curves_2450_all.pgf')
-plt.show()
+plt.savefig(fig_dir + 'png/load_curves_2450_all.png')
+plt.savefig(fig_dir + 'pgf/load_curves_2450_all.pgf')
+#plt.show()
 stop
 
 # select a few curves
@@ -94,4 +108,4 @@ plt.xlabel(r"$t_p$ [ns]")
 plt.ylabel(r"$f$ [$\mu$N]")
 plt.savefig(fig_dir + 'png/load_curves_2450_selected.png')
 plt.savefig(fig_dir + 'pgf/load_curves_2450_selected.pgf')
-plt.show()
+#plt.show()

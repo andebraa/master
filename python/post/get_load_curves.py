@@ -54,7 +54,7 @@ def get_load_curves():
     
 
     # collect log files
-    times = [50]
+    times = [1000]
     seeds = [53538]
 
     for seed in seeds:
@@ -75,7 +75,9 @@ def get_load_curves():
                             outfile_max_static = template_ms.format(temp, vel, force, 
                                                                     orientation, seed, 
                                                                     grid[0], grid[1]))
-
+        print('load curves written to: \n', template_lc.format(temp, vel, force,
+                                                                     orientation, seed,
+                                                                     grid[0], grid[1]))
 
 def get_erratic_load():
     """
