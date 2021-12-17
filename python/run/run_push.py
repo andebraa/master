@@ -17,6 +17,32 @@ import numpy as np
 from lammps_simulator import Simulator
 from lammps_simulator.computer import SlurmGPU, GPU
 
+def dump_aux(orientation, height, grid, erratic, output_dir, relax_seed, push_seed):
+    """
+    Function that reads in auxiliary directory, adds relax_seed and copies file to sim directory
+    """
+    relax_dir = '../../simulations/sys_or{orientation}_hi{height}/relax/'
+    auxiliary_relax_dir = directory=relax_dir + \
+    f"erratic/sim_temp{temp}_force{force}_time{simtime}_seed{relax_seed}_errgrid{grid[0]}_{grid[1]}"
+
+
+
+    #opening auxiliary file, and copying this to the directory
+    with open(auxiliary_relax_dir.format(orientation, height, grid[0], grid[1], 'r+')) as auxfile:
+        data = json.load(auxfile)
+        data.update({'relax_seed': relax_seed})
+        auxfile.seek(0) #resets file pointer to beggining of file
+
+    if grid:
+        if erratic:
+            with open(output_dir +'/system_or{}_hi{}_errgrid{}_{}_auxiliary.json'.format(orientation, height, grid[0], grid[1])) as outfile:
+                json.dump(data, outfile):
+        else:
+            with open(output_dir + '/system_or{}_hi{}_grid{}_{}_auxiliary.json'.format(orientation, height, grid[0], grid[1])) as outfile:
+                json.dump(data, outfile)
+    return 1
+
+
 
 # user inputs
 temp = 2300
@@ -85,17 +111,24 @@ for relax_seed in [53538]:
     if grid: #system might not be erratic, but it could still be grid 
         
         if erratic:
-            print(push_dir + f"sim_temp{temp}_vel{vel}_force{force}_time{push_time}_seed{push_seed}_errgrid{grid[0]}_{grid[1]}")
+            output_dir = push_dir + f"sim_temp{temp}_vel{vel}_force{force}_time{push_time}_seed{push_seed}_errgrid{grid[0]}_{grid[1]}"
             
             sim = Simulator(directory=push_dir + f"sim_temp{temp}_vel{vel}_force{force}_time{push_time}_seed{push_seed}_errgrid{grid[0]}_{grid[1]}", overwrite=True)
 
         else:
+            output_dir = push_dir + f"sim_temp{temp}_vel{vel}_force{force}_time{push_time}_seed{push_seed}_grid{grid[0]}_{grid[1]}"
+
             sim = Simulator(directory=push_dir + f"sim_temp{temp}_vel{vel}_force{force}_time{push_time}_seed{push_seed}_grid{grid[0]}_{grid[1]}", overwrite=True)
     
 
     else:
+        output_dir = push_dir + f"sim_temp{temp}_vel{vel}_force{force}_time{relax_steps}_seed{push_seed}"
+
         sim = Simulator(directory=push_dir + f"sim_temp{temp}_vel{vel}_force{force}_time{relax_steps}_seed{push_seed}", overwrite=True)
     
+    #read aux file from relax, write to push directory, append 
+    dump_aux(orientation, height, grid, erratic, output_dir, relax_seed)
+
     sim.copy_to_wd(restartfile, lammps_dir + "SiC.vashishta", "sigmoid.py")
     sim.set_input_script(lammps_dir + "in.push", **var)
     sim.run(computer=SlurmGPU(lmp_exec="lmp_python", slurm_args={'job-name': f'{int(temp/100)}_{relax_steps}_{push_seed}_erratic{erratic}'}, lmp_args={'-pk': 'kokkos newton on neigh full'}))
