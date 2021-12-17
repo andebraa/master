@@ -37,7 +37,30 @@ lammps_dir = project_dir + "lammps/"
 relax_dir = project_dir + f"simulations/sys_or{orientation}_hi{height}/relax/"
 init_dir = project_dir + f"initial_system/"
 
+auxiliary_dir = project_dir + 'initial_system/erratic/aux/system_or{}_hi{}_errgrid{}_{}_auxiliary.json'
 
+def dump_aux(orientation, height, grid, erratic, output_dir):
+    """
+    Function that reads in auxiliary directory, adds relax_seed and copies file to sim directory
+    """
+
+    #opening auxiliary file, and copying this to the directory
+    with open(auxiliary_dir.format(orientation, height, grid[0], grid[1], 'r+')) as auxfile:
+        data = json.load(auxfile)
+        data.update({'relax_seed': relax_seed})
+        auxfile.seek(0) #resets file pointer to beggining of file
+
+    if grid:
+        if erratic:
+            with open(output_dir +'/system_or{}_hi{}_errgrid{}_{}_auxiliary.json'.format(orientation, height, grid[0], grid[1])) as outfile:
+                json.dump(data, outfile):
+        else: 
+            with open(output_dir + '/system_or{}_hi{}_grid{}_{}_auxiliary.json'.format(orientation, height, grid[0], grid[1])) as outfile:
+                json.dump(data, outfile)
+    return 1
+
+
+# Finding the init datafile
 if erratic:
     #finding all files in directory, printing the seeds and having user write in desired seed
     template_dump = init_dir +f"erratic/system_or{orientation}_hi{height}_seed*_errgrid{grid[0]}_{grid[1]}.data"
@@ -66,7 +89,7 @@ else:
     datafile = project_dir + f"initial_system/system_or{orientation}_hi{height}.data"
     print(datafile)    
 
-# run relaxation
+
 var = {'datafile': datafile.split("/")[-1],
        'paramfile': "SiC.vashishta",
        'temp': temp,
@@ -75,20 +98,33 @@ var = {'datafile': datafile.split("/")[-1],
        'simtime': simtime,
        'freq': int(int(simtime/0.002)/num_restart_points), #timesteps
        'height': height}
+
+
+
+# Initializing the run with correct output script
 if erratic:
-    sim = Simulator(directory=relax_dir + \
-            f"erratic/sim_temp{temp}_force{force}_time{simtime}_seed{relax_seed}_errgrid{grid[0]}_{grid[1]}", overwrite=True)
+    output_dir = directory=relax_dir + \
+    f"erratic/sim_temp{temp}_force{force}_time{simtime}_seed{relax_seed}_errgrid{grid[0]}_{grid[1]}"
+    
+    sim = Simulator(directory = output_dir, overwrite=True)
 
 elif grid:
-    sim = Simulator(directory=relax_dir + \
-            f"grid/sim_temp{temp}_force{force}_time{simtime}_seed{relax_seed}_grid{grid[0]}_{grid[1]}", overwrite=True)
+    output_dir = relax_dir + \
+            f"grid/sim_temp{temp}_force{force}_time{simtime}_seed{relax_seed}_grid{grid[0]}_{grid[1]}"
+    sim = Simulator(directory=output_dir, overwrite=True)
 
 else:
-    sim = Simulator(directory=relax_dir + f"sim_temp{temp}_force{force}_time{simtime}_seed{relax_seed}", overwrite=True)
+    output_dir = relax_dir + f"sim_temp{temp}_force{force}_time{simtime}_seed{relax_seed}"
+    sim = Simulator(directory= output_dir, overwrite=True)
 
 sim.copy_to_wd(datafile, lammps_dir + "SiC.vashishta")
 sim.set_input_script(lammps_dir + "in.relax", **var)
 
+
+#read aux from init and copy to sim folder whilst appending relax_seed
+dump_aux(orientation, height, grid, erratic, output_dir) 
+
+# calling lammps simulator dependent on erratic or grid
 if erratic:
     if gpu:
         if slurm:
