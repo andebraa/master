@@ -49,7 +49,8 @@ if erratic and grid:
     aux_path = path + f"erratic/aux/system_or{lower_orient}_hi{lz}_seed{seed}_errgrid{grid[0]}_{grid[1]}_auxiliary.json"
 
     system = gen_erratic_system(lx, ly, ax, ay, hl, hu, hup, octa_d, dode_d, lower_orient,
-                                remove_atoms, aux_path=aux_path, grid=grid, asperities = asperities)
+                                remove_atoms, aux_path=aux_path, grid=grid, 
+                                asperities = asperities, seed = seed)
 
 
     system.write(system_file +'.data', format="lammps-data", atom_style = 'atomic') #alternate write method that fixes error?

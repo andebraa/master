@@ -304,11 +304,14 @@ def gen_grid_system(lx=300, ly=300, ax=150, ay=150, hl=50, hu=150, hup=2,
 
 def gen_erratic_system(lx=99.9, ly=100, ax=50, ay=50, hl=50, hu=60, hup=2,
                octa_d=39.0, dode_d=37.3, lower_orient="100", remove_atoms=True,
-               aux_path = '', grid = (3,3), asperities = 1):
+               aux_path = '', grid = (3,3), asperities = 1, seed = 0):
     """
     Based on grid system. Makes a nXn grid with asperitites. Then calls gen_grid which
     returns a boolean grid which describes the positions of the asperities. Then removes
     the boolean not postitions of asperities.
+
+    Takes seed as last input parameter, wrties this to aux file for documentation later
+
     """
     
     # total system height
@@ -386,8 +389,10 @@ def gen_erratic_system(lx=99.9, ly=100, ax=50, ay=50, hl=50, hu=60, hup=2,
 
     system = asperity + lower + upper 
 
+    #write auxiliary file with system information as well as init seed
     args = {'lx': lx_actual, 'ly':ly_actual, 'sys_lx': sys_lx, 'sys_ly': sys_ly, 'ax':ax, 'ay':ay, 'hl':hl, 
-    'hu': hu, 'hup': hup, 'grid': grid, 'asperities':asperities,'lower_orient': lower_orient, 'erratic': bool_grid}
+    'hu': hu, 'hup': hup, 'grid': grid, 'asperities':asperities,'lower_orient': lower_orient, 'erratic': bool_grid
+    , 'init_seed': seed}
 
     bg = {'grid': bool_grid}
     with open (aux_path, 'w') as outfile:
