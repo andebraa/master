@@ -8,6 +8,7 @@ import time
 import json
 import glob
 import re
+import os
 import numpy as np
 from lammps_simulator import Simulator
 from lammps_simulator.computer import GPU, CPU, SlurmGPU
@@ -37,25 +38,39 @@ lammps_dir = project_dir + "lammps/"
 relax_dir = project_dir + f"simulations/sys_or{orientation}_hi{height}/relax/"
 init_dir = project_dir + f"initial_system/"
 
-auxiliary_dir = project_dir + 'initial_system/erratic/aux/system_or{}_hi{}_errgrid{}_{}_auxiliary.json'
+init_auxiliary = project_dir + 'initial_system/erratic/aux/system_or{}_hi{}_seed{}_errgrid{}_{}_auxiliary.json'
 
-def dump_aux(orientation, height, grid, erratic, output_dir):
+def dump_aux(orientation, height, grid, erratic, output_dir, init_seed, relax_seed):
     """
-    Function that reads in auxiliary directory, adds relax_seed and copies file to sim directory
+    Function that reads in auxiliary directory, adds relax_seed and copies file to sim directory,
+    note; should not alter init auxiliary
     """
 
     #opening auxiliary file, and copying this to the directory
-    with open(auxiliary_dir.format(orientation, height, grid[0], grid[1], 'r+')) as auxfile:
+    with open(init_auxiliary.format(orientation, height, init_seed, grid[0], grid[1], 'r+')) as auxfile:
         data = json.load(auxfile)
         data.update({'relax_seed': relax_seed})
         auxfile.seek(0) #resets file pointer to beggining of file
 
     if grid:
         if erratic:
-            with open(output_dir +'/system_or{}_hi{}_errgrid{}_{}_auxiliary.json'.format(orientation, height, grid[0], grid[1])) as outfile:
-                json.dump(data, outfile):
+            output_aux = output_dir +'/system_or{}_hi{}_seed{}_errgrid{}_{}_auxiliary.json'.format(orientation, 
+                                                                                                   height, 
+                                                                                                   relax_seed,
+                                                                                                   grid[0], 
+                                                                                                   grid[1])
+
+            with open(output_aux, 'w') as outfile:
+                json.dump(data, outfile)
+        
         else: 
-            with open(output_dir + '/system_or{}_hi{}_grid{}_{}_auxiliary.json'.format(orientation, height, grid[0], grid[1])) as outfile:
+            output_aux = output_dir + '/system_or{}_hi{}_seed{}_grid{}_{}_auxiliary.json'.format(orientation, 
+                                                                                                 height, 
+                                                                                                 relax_seed,
+                                                                                                 grid[0], 
+                                                                                                 grid[1])
+            with open(output_aux, 'w') as outfile:
+                
                 json.dump(data, outfile)
     return 1
 
@@ -120,9 +135,11 @@ else:
 sim.copy_to_wd(datafile, lammps_dir + "SiC.vashishta")
 sim.set_input_script(lammps_dir + "in.relax", **var)
 
+#make the output directory, so we can write aux before run
+#os.mkdir(output_dir)
 
 #read aux from init and copy to sim folder whilst appending relax_seed
-dump_aux(orientation, height, grid, erratic, output_dir) 
+dump_aux(orientation, height, grid, erratic, output_dir, init_seed, relax_seed) 
 
 # calling lammps simulator dependent on erratic or grid
 if erratic:
