@@ -10,6 +10,7 @@ For more information, see the LICENSE file in the top-level dictionary.
 import re
 from glob import glob
 from numpy import loadtxt, asarray, mean
+import numpy as np
 import matplotlib.pyplot as plt
 from multiline import multiline
 
@@ -18,6 +19,7 @@ from multiline import multiline
 temp = 2300
 vel = 5
 force = 0.001
+orientation = 100
 grid = (4,4)
 erratic = True
 
@@ -32,25 +34,33 @@ if erratic:
     load_curve_dir = project_dir + 'txt/load_curves/erratic/'
     max_static_dir = project_dir + 'txt/max_static/erratic/'
     
-    template_lc = load_curve_dir + 'load_curves_temp{}_vel{}_force{}_seed*_errgrid{}_{}.txt'
-    template_ms = max_static_dir + 'max_static_temp{}_vel{}_force{}_seed*_errgrid{}_{}.txt'
+    template_lc = load_curve_dir + 'load_curves_temp{}_vel{}_force{}_or{}_seed*_errgrid{}_{}.txt'
+    template_ms = max_static_dir + 'max_static_temp{}_vel{}_force{}_or{}_seed*_errgrid{}_{}.txt'
 
 elif grid:
     load_curve_dir = project_dir + 'txt/load_curves/grid/'
     max_static_dir = project_dir + 'txt/max_static/grid/'
 
-    template_lc = load_curve_dir + 'load_curves_temp{}_vel{}_force{}_seed*_grid{}_{}.txt'
-    template_ms = max_static_dir + 'max_static_temp{}_vel{}_force{}_seed*_grid{}_{}.txt'
+    template_lc = load_curve_dir + 'load_curves_temp{}_vel{}_force{}_or{}_seed*_grid{}_{}.txt'
+    template_ms = max_static_dir + 'max_static_temp{}_vel{}_force{}_or{}_seed*_grid{}_{}.txt'
 
 
 # load load curves
-load_curve_files = template_lc.format(temp, vel, force, grid[0], grid[1])
+load_curve_files = template_lc.format(temp, vel, force, orientation, grid[0], grid[1])
 load_curves_all = []
+print('here you twat --------------------------------')
+
 for file in glob(load_curve_files):
     print(file)
     load_curves = loadtxt(file)
     load_curves_all.append(load_curves)
-#load_curves = mean(load_curves_all, axis=0)
+    print(np.shape(load_curves))
+
+load_curves_all[1] = load_curves_all[1][:len(load_curves_all[0])]
+
+shortest = np.argmin(load_curves_all) 
+
+load_curves = mean(load_curves_all, axis=0)
 
 load_curves = load_curves.reshape(-1, 1001, 2)   # assuming that all curves have 1001 points
 
@@ -64,7 +74,7 @@ with open(load_curve_file, 'r') as f:
 """
 
 # load max static curves
-max_point_files = template_ms.format(temp, vel, force, grid[0], grid[1])
+max_point_files = template_ms.format(temp, vel, force, orientation, grid[0], grid[1])
 max_static_all = []
 for file in glob(max_point_files):
     max_static = loadtxt(file)
