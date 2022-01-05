@@ -33,7 +33,7 @@ asperities = int(grid[0]*grid[1]*porosity)
 
 lower_orient = "100"
 remove_atoms = True
-erratic = False
+erratic = True
 
 seed = np.random.randint(10000, 100000)
 

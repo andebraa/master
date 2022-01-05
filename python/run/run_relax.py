@@ -26,7 +26,7 @@ num_restart_points = 5
 grid = (4,4) 
 slurm = True
 gpu = True
-erratic = False
+erratic = True
 
 relax_seed = np.random.randint(10000, 100000)
 
