@@ -26,7 +26,7 @@ num_restart_points = 5
 grid = (4,4) 
 slurm = True
 gpu = True
-erratic = True
+erratic = False
 
 relax_seed = np.random.randint(10000, 100000)
 
@@ -40,7 +40,7 @@ init_dir = project_dir + f"initial_system/"
 
 init_auxiliary = project_dir + 'initial_system/erratic/aux/system_or{}_hi{}_seed{}_errgrid{}_{}_auxiliary.json'
 
-def dump_aux(orientation, height, grid, erratic, output_dir, init_seed, relax_seed):
+def dump_aux(orientation, height, grid, erratic, output_dir, relax_seed, init_seed = 0):
     """
     Function that reads in auxiliary directory, adds relax_seed and copies file to sim directory,
     note; should not alter init auxiliary
@@ -139,7 +139,11 @@ sim.set_input_script(lammps_dir + "in.relax", **var)
 #os.mkdir(output_dir)
 
 #read aux from init and copy to sim folder whilst appending relax_seed
-dump_aux(orientation, height, grid, erratic, output_dir, init_seed, relax_seed) 
+if grid and erratic:
+    dump_aux(orientation, height, grid, erratic, output_dir, relax_seed, init_seed) 
+elif erratic:
+    dump_aux(orientation, height, grid, erratic, output_dir, relax_seed) 
+    
 
 # calling lammps simulator dependent on erratic or grid
 if erratic:

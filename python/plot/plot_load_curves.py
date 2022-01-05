@@ -48,7 +48,6 @@ elif grid:
 # load load curves
 load_curve_files = template_lc.format(temp, vel, force, orientation, grid[0], grid[1])
 load_curves_all = []
-print('here you twat --------------------------------')
 
 for file in glob(load_curve_files):
     print(file)
@@ -77,6 +76,7 @@ with open(load_curve_file, 'r') as f:
 max_point_files = template_ms.format(temp, vel, force, orientation, grid[0], grid[1])
 max_static_all = []
 for file in glob(max_point_files):
+    print(file)
     max_static = loadtxt(file)
     max_static_all.append(max_static)
 max_static = mean(max_static_all, axis=0)
@@ -91,7 +91,7 @@ axcb.set_label(r'$t$ [ns]')
 plt.xlabel(r"$t_p$ [ns]")
 plt.ylabel(r"$f$ [$\mu$N]")
 plt.savefig(fig_dir + 'png/load_curves_2450_all.png')
-plt.savefig(fig_dir + 'pgf/load_curves_2450_all.pgf')
+#plt.savefig(fig_dir + 'pgf/load_curves_2450_all.pgf')
 #plt.show()
 stop
 

@@ -54,8 +54,8 @@ def get_load_curves():
     
 
     # collect log files
-    times = [1000]
-    seeds = [53538, 94890]
+    times = [500]
+    seeds = [31906, 35578, 69872, 94879]
 
     for seed in seeds:
         logfiles = []
