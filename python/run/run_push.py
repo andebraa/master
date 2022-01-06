@@ -99,7 +99,7 @@ push_time = 500 #piko seconds. breaks around 100 acording to even
 
 push_seed = np.random.randint(10000, 100000)
 
-for relax_seed in []: #used: 37144
+for relax_seed in [94514]: #used: 37144, 48329, 94514
     
     if grid:
         if erratic:

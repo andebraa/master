@@ -28,7 +28,7 @@ erratic = True
 project_dir = '../../'
 fig_dir = project_dir + 'fig/'
 
-
+seeds = [27278,70295,98184,31906,35578,69872]
 
 if erratic:
     load_curve_dir = project_dir + 'txt/load_curves/erratic/'
@@ -50,10 +50,11 @@ load_curve_files = template_lc.format(temp, vel, force, orientation, grid[0], gr
 load_curves_all = []
 
 for file in glob(load_curve_files):
-    print(file)
     load_curves = loadtxt(file)
-    load_curves_all.append(load_curves)
-    print(np.shape(load_curves))
+    for seed in seeds:
+        if str(seed) in str(file):
+            print(file)
+            load_curves_all.append(load_curves)
 
 load_curves_all[1] = load_curves_all[1][:len(load_curves_all[0])]
 
@@ -76,9 +77,11 @@ with open(load_curve_file, 'r') as f:
 max_point_files = template_ms.format(temp, vel, force, orientation, grid[0], grid[1])
 max_static_all = []
 for file in glob(max_point_files):
-    print(file)
-    max_static = loadtxt(file)
-    max_static_all.append(max_static)
+    for seed in seeds:
+        if str(seed) in str(file):
+            max_static = loadtxt(file)
+            max_static_all.append(max_static)
+            print(file)
 max_static = mean(max_static_all, axis=0)
 
 push_times = [0.2, 2, 20]
@@ -90,7 +93,8 @@ axcb = fig.colorbar(lc, ax=ax)
 axcb.set_label(r'$t$ [ns]')
 plt.xlabel(r"$t_p$ [ns]")
 plt.ylabel(r"$f$ [$\mu$N]")
-plt.savefig(fig_dir + 'png/load_curves_2450_all.png')
+plt.title(f"load curves for {len(seeds)} runs, force {force}, vel {vel}")
+plt.savefig(fig_dir + 'png/load_curves_runs6_rseed37144.png')
 #plt.savefig(fig_dir + 'pgf/load_curves_2450_all.pgf')
 #plt.show()
 stop
