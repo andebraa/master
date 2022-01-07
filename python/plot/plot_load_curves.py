@@ -88,7 +88,7 @@ def plot_mean_of_multiple(temp, vel, force, orientation, grid, template_lc, temp
         plt.plot(load_curves_mean[0,:,0], load_curves_mean[0,:,1], label=seeds[i])
         plt.xlabel(r"$t_p$ [ns]")
     plt.ylabel(r"$f$ [$\mu$N]")
-    plt.title(f"mean of multiple load curves relax seeds; {seeds}, force {force}, vel {vel}")
+    plt.title(f"mean of multiple load curves relax seeds, force {force}, vel {vel}")
     plt.legend()
     plt.savefig(fig_dir + 'png/means_of_multiple.png')
     
