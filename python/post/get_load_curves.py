@@ -56,7 +56,7 @@ def get_load_curves():
     # collect log files
     times = [500]
 
-    seeds = [27278, 70295,98184]  
+    seeds = [42439,51019,79411,14943]  
 
     # [31906, 35578, 69872, 94879] push seeds who used relax 37144
 

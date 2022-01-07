@@ -11,9 +11,11 @@ import re
 from glob import glob
 from numpy import loadtxt, asarray, mean
 import numpy as np
+import matplotlib as mpl
 import matplotlib.pyplot as plt
 from multiline import multiline
-
+from matplotlib import style
+plt.style.use('seaborn')
 
 # user input
 temp = 2300
@@ -28,7 +30,8 @@ erratic = True
 project_dir = '../../'
 fig_dir = project_dir + 'fig/'
 
-seeds = [27278,70295,98184,31906,35578,69872]
+#seeds = [27278,70295,98184,31906,35578,69872] 
+seeds = [42439,51019,79411,14943]
 
 if erratic:
     load_curve_dir = project_dir + 'txt/load_curves/erratic/'
@@ -51,13 +54,14 @@ load_curves_all = []
 
 for file in glob(load_curve_files):
     load_curves = loadtxt(file)
+    print(file)
     for seed in seeds:
         if str(seed) in str(file):
             print(file)
             load_curves_all.append(load_curves)
 
 load_curves_all[1] = load_curves_all[1][:len(load_curves_all[0])]
-
+load_curves_all = np.array(load_curves_all)
 shortest = np.argmin(load_curves_all) 
 
 load_curves = mean(load_curves_all, axis=0)
@@ -85,18 +89,19 @@ for file in glob(max_point_files):
 max_static = mean(max_static_all, axis=0)
 
 push_times = [0.2, 2, 20]
+print(np.shape(load_curves[0,:,0]))
+for i in range(len(seeds)):
 
-# plot all curves with colorbar to indicate the push time
-fig, ax = plt.subplots()
-lc = multiline(load_curves[:, :, 0], load_curves[:, :, 1], push_times, ax=ax)
-axcb = fig.colorbar(lc, ax=ax)
-axcb.set_label(r'$t$ [ns]')
+    plt.plot(load_curves_all[i,:, 0], load_curves_all[i,:, 1], 'b--',label=seeds[i])
+plt.plot(load_curves[0,:,0], load_curves[0,:,1], '-g', label = 'mean' )
 plt.xlabel(r"$t_p$ [ns]")
 plt.ylabel(r"$f$ [$\mu$N]")
 plt.title(f"load curves for {len(seeds)} runs, force {force}, vel {vel}")
-plt.savefig(fig_dir + 'png/load_curves_runs6_rseed37144.png')
+plt.legend()
+plt.savefig(fig_dir + 'png/load_curves_runs6_rseed48329.png')
 #plt.savefig(fig_dir + 'pgf/load_curves_2450_all.pgf')
 #plt.show()
+"""
 stop
 
 # select a few curves
@@ -123,3 +128,4 @@ plt.ylabel(r"$f$ [$\mu$N]")
 plt.savefig(fig_dir + 'png/load_curves_2450_selected.png')
 plt.savefig(fig_dir + 'pgf/load_curves_2450_selected.pgf')
 #plt.show()
+"""
