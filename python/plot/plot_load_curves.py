@@ -126,8 +126,8 @@ if __name__ == '__main__':
         template_lc = load_curve_dir + 'load_curves_temp{}_vel{}_force{}_or{}_seed*_grid{}_{}.txt'
         template_ms = max_static_dir + 'max_static_temp{}_vel{}_force{}_or{}_seed*_grid{}_{}.txt'
 
-    #plot_all_curves_and_mean(temp, vel, force, orientation, grid, template_lc, template_ms, seeds1)    
-    plot_mean_of_multiple(temp, vel, force, orientation, grid, template_lc, template_ms, [seeds1, seeds2, seeds3])
+    plot_all_curves_and_mean(temp, vel, force, orientation, grid, template_lc, template_ms, seeds3)    
+    #plot_mean_of_multiple(temp, vel, force, orientation, grid, template_lc, template_ms, [seeds1, seeds2, seeds3])
 
     """
     stop
