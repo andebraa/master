@@ -369,7 +369,10 @@ def gen_erratic_system(lx=99.9, ly=100, ax=50, ay=50, hl=50, hu=60, hup=2,
 
 
     #asperity removal
-    bool_grid = gen_grid(grid, asperities, np.array([[1,1,1,1],[0,0,0,0],[1,1,1,1],[0,0,0,0]]))
+    
+    bool_grid = gen_grid(grid, asperities)
+    #for custom setup:
+    #bool_grid = gen_grid(grid, asperities, np.array([[1,1,1,1],[0,0,0,0],[1,1,1,1],[0,0,0,0]]))
 
 
     print(bool_grid)
@@ -428,9 +431,9 @@ def gen_grid(grid, num_asperities, custom = False):
         boolean grid with shape nxn. np.sum(bool_grid) = num_asperities
 
     """ 
-    if custom.any():
-        bool_grid = custom
-        return bool_grid
+    #if custom.any():
+    #    bool_grid = custom
+    #    return bool_grid
 
 
     if (grid[0] * grid[1] < num_asperities):
