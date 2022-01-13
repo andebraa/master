@@ -327,9 +327,9 @@ def gen_erratic_system(lx=99.9, ly=100, ax=50, ay=50, hl=50, hu=60, hup=2,
 
     # carve out asperity
     asperity = create_bulk_crystal("silicon_carbide_3c", (lx, ly, lz + 5))
-    geometry = OctahedronGeometry(octa_d, (ax, ay, lz - 10))  # d=n*3.90nm
+    geometry = OctahedronGeometry(octa_d, (ax, ay, lz - hup))  # d=n*3.90nm
     carve_geometry(asperity, geometry, side='out')
-    geometry = DodecahedronGeometry(dode_d, (ax, ay, lz - 10))  # d=n*3.73nm
+    geometry = DodecahedronGeometry(dode_d, (ax, ay, lz - hup))  # d=n*3.73nm
     carve_geometry(asperity, geometry, side='out')
     geometry = PlaneGeometry((0, 0, hl + 2), (0, 0, -1))
     carve_geometry(asperity, geometry, side="out")
