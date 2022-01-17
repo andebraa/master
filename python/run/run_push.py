@@ -64,7 +64,7 @@ force = 0.001
 vel = 5
 #pushtime = 500000 #timestep to start pushing
 
-height = 90 #90 or 115
+height = 95 #90, 95 or 115
 orientation = "100"
 
 grid = (4,4)
@@ -99,7 +99,7 @@ push_time = 500 #piko seconds. breaks around 100 acording to even
 
 push_seed = np.random.randint(10000, 100000)
 
-for relax_seed in [94514]: #used: 37144, 48329, 94514
+for relax_seed in [42641]: #used: 37144, 48329, 94514
     
     if grid:
         if erratic:
