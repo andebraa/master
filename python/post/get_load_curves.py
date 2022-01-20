@@ -14,7 +14,7 @@ def get_load_curves():
     # user input
     temp = 2300
     orientation = "100"
-    height = 90
+    height = 110
     vel = 5
     force = 0.001
     
@@ -56,7 +56,7 @@ def get_load_curves():
     # collect log files
     times = [500]
 
-    seeds = [17744,77072,77201,88708]  
+    seeds = [12589, 50887]  
 
     # [31906, 35578, 69872, 94879] push seeds who used relax 37144
 

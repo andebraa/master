@@ -111,7 +111,8 @@ if __name__ == '__main__':
     seeds1 = [27278,70295,98184,31906,35578,69872] 
     seeds2 = [42439,51019,79411,14943]
     seeds3 = [17744,77072,77201,88708]
-    
+    seeds4 = [58958,67466,85867]
+    seeds5 = [12589, 50887] #thiccest
     if erratic:
         load_curve_dir = project_dir + 'txt/load_curves/erratic/'
         max_static_dir = project_dir + 'txt/max_static/erratic/'
@@ -126,7 +127,7 @@ if __name__ == '__main__':
         template_lc = load_curve_dir + 'load_curves_temp{}_vel{}_force{}_or{}_seed*_grid{}_{}.txt'
         template_ms = max_static_dir + 'max_static_temp{}_vel{}_force{}_or{}_seed*_grid{}_{}.txt'
 
-    plot_all_curves_and_mean(temp, vel, force, orientation, grid, template_lc, template_ms, seeds3)    
+    plot_all_curves_and_mean(temp, vel, force, orientation, grid, template_lc, template_ms, seeds4)    
     #plot_mean_of_multiple(temp, vel, force, orientation, grid, template_lc, template_ms, [seeds1, seeds2, seeds3])
 
     """
