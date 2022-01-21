@@ -74,7 +74,7 @@ def plot_all_curves_and_mean(temp, vel, force, orientation, grid, template_lc, t
     plt.ylabel(r"$f$ [$\mu$N]")
     plt.title(f"load curves for {len(seeds)} runs, force {force}, vel {vel}")
     plt.legend()
-    plt.savefig(fig_dir + 'png/load_curves_runs6_rseed94514.png')
+    plt.savefig(fig_dir + 'png/load_curves_runs7_thiccest.png')
     #plt.savefig(fig_dir + 'pgf/load_curves_2450_all.pgf')
     #plt.show()
 
@@ -127,7 +127,7 @@ if __name__ == '__main__':
         template_lc = load_curve_dir + 'load_curves_temp{}_vel{}_force{}_or{}_seed*_grid{}_{}.txt'
         template_ms = max_static_dir + 'max_static_temp{}_vel{}_force{}_or{}_seed*_grid{}_{}.txt'
 
-    plot_all_curves_and_mean(temp, vel, force, orientation, grid, template_lc, template_ms, seeds4)    
+    plot_all_curves_and_mean(temp, vel, force, orientation, grid, template_lc, template_ms, seeds5)    
     #plot_mean_of_multiple(temp, vel, force, orientation, grid, template_lc, template_ms, [seeds1, seeds2, seeds3])
 
     """

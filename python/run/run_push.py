@@ -97,10 +97,10 @@ relax_steps = 500000
 #push_steps = 25000 # how long we push for (ps maybe, or timesteps)
 push_time = 500 #piko seconds. breaks around 100 acording to even
 
-push_seed = np.random.randint(10000, 100000)
 
-for relax_seed in [96889]: #used: 37144, 48329, 94514
+for relax_seed in [29597,44991,81081,47027]: #used: 37144, 48329, 94514
     
+    push_seed = np.random.randint(10000, 100000)
     if grid:
         if erratic:
 
