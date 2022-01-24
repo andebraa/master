@@ -19,7 +19,7 @@ from lammps_simulator.computer import GPU, CPU, SlurmGPU
 temp = 2300
 simtime = 1000 #picosekunder
 force = 0.001
-height = 85
+height = 110
 orientation = "100"
 num_restart_points = 5
 
