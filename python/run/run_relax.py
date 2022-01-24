@@ -19,7 +19,7 @@ from lammps_simulator.computer import GPU, CPU, SlurmGPU
 temp = 2300
 simtime = 1000 #picosekunder
 force = 0.001
-height = 110
+height = 85
 orientation = "100"
 num_restart_points = 5
 
@@ -29,7 +29,7 @@ gpu = True
 erratic = True
 
 relax_seed = np.random.randint(10000, 100000)
-
+print('relax_seed', relax_seed)
 
 # paths
 #project_dir = "/run/user/1004/andebraa_masterdata/"
