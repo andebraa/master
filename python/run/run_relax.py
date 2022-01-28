@@ -19,7 +19,7 @@ from lammps_simulator.computer import GPU, CPU, SlurmGPU
 temp = 2300
 simtime = 1000 #picosekunder
 force = 0.001
-height = 110
+height = 109
 orientation = "100"
 num_restart_points = 5
 
@@ -150,7 +150,7 @@ if erratic:
     if gpu:
         if slurm:
             sim.run(computer=SlurmGPU(lmp_exec="lmp_python", 
-                    slurm_args={'job-name': f'N{int(temp/100)}_{int(force*1000)}_{relax_seed}_errgrid{grid[0]}_{grid[1]}'}, 
+                    slurm_args={'job-name': f'err{relax_seed}'}, 
                     lmp_args={'-pk': 'kokkos newton on neigh full'}))
         else:
             sim.run(computer=GPU(lmp_exec = 'lmp_python'), stdout = None)
@@ -161,7 +161,7 @@ elif grid:
     if gpu:
         if slurm:
             sim.run(computer=SlurmGPU(lmp_exec="lmp_python", 
-                                      slurm_args={'job-name': f'N{int(temp/100)}_{int(force*1000)}_{relax_seed}_grid{grid[0]}_{grid[1]}'}, 
+                                      slurm_args={'job-name': f'grid{relax_seed}'}, 
                                       lmp_args={'-pk': 'kokkos newton on neigh full'}))
         else:
             sim.run(computer=GPU(lmp_exec = 'lmp_python'), stdout = None)
@@ -172,7 +172,7 @@ else:
     if gpu:
         if slurm:
             sim.run(computer=SlurmGPU(lmp_exec="lmp_python", 
-                slurm_args={'job-name': f'N{int(temp/100)}_{int(force*1000)}_{relax_seed}'}, 
+                slurm_args={'job-name': f'{relax_seed}'}, 
                 lmp_args={'-pk': 'kokkos newton on neigh full'}))
         else:
             sim.run(computer=GPU(lmp_exec = 'lmp_python'), stdout = None)

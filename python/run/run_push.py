@@ -64,7 +64,7 @@ force = 0.001
 vel = 5
 #pushtime = 500000 #timestep to start pushing
 
-height = 110 #90, 95, 110 or 115
+height = 109 #90, 95, 110 or 115
 orientation = "100"
 
 grid = (4,4)
@@ -98,9 +98,10 @@ relax_steps = 500000
 push_time = 500 #piko seconds. breaks around 100 acording to even
 
 
-for relax_seed in [29597,44991,81081,47027]: #used: 37144, 48329, 94514
+for relax_seed in [39463,84117,29469]: #used: 37144, 48329, 94514
     
     push_seed = np.random.randint(10000, 100000)
+    print(push_seed)
     if grid:
         if erratic:
 
@@ -146,4 +147,4 @@ for relax_seed in [29597,44991,81081,47027]: #used: 37144, 48329, 94514
     
     dump_aux(orientation, height, grid, erratic, output_dir, relax_time, relax_seed, push_seed)
     
-    sim.run(computer=SlurmGPU(lmp_exec="lmp_python", slurm_args={'job-name': f'{int(temp/100)}_{relax_steps}_{push_seed}_erratic{erratic}'}, lmp_args={'-pk': 'kokkos newton on neigh full'}))
+    sim.run(computer=SlurmGPU(lmp_exec="lmp_python", slurm_args={'job-name': f'p{push_seed}'}, lmp_args={'-pk': 'kokkos newton on neigh full'}))
