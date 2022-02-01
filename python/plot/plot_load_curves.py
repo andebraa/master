@@ -110,7 +110,7 @@ def plot_load_curves_as_funciton_of_top_thiccness():
 
     template_lc = load_curve_dir + 'load_curves_temp{}_vel{}_force{}_or{}_seed*_errgrid{}_{}.txt'
     template_ms = max_static_dir + 'max_static_temp{}_vel{}_force{}_or{}_seed*_errgrid{}_{}.txt'
- 
+    style.use('seaborn') 
     for i,seed in enumerate(seeds):
         load_curves_all, load_curves = load_load_curves(temp, vel, force, orientation, 
                                                         grid, template_lc,template_ms, seed)
