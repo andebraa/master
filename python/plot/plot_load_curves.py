@@ -65,6 +65,7 @@ def plot_load_curves_as_funciton_of_top_thiccness():
     project_dir = '../../'
     fig_dir = project_dir + 'fig/'
 
+    """ #theese are relax seeds
     seeds_5 =  [24296,84160,79210]
     seeds_8 =  [35701,84452,85253]
     seeds_9 =  [34105,10800,42330]
@@ -80,6 +81,22 @@ def plot_load_curves_as_funciton_of_top_thiccness():
     seeds_28 = [47223,86471,56804]
     seeds_30 = [55262,76203,84098]
     seeds_33 = [39463,84117,53537]
+    """
+    seeds_5 =  [88753, 12754, 91693] # thicc 80
+    seeds_8 =  [50219, 31693, 19478] # thicc 83
+    seeds_9 =  [81094, 81717, 10840] # thicc 85
+    seeds_11 = [89936, 25987, 82860] # thicc 85
+    seeds_12 = [63620, 46351, 18735] # thicc 90
+    seeds_14 = [62648, 89682, 30607] # thicc 90
+    seeds_16 = [17767, 58195, 19686] # thicc 95
+    seeds_18 = [11084, 50879, 83355] # thicc 93
+    seeds_20 = [81955, 86485, 61282] # thicc 95
+    seeds_22 = [96804, 43682, 88372] # thicc 100
+    seeds_24 = [64771, 82158, 63871] # thicc 100
+    seeds_26 = [95317, 18462, 11729]#thicc 100
+    seeds_28 = [54648,88413,94253] #thicc 103
+    seeds_30 = [92651,19224,85380] #thicc 105
+    seeds_33 = [64798,34149] #thicc 109
 
     seeds = [seeds_5, seeds_8, seeds_11, seeds_12 , 
              seeds_14, seeds_16, seeds_18, seeds_20, 
@@ -94,17 +111,17 @@ def plot_load_curves_as_funciton_of_top_thiccness():
     template_lc = load_curve_dir + 'load_curves_temp{}_vel{}_force{}_or{}_seed*_errgrid{}_{}.txt'
     template_ms = max_static_dir + 'max_static_temp{}_vel{}_force{}_or{}_seed*_errgrid{}_{}.txt'
  
-    for seed in seeds:
+    for i,seed in enumerate(seeds):
         load_curves_all, load_curves = load_load_curves(temp, vel, force, orientation, 
                                                         grid, template_lc,template_ms, seed)
-        plt.plot(load_curves[0,:,0], load_curves[0,:,1], '-g', label = f'hup {hup[i]}' )
+        plt.plot(load_curves[0,:,0], load_curves[0,:,1], label = f'hup {hup[i]}' )
             
 
     plt.xlabel(r"$t_p$ [ns]")
     plt.ylabel(r"$f$ [$\mu$N]")
     plt.title(f"Mean of three runs, for varying upper plate thicness")
     plt.legend()
-    plt.savefig(fig_dir + 'png/load_curves_runs7_thiccest.png')
+    plt.savefig(fig_dir + 'png/load_curves_thicc_runs.png')
 
 
 def plot_all_curves_and_mean(temp, vel, force, orientation, grid, template_lc, template_ms, seeds):
