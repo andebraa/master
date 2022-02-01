@@ -111,10 +111,14 @@ def plot_load_curves_as_funciton_of_top_thiccness():
     template_lc = load_curve_dir + 'load_curves_temp{}_vel{}_force{}_or{}_seed*_errgrid{}_{}.txt'
     template_ms = max_static_dir + 'max_static_temp{}_vel{}_force{}_or{}_seed*_errgrid{}_{}.txt'
     style.use('seaborn') 
+    min_hup = np.min(hup)
+    max_hup = hup[-1]
+
     for i,seed in enumerate(seeds):
         load_curves_all, load_curves = load_load_curves(temp, vel, force, orientation, 
                                                         grid, template_lc,template_ms, seed)
-        plt.plot(load_curves[0,:,0], load_curves[0,:,1], label = f'hup {hup[i]}' )
+        c = plt.cm.viridis((max_hup - hup[i])/(max_hup - min_hup + 0.01))
+        plt.plot(load_curves[0,:,0], load_curves[0,:,1], c=c, label = f'hup {hup[i]}' )
             
 
     plt.xlabel(r"$t_p$ [ns]")
