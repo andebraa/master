@@ -120,7 +120,7 @@ def plot_load_curves_as_funciton_of_top_thiccness():
     #plt.xlabel(r"$t_p$ [ns]")
     #plt.ylabel(r"$f$ [$\mu$N]")
     fig.suptitle(f"Mean of three runs, for varying upper plate thicness")
-    plt.savefig(fig_dir + 'png/load_curves_thicc_runs_foursquare.png')
+    plt.savefig(fig_dir + 'png/load_curves_thicc_runs_foursquare.png', dpi = 500)
 
 
 def plot_all_curves_and_mean(temp, vel, force, orientation, grid, template_lc, template_ms, seeds):
