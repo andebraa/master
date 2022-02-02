@@ -27,18 +27,12 @@ def load_max_static(temp, vel, force, orientation, grid, template_lc, template_m
     # ms files: time [nS] max friction [mN] 
     assert files != []
     for file in glob(ms_files):
-        
         for seed in seeds:
             if str(seed) in str(file):
                 time, ms = loadtxt(file)
-                print('ms')
-                print(ms)
                 ms_all.append(ms)
 
-
-    mean_static = mean(ms_all)
-
-    print(mean_static)
+    mean_static = mean(ms_all, axis = 0)
     return ms_all, mean_static
 
 
@@ -90,6 +84,7 @@ def plot_max_static_vs_thiccness():
     for i, seed in enumerate(seeds):
         ms_all, mean_static = load_max_static(temp, vel, force, orientation, grid, 
                                               template_lc, template_ms, seed) 
+        
         plt.plot(hup[i], mean_static)
         
     plt.xlabel(r"$hup$ [pm]")
