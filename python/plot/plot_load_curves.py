@@ -108,6 +108,8 @@ def plot_load_curves_as_funciton_of_top_thiccness():
                                                             grid, template_lc,template_ms, seed)
             c = plt.cm.viridis((max_hup - hup[i])/(max_hup - min_hup + 0.01))
             axs[j].plot(load_curves[0,:,0], load_curves[0,:,1], c=c, label = f'hup {hup[i]}' )
+            for l in range(len(seed)):
+                axs[j].plot(load_curves_all[l,:,0], load_curves_all[l,:,1], '--', alpha = 0.5, c=c, label=seeds[l])
             axs[j].legend()
             i += 1
             
