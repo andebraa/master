@@ -80,12 +80,14 @@ def plot_max_static_vs_thiccness():
     template_ms = max_static_dir + 'max_static_temp{}_vel{}_force{}_or{}_seed*_errgrid{}_{}.txt'
     style.use('seaborn') 
 
-   
+    all_mean_static = np.zeros(len(seeds))
     for i, seed in enumerate(seeds):
         ms_all, mean_static = load_max_static(temp, vel, force, orientation, grid, 
                                               template_lc, template_ms, seed) 
-        
-        plt.plot(hup[i], mean_static)
+        all_mean_static[i] = mean_static
+        for ms in ms_all:
+            plt.plot(hup[i], ms, 'o')
+    plt.plot(hup, all_mean_static, label = 'mean')
         
     plt.xlabel(r"$hup$ [pm]")
     plt.ylabel(r"$f$ [$\mu$N]")
