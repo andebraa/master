@@ -108,12 +108,13 @@ def plot_load_curves_as_funciton_of_top_thiccness():
                                                             grid, template_lc,template_ms, seed)
             c = plt.cm.viridis((max_hup - hup[i])/(max_hup - min_hup + 0.01))
             axs[j].plot(load_curves[0,:,0], load_curves[0,:,1], c=c, label = f'hup {hup[i]}' )
-            plt.legend()
+            axs[j].legend()
             i += 1
             
     for ax in axs.flat:
         ax.set(xlabel=r"$t_p$ [ns]", ylabel = r"$f$ [$\mu$N]")
         ax.label_outer()
+        
     #plt.xlabel(r"$t_p$ [ns]")
     #plt.ylabel(r"$f$ [$\mu$N]")
     fig.suptitle(f"Mean of three runs, for varying upper plate thicness")
