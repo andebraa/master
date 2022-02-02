@@ -112,10 +112,10 @@ def plot_load_curves_as_funciton_of_top_thiccness():
             
     for ax in axs.flat:
         ax.set(xlabel=r"$t_p$ [ns]", ylabel = r"$f$ [$\mu$N]")
-        ax.label_outer()
+        #ax.label_outer()
     #plt.xlabel(r"$t_p$ [ns]")
     #plt.ylabel(r"$f$ [$\mu$N]")
-    plt.title(f"Mean of three runs, for varying upper plate thicness")
+    fig.suptitle(f"Mean of three runs, for varying upper plate thicness")
     plt.legend()
     plt.savefig(fig_dir + 'png/load_curves_thicc_runs_foursquare.png')
 
