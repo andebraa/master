@@ -14,7 +14,7 @@ def get_load_curves():
     # user input
     temp = 2300
     orientation = "100"
-    height = 109
+    height = 80
     vel = 5
     force = 0.001
     
@@ -67,7 +67,9 @@ def get_load_curves():
     #seeds = [11084,50879,83355] # thicc 93
     #seeds = [54648,88413,94253] #thicc 103
     #seeds = [92651,19224,85380] #thicc 105
-    seeds = [64798,34149] #thicc 109
+    #seeds = [64798,34149] #thicc 109
+    
+
     for seed in seeds:
         logfiles = []
         for time in times:
