@@ -65,23 +65,6 @@ def plot_load_curves_as_funciton_of_top_thiccness():
     project_dir = '../../'
     fig_dir = project_dir + 'fig/'
 
-    """ #theese are relax seeds
-    seeds_5 =  [24296,84160,79210]
-    seeds_8 =  [35701,84452,85253]
-    seeds_9 =  [34105,10800,42330]
-    seeds_11 = [89027,21504,40454]
-    seeds_12 = [80577,25262,14194]
-    seeds_14 = [82798,96793,76957]
-    seeds_16 = [81147,61987,51593]
-    seeds_18 = [51735,44709,45053]
-    seeds_20 = [70164,14798,28863]
-    seeds_22 = [43346,72761,24220]
-    seeds_24 = [41110,27848,58248]
-    seeds_26 = [29628,48780,22090]
-    seeds_28 = [47223,86471,56804]
-    seeds_30 = [55262,76203,84098]
-    seeds_33 = [39463,84117,53537]
-    """
     seeds_5 =  [88753, 12754, 91693] # thicc 80
     seeds_8 =  [50219, 31693, 19478] # thicc 83
     seeds_9 =  [81094, 81717, 10840] # thicc 85
@@ -98,10 +81,11 @@ def plot_load_curves_as_funciton_of_top_thiccness():
     seeds_30 = [92651,19224,85380] #thicc 105
     seeds_33 = [64798,34149] #thicc 109
 
-    seeds = [seeds_5, seeds_8, seeds_11, seeds_12 , 
-             seeds_14, seeds_16, seeds_18, seeds_20, 
-             seeds_22, seeds_24, seeds_26, seeds_28, 
-             seeds_30, seeds_33]
+    _seeds1 = [seeds_5, seeds_8, seeds_9, seeds_11]
+    _seeds2 = [seeds_12, seeds_14, seeds_16, seeds_18]
+    _seeds3 = [seeds_20, seeds_22, seeds_24, seeds_26]
+    _seeds4 = [seeds_28, seeds_30, seeds_33]
+
 
     hup = [5,8,9,11,12,14,16,18,20,22,24,26,28,30,33]
 
@@ -114,18 +98,26 @@ def plot_load_curves_as_funciton_of_top_thiccness():
     min_hup = np.min(hup)
     max_hup = hup[-1]
 
-    for i,seed in enumerate(seeds):
-        load_curves_all, load_curves = load_load_curves(temp, vel, force, orientation, 
-                                                        grid, template_lc,template_ms, seed)
-        c = plt.cm.viridis((max_hup - hup[i])/(max_hup - min_hup + 0.01))
-        plt.plot(load_curves[0,:,0], load_curves[0,:,1], c=c, label = f'hup {hup[i]}' )
+    fig, axs = plt.subplots(2,2)
+   
+    axs = axs.ravel()
+    i = 0
+    for j, seeds in enumerate([_seeds1, _seeds2, _seeds3, _seeds4]):
+        for k,seed in enumerate(seeds):
+            load_curves_all, load_curves = load_load_curves(temp, vel, force, orientation, 
+                                                            grid, template_lc,template_ms, seed)
+            c = plt.cm.viridis((max_hup - hup[i])/(max_hup - min_hup + 0.01))
+            axs[j].plot(load_curves[0,:,0], load_curves[0,:,1], c=c, label = f'hup {hup[i]}' )
+            i += 1
             
-
-    plt.xlabel(r"$t_p$ [ns]")
-    plt.ylabel(r"$f$ [$\mu$N]")
+    for ax in axs.flat:
+        ax.set(xlabel=r"$t_p$ [ns]", ylabel = r"$f$ [$\mu$N]")
+        ax.label_outer()
+    #plt.xlabel(r"$t_p$ [ns]")
+    #plt.ylabel(r"$f$ [$\mu$N]")
     plt.title(f"Mean of three runs, for varying upper plate thicness")
     plt.legend()
-    plt.savefig(fig_dir + 'png/load_curves_thicc_runs.png')
+    plt.savefig(fig_dir + 'png/load_curves_thicc_runs_foursquare.png')
 
 
 def plot_all_curves_and_mean(temp, vel, force, orientation, grid, template_lc, template_ms, seeds):
@@ -235,4 +227,23 @@ if __name__ == '__main__':
     plt.savefig(fig_dir + 'png/load_curves_2450_selected.png')
     plt.savefig(fig_dir + 'pgf/load_curves_2450_selected.pgf')
     #plt.show()
+    """
+
+
+    """ #theese are relax seeds
+    seeds_5 =  [24296,84160,79210]
+    seeds_8 =  [35701,84452,85253]
+    seeds_9 =  [34105,10800,42330]
+    seeds_11 = [89027,21504,40454]
+    seeds_12 = [80577,25262,14194]
+    seeds_14 = [82798,96793,76957]
+    seeds_16 = [81147,61987,51593]
+    seeds_18 = [51735,44709,45053]
+    seeds_20 = [70164,14798,28863]
+    seeds_22 = [43346,72761,24220]
+    seeds_24 = [41110,27848,58248]
+    seeds_26 = [29628,48780,22090]
+    seeds_28 = [47223,86471,56804]
+    seeds_30 = [55262,76203,84098]
+    seeds_33 = [39463,84117,53537]
     """
