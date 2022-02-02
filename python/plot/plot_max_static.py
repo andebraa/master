@@ -86,7 +86,7 @@ def plot_max_static_vs_thiccness():
                                               template_lc, template_ms, seed) 
         all_mean_static[i] = mean_static
         for ms in ms_all:
-            plt.plot(hup[i], ms, 'o')
+            plt.plot(hup[i], ms, 'ob')
     plt.plot(hup, all_mean_static, label = 'mean')
         
     plt.xlabel(r"$hup$ [pm]")
