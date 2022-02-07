@@ -22,7 +22,8 @@ def load_load_curves(temp, vel, force, orientation, grid, template_lc, template_
     # load load curves
     load_curve_files = template_lc.format(temp, vel, force, orientation, grid[0], grid[1])
     load_curves_all = []
-    
+   
+
     files = glob(load_curve_files)
     assert files != []
     for file in glob(load_curve_files):
@@ -31,14 +32,14 @@ def load_load_curves(temp, vel, force, orientation, grid, template_lc, template_
             if str(seed) in str(file):
                 print('found loadcurve ',file)
                 load_curves_all.append(load_curves)
-
+                print(len(load_curves))
     load_curves_all[1] = load_curves_all[1][:len(load_curves_all[0])]
     load_curves_all = np.array(load_curves_all)
     shortest = np.argmin(load_curves_all) 
 
     load_curves = mean(load_curves_all, axis=0)
 
-    load_curves = load_curves.reshape(-1, 1001, 2)   # assuming that all curves have 1001 points
+    load_curves = load_curves.reshape(-1, 801, 2)   # assuming that all curves have 1001 points
     
     return load_curves_all, load_curves
 
@@ -147,9 +148,7 @@ def plot_all_curves_and_mean(temp, vel, force, orientation, grid, template_lc, t
     plt.ylabel(r"$f$ [$\mu$N]")
     plt.title(f"load curves for {len(seeds)} runs, force {force}, vel {vel}")
     plt.legend()
-    plt.savefig(fig_dir + 'png/load_curves_runs7_thiccest.png')
-    #plt.savefig(fig_dir + 'pgf/load_curves_2450_all.pgf')
-    #plt.show()
+    plt.savefig(fig_dir + 'png/load_curves_second_rendition_all_and_mean.png')
 
 def plot_mean_of_multiple(temp, vel, force, orientation, grid, template_lc, template_ms, seeds):
     for i in range(len(seeds)):
@@ -170,7 +169,7 @@ if __name__ == '__main__':
 
     # user input
     temp = 2300
-    vel = 5
+    vel = 1.25
     force = 0.001
     orientation = 100
     grid = (4,4)
@@ -181,11 +180,26 @@ if __name__ == '__main__':
     project_dir = '../../'
     fig_dir = project_dir + 'fig/'
 
-    seeds1 = [27278,70295,98184,31906,35578,69872] 
-    seeds2 = [42439,51019,79411,14943]
-    seeds3 = [17744,77072,77201,88708]
-    seeds4 = [58958,67466,85867]
-    seeds5 = [12589, 50887] #thiccest
+    #seeds1 = [27278,70295,98184,31906,35578,69872] 
+    #seeds2 = [42439,51019,79411,14943]
+    #seeds3 = [17744,77072,77201,88708]
+    #seeds4 = [58958,67466,85867]
+    #seeds5 = [12589, 50887] #thiccest
+   
+    # second push run
+    seeds_80 = [71361,91111,63445] # 80
+    seeds_83 = [12890,62608,29899] # 83
+    seeds_85 = [70529,45585,64900, 66909,27035,43111] # 85 
+    seeds_90 = [81809,93141,56900, 33447,88504,79793] # 90
+    seeds_93 = [75942,21663,49508] # 93
+    seeds_95 = [67321,29830,36667, 77113,99307,62931] # 95
+    seeds_100 = [47606,72506,44762, 47009,37801,56714, 54238,10257,73002] # 100
+    seeds_103 = [71970,74062,60542] # 103
+    seeds_105 = [81636,35286,69718] # 105
+    seeds_109 = [90953,90762,47980] # 109
+    seeds = seeds_80+ seeds_83+ seeds_85+ seeds_90+ seeds_93\
+            +seeds_95+ seeds_100+ seeds_103+ seeds_105+ seeds_109
+
     if erratic:
         load_curve_dir = project_dir + 'txt/load_curves/erratic/'
         max_static_dir = project_dir + 'txt/max_static/erratic/'
@@ -200,9 +214,9 @@ if __name__ == '__main__':
         template_lc = load_curve_dir + 'load_curves_temp{}_vel{}_force{}_or{}_seed*_grid{}_{}.txt'
         template_ms = max_static_dir + 'max_static_temp{}_vel{}_force{}_or{}_seed*_grid{}_{}.txt'
 
-    #plot_all_curves_and_mean(temp, vel, force, orientation, grid, template_lc, template_ms, seeds5)    
+    plot_all_curves_and_mean(temp, vel, force, orientation, grid, template_lc, template_ms, seeds)    
     #plot_mean_of_multiple(temp, vel, force, orientation, grid, template_lc, template_ms, [seeds1, seeds2, seeds3])
-    plot_load_curves_as_funciton_of_top_thiccness()
+    #plot_load_curves_as_funciton_of_top_thiccness()
     """
     stop
 

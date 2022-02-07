@@ -61,7 +61,7 @@ def dump_aux(orientation, height, grid, erratic, output_dir, relax_time, relax_s
 temp = 2300
 #seed = np.random.randint(10000, 100000)
 force = 0.001
-vel = 5
+vel = 5/4
 #pushtime = 500000 #timestep to start pushing
 
 height = 109 #90, 95, 110 or 115
@@ -95,10 +95,10 @@ else:
 relax_time = 1000 #ps time until we push
 relax_steps = 500000
 #push_steps = 25000 # how long we push for (ps maybe, or timesteps)
-push_time = 500 #piko seconds. breaks around 100 acording to even
+push_time = 400 #piko seconds. breaks around 100 acording to even
 
 
-for relax_seed in [39463,84117,29469]: #used: 37144, 48329, 94514
+for relax_seed in [84117]: #used: 37144, 48329, 94514
     
     push_seed = np.random.randint(10000, 100000)
     print(push_seed)
