@@ -95,10 +95,10 @@ else:
 relax_time = 1000 #ps time until we push
 relax_steps = 500000
 #push_steps = 25000 # how long we push for (ps maybe, or timesteps)
-push_time = 400 #piko seconds. breaks around 100 acording to even
+push_time = 500 #piko seconds. breaks around 100 acording to even
 
 
-for relax_seed in [84117]: #used: 37144, 48329, 94514
+for relax_seed in [39463,84117,53537]: #used: 37144, 48329, 94514
     
     push_seed = np.random.randint(10000, 100000)
     print(push_seed)
@@ -120,7 +120,7 @@ for relax_seed in [84117]: #used: 37144, 48329, 94514
            'force': 0.001,
            'simtime': push_time, #even called it simetime, no idea what it is
            'pushtime': relax_steps, #steps until push
-           'vel': 5} #m/s
+           'vel': vel} #m/s
 
     if grid: #system might not be erratic, but it could still be grid 
         

@@ -39,7 +39,7 @@ def load_max_static(temp, vel, force, orientation, grid, template_lc, template_m
 def plot_max_static_vs_thiccness():
     # user input
     temp = 2300
-    vel = 5
+    vel = 1.25
     force = 0.001
     orientation = 100
     grid = (4,4)
@@ -50,6 +50,7 @@ def plot_max_static_vs_thiccness():
     project_dir = '../../'
     fig_dir = project_dir + 'fig/'
 
+    """ # first run vel 5 time 500
     seeds_5 =  [88753, 12754, 91693] # thicc 80
     seeds_8 =  [50219, 31693, 19478] # thicc 83
     seeds_9 =  [81094, 81717, 10840] # thicc 85
@@ -65,6 +66,23 @@ def plot_max_static_vs_thiccness():
     seeds_28 = [54648,88413,94253] #thicc 103
     seeds_30 = [92651,19224,85380] #thicc 105
     seeds_33 = [64798,34149] #thicc 109
+    """
+        # second push run vel 1.25
+    seeds_5 = [71361,91111,63445] # 80
+    seeds_8 = [12890,62608,29899] # 83
+    seeds_9 = [70529,45585,64900]
+    seeds_11 = [66909,27035,43111] # 85 
+    seeds_12 = [81809,93141,56900]
+    seeds_14 = [33447,88504,79793] # 90
+    seeds_18 = [75942,21663,49508] # 93
+    seeds_16 = [67321,29830,36667]
+    seeds_20 = [77113,99307,62931] # 95
+    seeds_22 = [47606,72506,44762]
+    seeds_24 = [47009,37801,56714]
+    seeds_26 = [54238,10257,73002] # 100
+    seeds_28 = [71970,74062,60542] # 103
+    seeds_30 = [81636,35286,69718] # 105
+    seeds_33 = [90953,90762,47980] # 109
 
     seeds = [seeds_5, seeds_8, seeds_9, seeds_11, seeds_12, seeds_14, 
             seeds_16, seeds_18, seeds_20, seeds_22, seeds_24, seeds_26, 
@@ -92,7 +110,7 @@ def plot_max_static_vs_thiccness():
     plt.xlabel(r"$hup$ [pm]")
     plt.ylabel(r"$f$ [$\mu$N]")
     plt.title('mean max static vs upper plate thicness')
-    plt.savefig(fig_dir + 'png/max_static_vs_hup.png')
+    plt.savefig(fig_dir + 'png/max_static_vs_hup2.png')
 
     
 
