@@ -55,7 +55,7 @@ with open(load_curve_file, 'r') as f:
 def plot_load_curves_as_funciton_of_top_thiccness():
     # user input
     temp = 2300
-    vel = 5
+    vel = 1.25
     force = 0.001
     orientation = 100
     grid = (4,4)
@@ -66,6 +66,7 @@ def plot_load_curves_as_funciton_of_top_thiccness():
     project_dir = '../../'
     fig_dir = project_dir + 'fig/'
 
+    """ #first run vel 5
     seeds_5 =  [88753, 12754, 91693] # thicc 80
     seeds_8 =  [50219, 31693, 19478] # thicc 83
     seeds_9 =  [81094, 81717, 10840] # thicc 85
@@ -82,11 +83,30 @@ def plot_load_curves_as_funciton_of_top_thiccness():
     seeds_30 = [92651,19224,85380] #thicc 105
     seeds_33 = [64798,34149] #thicc 109
 
+    """
+
+    # second push run vel 1.25
+    seeds_5 = [71361,91111,63445] # 80
+    seeds_8 = [12890,62608,29899] # 83
+    seeds_9 = [70529,45585,64900]
+    seeds_11 = [66909,27035,43111] # 85 
+    seeds_12 = [81809,93141,56900] 
+    seeds_14 = [33447,88504,79793] # 90
+    seeds_18 = [75942,21663,49508] # 93
+    seeds_16 = [67321,29830,36667] 
+    seeds_20 = [77113,99307,62931] # 95
+    seeds_22 = [47606,72506,44762] 
+    seeds_24 = [47009,37801,56714] 
+    seeds_26 = [54238,10257,73002] # 100
+    seeds_28 = [71970,74062,60542] # 103
+    seeds_30 = [81636,35286,69718] # 105
+    seeds_33 = [90953,90762,47980] # 109
+    
+    
     _seeds1 = [seeds_5, seeds_8, seeds_9, seeds_11]
     _seeds2 = [seeds_12, seeds_14, seeds_16, seeds_18]
     _seeds3 = [seeds_20, seeds_22, seeds_24, seeds_26]
     _seeds4 = [seeds_28, seeds_30, seeds_33]
-
 
     hup = [5,8,9,11,12,14,16,18,20,22,24,26,28,30,33]
 
@@ -121,7 +141,7 @@ def plot_load_curves_as_funciton_of_top_thiccness():
     #plt.xlabel(r"$t_p$ [ns]")
     #plt.ylabel(r"$f$ [$\mu$N]")
     fig.suptitle(f"Mean of three runs, for varying upper plate thicness")
-    plt.savefig(fig_dir + 'png/load_curves_thicc_runs_foursquare.png', dpi = 500)
+    plt.savefig(fig_dir + 'png/load_curves_thicc_runs2_foursquare.png', dpi = 500)
 
 
 def plot_all_curves_and_mean(temp, vel, force, orientation, grid, template_lc, template_ms, seeds):
@@ -186,19 +206,6 @@ if __name__ == '__main__':
     #seeds4 = [58958,67466,85867]
     #seeds5 = [12589, 50887] #thiccest
    
-    # second push run
-    seeds_80 = [71361,91111,63445] # 80
-    seeds_83 = [12890,62608,29899] # 83
-    seeds_85 = [70529,45585,64900, 66909,27035,43111] # 85 
-    seeds_90 = [81809,93141,56900, 33447,88504,79793] # 90
-    seeds_93 = [75942,21663,49508] # 93
-    seeds_95 = [67321,29830,36667, 77113,99307,62931] # 95
-    seeds_100 = [47606,72506,44762, 47009,37801,56714, 54238,10257,73002] # 100
-    seeds_103 = [71970,74062,60542] # 103
-    seeds_105 = [81636,35286,69718] # 105
-    seeds_109 = [90953,90762,47980] # 109
-    seeds = seeds_80+ seeds_83+ seeds_85+ seeds_90+ seeds_93\
-            +seeds_95+ seeds_100+ seeds_103+ seeds_105+ seeds_109
 
     if erratic:
         load_curve_dir = project_dir + 'txt/load_curves/erratic/'
@@ -214,9 +221,9 @@ if __name__ == '__main__':
         template_lc = load_curve_dir + 'load_curves_temp{}_vel{}_force{}_or{}_seed*_grid{}_{}.txt'
         template_ms = max_static_dir + 'max_static_temp{}_vel{}_force{}_or{}_seed*_grid{}_{}.txt'
 
-    plot_all_curves_and_mean(temp, vel, force, orientation, grid, template_lc, template_ms, seeds)    
+    #plot_all_curves_and_mean(temp, vel, force, orientation, grid, template_lc, template_ms, seeds)    
     #plot_mean_of_multiple(temp, vel, force, orientation, grid, template_lc, template_ms, [seeds1, seeds2, seeds3])
-    #plot_load_curves_as_funciton_of_top_thiccness()
+    plot_load_curves_as_funciton_of_top_thiccness()
     """
     stop
 
