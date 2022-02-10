@@ -33,13 +33,14 @@ def load_load_curves(temp, vel, force, orientation, grid, template_lc, template_
                 print('found loadcurve ',file)
                 load_curves_all.append(load_curves)
                 print(len(load_curves))
+    print('load curves shape: ', np.shape(load_curves_all))
     load_curves_all[1] = load_curves_all[1][:len(load_curves_all[0])]
     load_curves_all = np.array(load_curves_all)
     shortest = np.argmin(load_curves_all) 
 
     load_curves = mean(load_curves_all, axis=0)
 
-    load_curves = load_curves.reshape(-1, 801, 2)   # assuming that all curves have 1001 points
+    load_curves = load_curves.reshape(-1, 1001, 2)   # assuming that all curves have 1001 points
     
     return load_curves_all, load_curves
 
@@ -84,8 +85,8 @@ def plot_load_curves_as_funciton_of_top_thiccness():
     seeds_33 = [64798,34149] #thicc 109
 
     """
-
-    # second push run vel 1.25
+    """
+    # second push run vel 5
     seeds_5 = [71361,91111,63445] # 80
     seeds_8 = [12890,62608,29899] # 83
     seeds_9 = [70529,45585,64900]
@@ -101,7 +102,23 @@ def plot_load_curves_as_funciton_of_top_thiccness():
     seeds_28 = [71970,74062,60542] # 103
     seeds_30 = [81636,35286,69718] # 105
     seeds_33 = [90953,90762,47980] # 109
-    
+    """
+        #third push run
+    seeds_5 = [76532,67473,86988]
+    seeds_8 = [22135,54054,39337]
+    seeds_9 = [15007,95692,61395]
+    seeds_11 = [31234,92172,49033]
+    seeds_12 = [27448,57576,83094] 
+    seeds_14 = [68672,65867,65400]
+    seeds_16 = [57652,77804,75056]
+    seeds_18 = [37474,72730,76985] 
+    seeds_20 = [16010,24858,24113]
+    seeds_22 = [19590,75450,95072] 
+    seeds_24 = [63988,78860,45476] 
+    seeds_26 = [35593,21768,33674]
+    seeds_28 = [81910,33465] #46388 missing
+    seeds_30 = [23317,44679,86430]
+    seeds_33 = [66411,52069,63812]
     
     _seeds1 = [seeds_5, seeds_8, seeds_9, seeds_11]
     _seeds2 = [seeds_12, seeds_14, seeds_16, seeds_18]
