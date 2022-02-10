@@ -81,3 +81,5 @@ thermo_style custom step temp time pxx pyy pzz pe press v_rx v_rz v_vx v_vz v_fx
 dump dumper all custom ${thousand_steps} dump.bin id type x y z c_stress[1] c_stress[3] c_stress[5]
 
 run $(v_simtime/dt)
+
+write_restart push_restart.bin
