@@ -115,7 +115,7 @@ for height, seeds in seed_dict.items(): #used: 37144, 48329, 94514
 
     for relax_seed in seeds:
         push_seed = np.random.randint(10000, 100000)
-        print(push_seed)
+        print(height, push_seed)
         if grid:
             if erratic:
 

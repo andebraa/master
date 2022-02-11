@@ -28,7 +28,7 @@ mass 1 12.011
 mass 2 28.079
 timestep 0.002
 
-variable thousand_steps equal $(v_simtime/dt/1000)
+variable thousand_steps equal $(v_simtime/dt/100)
 
 
 # set position of asperity in x- and y-dir. z-dir is free. 
