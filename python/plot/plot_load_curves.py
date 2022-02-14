@@ -40,7 +40,7 @@ def load_load_curves(temp, vel, force, orientation, grid, template_lc, template_
 
     load_curves = mean(load_curves_all, axis=0)
 
-    load_curves = load_curves.reshape(-1, 1001, 2)   # assuming that all curves have 1001 points
+    load_curves = load_curves.reshape(-1, 1401, 2)   # assuming that all curves have 1001 points
     
     return load_curves_all, load_curves
 
@@ -103,6 +103,7 @@ def plot_load_curves_as_funciton_of_top_thiccness():
     seeds_30 = [81636,35286,69718] # 105
     seeds_33 = [90953,90762,47980] # 109
     """
+    """
         #third push run
     seeds_5 = [76532,67473,86988]
     seeds_8 = [22135,54054,39337]
@@ -119,7 +120,26 @@ def plot_load_curves_as_funciton_of_top_thiccness():
     seeds_28 = [81910,33465] #46388 missing
     seeds_30 = [23317,44679,86430]
     seeds_33 = [66411,52069,63812]
-    
+    """
+
+    #fourth push, 700 long
+    seeds_5 = [97841,88985,79749] #80
+    seeds_8 = [81474,90347,79290] #83
+    seeds_9 = [40328,90215,62491]
+    seeds_11 = [80371,12038,48116] # 85
+    seeds_12 = [61347,50189,68738]
+    seeds_14 = [19022,23781,73474] #90
+    seeds_16 = [27598,75257,74926] # 95
+    seeds_20 = [17821,40450,80080] # 95
+    seeds_18 = [14130,95349,16972] #93
+    seeds_22 = [64180,63781,84634] 
+    seeds_24 = [64308,93573,48127] 
+    seeds_26 = [78231,43336,42599] # 100
+    seeds_28 = [28782,23246,41573] # 103
+    seeds_30 = [48834,99626,28475] # 105
+    seeds_33 = [89090,40422,52257] #109
+
+
     _seeds1 = [seeds_5, seeds_8, seeds_9, seeds_11]
     _seeds2 = [seeds_12, seeds_14, seeds_16, seeds_18]
     _seeds3 = [seeds_20, seeds_22, seeds_24, seeds_26]
@@ -158,7 +178,7 @@ def plot_load_curves_as_funciton_of_top_thiccness():
     #plt.xlabel(r"$t_p$ [ns]")
     #plt.ylabel(r"$f$ [$\mu$N]")
     fig.suptitle(f"Mean of three runs, for varying upper plate thicness")
-    plt.savefig(fig_dir + 'png/load_curves_thicc_runs2_foursquare.png', dpi = 500)
+    plt.savefig(fig_dir + 'png/load_curves_thicc_runs3_foursquare.png', dpi = 500)
 
 
 def plot_all_curves_and_mean(temp, vel, force, orientation, grid, template_lc, template_ms, seeds):
