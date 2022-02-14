@@ -71,7 +71,7 @@ fix 8 all ave/atom ${thousand_steps} 1 ${thousand_steps} c_stress[*]
 # compute displacement
 compute chunks all chunk/atom bin/3d x 0.0 10.0 y 0.0 10.0 z 50.0 10.0 nchunk once ids once
 compute com all com/chunk chunks
-variable com_file string ../../../../txt/com/com_temp${temp}_vel${vel}_force${force}_time${pushtime}_seed${seed}.txt
+variable com_file string ../../../../../txt/com/com_temp${temp}_vel${vel}_force${force}_time${pushtime}_seed${seed}.txt
 fix com_avg all ave/time ${thousand_steps} 1 ${thousand_steps} c_com[1] mode vector file ${com_file}
 
 
