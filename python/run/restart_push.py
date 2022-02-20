@@ -120,14 +120,14 @@ for height, seeds in seed_dict.items(): #used: 37144, 48329, 94514
         if grid:
             if erratic:
 
-                restartfile = push_dir + f"sim_temp{temp}_vel{vel}_force{force}_time{relax_time}_seed{old_push_seed}_errgrid{grid[0]}_{grid[1]}/push_restart.bin"
+                restartfile = push_dir + f"sim_temp{temp}_vel{vel}_force{force}_time{prev_push_time}_seed{old_push_seed}_errgrid{grid[0]}_{grid[1]}/push_restart.bin"
                 
             else:
-                restartfile = push_dir + f"sim_temp{temp}_vel{vel}_force{force}_time{relax_time}_seed{old_push_seed}_grid{grid[0]}_{grid[1]}/push_restart.bin"
+                restartfile = push_dir + f"sim_temp{temp}_vel{vel}_force{force}_time{prev_push_time}_seed{old_push_seed}_grid{grid[0]}_{grid[1]}/push_restart.bin"
 
 
         else:
-            restartfile = push_dir + f"sim_temp{temp}_vel{vel}_force{force}_time{relax_time}_seed{old_push_seed}/push_restart.bin"
+            restartfile = push_dir + f"sim_temp{temp}_vel{vel}_force{force}_time{prev_push_time}_seed{old_push_seed}/push_restart.bin"
 
         var = {'restartfile': f"push_restart.bin",
                'paramfile': "SiC.vashishta",
