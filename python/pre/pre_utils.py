@@ -372,7 +372,8 @@ def gen_erratic_system(lx=99.9, ly=100, ax=50, ay=50, hl=50, hu=60, hup=2,
     
     #bool_grid = gen_grid(grid, asperities)
     #for custom setup:
-    bool_grid = gen_grid(grid, asperities, np.array([[0,1,0,1],[1,1,0,0],[1,0,0,1],[0,0,1,1]]))
+    #bool_grid = gen_grid(grid, asperities, np.array([[0,1,0,1],[1,1,0,0],[1,0,0,1],[0,0,1,1]]))
+    bool_grid = gen_grid(grid, asperities, np.array([[0,1,0,1],[1,0,1,0],[0,1,0,1],[1,0,1,0]]))
 
 
     print(bool_grid)

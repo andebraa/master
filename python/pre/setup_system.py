@@ -23,7 +23,7 @@ ly = 100        # system length y-dir
 ax = 50         # initial x-coordinate of asperity
 ay = 50         # initial y-coordinate of asperity
 hl = 20         # height of lower surface/plate
-hu = 89         # height of upper surface #thin: 65, thicc: 75, thiccer: 90
+hu = 90         # height of upper surface #thin: 65, thicc: 75, thiccer: 90
 hup = 33        # thickness of upper plate #thin: 2, thicc: 20, thiccer: 35
 lz = hl + hu    #total system height
 octa_d = 1 * 39.0 #The multiplyer has to be an integer
@@ -48,8 +48,8 @@ args = {'lx': lx, 'ly':ly, 'ax':ax, 'ay':ay, 'hl':hl, 'hu': hu, 'hup': hup, 'gri
 
 if erratic and grid:
     
-    system_file = path + f"erratic/system_or{lower_orient}_hi{lz}_seed{seed}_errgrid{grid[0]}_{grid[1]}"
-    aux_path = path + f"erratic/aux/system_or{lower_orient}_hi{lz}_seed{seed}_errgrid{grid[0]}_{grid[1]}_auxiliary.json"
+    system_file = path + f"erratic/system_or{lower_orient}_hi{lz}_seed{seed}_errgrid{grid[0]}_{grid[1]}_chess"
+    aux_path = path + f"erratic/aux/system_or{lower_orient}_hi{lz}_seed{seed}_errgrid{grid[0]}_{grid[1]}_chess_auxiliary.json"
 
     system = gen_erratic_system(lx, ly, ax, ay, hl, hu, hup, octa_d, dode_d, lower_orient,
                                 remove_atoms, aux_path=aux_path, grid=grid, 
