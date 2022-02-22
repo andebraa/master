@@ -39,7 +39,7 @@ def get_load_curves():
 
     
     #fourth push, 700 long
-    #seeds = [97841,88985,79749] #80
+    seeds = [97841,88985,79749] #80
     #seeds = [81474,90347,79290] #83
     #seeds = [40328,90215,62491,80371,12038,48116] # 85
     #seeds = [61347,50189,68738, 19022,23781,73474] #90
@@ -49,21 +49,23 @@ def get_load_curves():
     #seeds = [64180,63781,84634, 64308,93573,48127, 78231,43336,42599] # 100
     #seeds = [28782,23246,41573] # 103
     #seeds = [48834,99626,28475] # 105
-    seeds = [89090,40422,52257] #109
+    #seeds = [89090,40422,52257] #109
 
-    heights = [80,83,85,90,93,95,100,103,105,109] 
+    heights = [80]#,83,85,90,93,95,100,103,105,109] 
 
     for height in heights:
-        reruns = 
         for seed in seeds:
-            logfiles = []
-            print(f"seed: {seed}   time: {time}")
-            orig_logfile = template_logfiles.format(orientation, height, temp, vel, force, orig_time, seed, grid[0], grid[1])
-            rerun_logfile = rerun_template.format(orientation, height, temp, vel, force, orig_time, seed, grid[0], grid[1], rerun_time)
-            print(orig_logfile)
-            logfiles.append(orig_logfile)
+            print(f"seed: {seed}")
+            orig_logfile = template_logfiles.format(orientation, height, temp, 
+                                                    vel, force, orig_time, seed, 
+                                                    grid[0], grid[1])
 
+            rerun_logfile = rerun_template.format(orientation, height, temp, vel, 
+                                                  force, orig_time, seed, grid[0], 
+                                                  grid[1], rerun_time)
 
+            print('orig_logfile', orig_logfile)
+            print('rerun_logfile', rerun_logfile)
             # extract load curves
             extract_load_curves(orig_logfile, None, 0, 5000, 
                                 outfile_load_curves = template_lc.format(temp, vel, force, 
@@ -72,23 +74,11 @@ def get_load_curves():
 
                                 outfile_max_static = template_ms.format(temp, vel, force, 
                                                                         orientation, seed, 
-                                                                        grid[0], grid[1]))
+                                                                        grid[0], grid[1]), 
+                                rerun = rerun_logfile)
             print('load curves written to: \n', template_lc.format(temp, vel, force,
                                                                          orientation, seed,
                                                                      grid[0], grid[1]))
             
-            # append rerun logfiles
-            extract_load_curves(logfiles, None, 0, 5000, 
-                                outfile_load_curves = template_lc.format(temp, vel, force, 
-                                                                         orientation, seed, 
-                                                                         grid[0], grid[1]),
-
-                                outfile_max_static = template_ms.format(temp, vel, force, 
-                                                                        orientation, seed, 
-                                                                        grid[0], grid[1])
-                                rerun = True)
-            print('load curves written to: \n', template_lc.format(temp, vel, force,
-                                                                         orientation, seed,
-                                                                     grid[0], grid[1]))
 if __name__ == '__main__':
     get_load_curves()

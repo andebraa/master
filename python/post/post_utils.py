@@ -197,7 +197,7 @@ def count_coord(dumpfile, outfile="coord.txt"):
     del pipeline
 
 
-def extract_load_curves(logfiles, delta=None, init_time=0, window=1,
+def extract_load_curves(logfile, delta=None, init_time=0, window=1,
                         outfile_load_curves="load_curves.txt",
                         outfile_max_static="max_static.txt",
                         prominence=0.05, asperity = False, rerun = False):
@@ -274,48 +274,55 @@ def extract_load_curves(logfiles, delta=None, init_time=0, window=1,
     f_lc.write(header_load_curves)
     f_ms.write(header_max_static)
 
-    for i, logfile in enumerate(logfiles):
-        push_time = init_time + i * delta   # moment when we start pushing
+    #for i, logfile in enumerate(logfiles):
+    push_time = init_time +  delta   # moment when we start pushing
 
-        # read log file
-        log_obj = File(logfile)
-        time = log_obj.get("Time") / 1000    # convert from ps to ns
-        fx = -log_obj.get("v_fx")            # change sign of friction force
-        print("Length of log file: ", len(time))
+    # read log file
+    log_obj1 = File(logfile)
 
-        # smooth friction force
-        fx = running_mean(fx, window)
-
-        # convert friction force from eV/Å to μN (micro Newton)
-        eV = value(u'elementary charge')  # J
-        Å = 1e-10  # m
-        fx *= eV / Å  # J/m = N
-        fx *= 1e6  # mN
-
-        # identify first prominent peak
-        peaks, _ = find_peaks(fx, prominence=prominence)
-        try:
-            first_peak = peaks[0]
-        except IndexError:
-            first_peak = 0
-            warnings.warn("No prominent peaks found, try a lower prominence")
+    if rerun:
+        log_obj2 = File(rerun)
+        log_obj = log_obj1 + log_obj2
+    else:
+        log_obj = log_obj1
+    time = log_obj.get("Time") / 1000    # convert from ps to ns
+    fx = -log_obj.get("v_fx")            # change sign of friction force
+    print("Length of log file: ", len(time))
 
 
-        # save data to files
-        # we do not really need 250000 points, it just takes up
-        # a lot of space and makes the curves hard to plot.
-        # 1000 points should be more than sufficient
-        time_short = time[::250]
-        fx_short = fx[::250]
-        header_lc_intermediate = (
-          " \n"
-          f"push time: {push_time} ns \n"
-          f"length: {len(time_short)} \n"
-          "time [ns]\t\t friction force [mN]")
-        savetxt(f_lc, asarray([time_short, fx_short]).T,
-                header=header_lc_intermediate)
-        f_ms.write(f"{push_time + time[first_peak]:.10e} {fx[first_peak]:.10e} \n")
-        f_ms.flush()
+    # smooth friction force
+    fx = running_mean(fx, window)
+
+    # convert friction force from eV/Å to μN (micro Newton)
+    eV = value(u'elementary charge')  # J
+    Å = 1e-10  # m
+    fx *= eV / Å  # J/m = N
+    fx *= 1e6  # mN
+
+    # identify first prominent peak
+    peaks, _ = find_peaks(fx, prominence=prominence)
+    try:
+        first_peak = peaks[0]
+    except IndexError:
+        first_peak = 0
+        warnings.warn("No prominent peaks found, try a lower prominence")
+
+
+    # save data to files
+    # we do not really need 250000 points, it just takes up
+    # a lot of space and makes the curves hard to plot.
+    # 1000 points should be more than sufficient
+    time_short = time[::250]
+    fx_short = fx[::250]
+    header_lc_intermediate = (
+      " \n"
+      f"push time: {push_time} ns \n"
+      f"length: {len(time_short)} \n"
+      "time [ns]\t\t friction force [mN]")
+    savetxt(f_lc, asarray([time_short, fx_short]).T,
+            header=header_lc_intermediate)
+    f_ms.write(f"{push_time + time[first_peak]:.10e} {fx[first_peak]:.10e} \n")
+    f_ms.flush()
 
     # close files
     f_lc.close()
