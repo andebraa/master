@@ -19,7 +19,8 @@ from lammps_simulator.computer import GPU, CPU, SlurmGPU
 temp = 2300
 simtime = 1000 #picosekunder
 force = 0.001
-height = 109
+height = input('height ')
+
 orientation = "100"
 num_restart_points = 5
 
@@ -38,7 +39,7 @@ lammps_dir = project_dir + "lammps/"
 relax_dir = project_dir + f"simulations/sys_or{orientation}_hi{height}/relax/"
 init_dir = project_dir + f"initial_system/"
 
-init_auxiliary = project_dir + 'initial_system/erratic/aux/system_or{}_hi{}_seed{}_errgrid{}_{}_auxiliary.json'
+init_auxiliary = project_dir + 'initial_system/erratic/aux/system_or{}_hi{}_seed{}_errgrid{}_{}_chess_auxiliary.json'
 
 def dump_aux(orientation, height, grid, erratic, output_dir, relax_seed, init_seed = 0):
     """
@@ -54,7 +55,7 @@ def dump_aux(orientation, height, grid, erratic, output_dir, relax_seed, init_se
 
     if grid:
         if erratic:
-            output_aux = output_dir +'/system_or{}_hi{}_seed{}_errgrid{}_{}_auxiliary.json'.format(orientation, 
+            output_aux = output_dir +'/system_or{}_hi{}_seed{}_errgrid{}_{}_chess_auxiliary.json'.format(orientation, 
                                                                                                    height, 
                                                                                                    relax_seed,
                                                                                                    grid[0], 
@@ -78,7 +79,7 @@ def dump_aux(orientation, height, grid, erratic, output_dir, relax_seed, init_se
 # Finding the init datafile
 if erratic:
     #finding all files in directory, printing the seeds and having user write in desired seed
-    template_dump = init_dir +f"erratic/system_or{orientation}_hi{height}_seed*_errgrid{grid[0]}_{grid[1]}.data"
+    template_dump = init_dir +f"erratic/system_or{orientation}_hi{height}_seed*_errgrid{grid[0]}_{grid[1]}_chess.data"
     print(template_dump)
     init_seeds = glob.glob(template_dump)
    
@@ -90,7 +91,7 @@ if erratic:
 
     init_seed = input('select seed ')
     
-    datafile = project_dir + f"initial_system/erratic/system_or{orientation}_hi{height}_seed{init_seed}_errgrid{grid[0]}_{grid[1]}.data"
+    datafile = project_dir + f"initial_system/erratic/system_or{orientation}_hi{height}_seed{init_seed}_errgrid{grid[0]}_{grid[1]}_chess.data"
     #datafile = project_dir + f"initial_system/erratic/system_or{orientation}_hi{height}_rep{grid[0]}{grid[1]}_removed00.data"
 
     print(datafile)
@@ -119,7 +120,7 @@ var = {'datafile': datafile.split("/")[-1],
 # Initializing the run with correct output script
 if erratic:
     output_dir = directory=relax_dir + \
-    f"erratic/sim_temp{temp}_force{force}_time{simtime}_seed{relax_seed}_errgrid{grid[0]}_{grid[1]}"
+    f"erratic/sim_temp{temp}_force{force}_time{simtime}_seed{relax_seed}_errgrid{grid[0]}_{grid[1]}_chess"
     
     sim = Simulator(directory = output_dir, overwrite=True)
 
