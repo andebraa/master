@@ -32,7 +32,7 @@ def get_load_curves():
 
     
     if erratic:
-        rerun_template = push_dir + 'sim_temp{}_vel{}_force{}_time{}_seed{}_errgrid{}_{}/rerun_time{}/log.lammps'
+        rerun_template = push_dir + 'sim_temp{}_vel{}_force{}_time{}_seed{}_errgrid{}_{}/restart_time{}/log.lammps'
         template_logfiles = push_dir + 'sim_temp{}_vel{}_force{}_time{}_seed{}_errgrid{}_{}/log.lammps'
         template_lc = lc_dir + 'load_curves_temp{}_vel{}_force{}_or{}_seed{}_errgrid{}_{}.txt'
         template_ms = ms_dir + 'max_static_temp{}_vel{}_force{}_or{}_seed{}_errgrid{}_{}.txt'
