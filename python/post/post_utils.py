@@ -16,6 +16,7 @@ from scipy.signal import find_peaks
 from scipy.constants import value
 from lammps_logfile import File, running_mean
 import warnings
+import numpy as np
 
 def get_erratic_contact_area(pipeline, outfile="area.txt", delta=None,
                              init_time=0, asperity = 1, grid = (1,1)):
@@ -282,11 +283,13 @@ def extract_load_curves(logfile, delta=None, init_time=0, window=1,
 
     if rerun:
         log_obj2 = File(rerun)
-        log_obj = log_obj1 + log_obj2
+        time = np.append(log_obj1.get("Time"), log_obj2.get("Time")) /1000  # convert from ps to ns
+        fx = -np.append(log_obj1.get("v_fx"), log_obj2.get('v_fx')) # change sign of friction force
+    
     else:
-        log_obj = log_obj1
-    time = log_obj.get("Time") / 1000    # convert from ps to ns
-    fx = -log_obj.get("v_fx")            # change sign of friction force
+        time = log_obj.get("Time") / 1000    # convert from ps to ns
+        fx = -log_obj.get("v_fx")            # change sign of friction force
+    
     print("Length of log file: ", len(time))
 
 
