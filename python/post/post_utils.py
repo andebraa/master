@@ -279,12 +279,12 @@ def extract_load_curves(logfile, delta=None, init_time=0, window=1,
     push_time = init_time +  delta   # moment when we start pushing
 
     # read log file
-    log_obj1 = File(logfile)
+    log_obj = File(logfile)
 
     if rerun:
         log_obj2 = File(rerun)
-        time = np.append(log_obj1.get("Time"), log_obj2.get("Time")) /1000  # convert from ps to ns
-        fx = -np.append(log_obj1.get("v_fx"), log_obj2.get('v_fx')) # change sign of friction force
+        time = np.append(log_obj.get("Time"), log_obj2.get("Time")) /1000  # convert from ps to ns
+        fx = -np.append(log_obj.get("v_fx"), log_obj2.get('v_fx')) # change sign of friction force
     
     else:
         time = log_obj.get("Time") / 1000    # convert from ps to ns

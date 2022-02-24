@@ -89,6 +89,7 @@ relax_steps = 500000
 #push_steps = 25000 # how long we push for (ps maybe, or timesteps)
 push_time = 700 #piko seconds. breaks around 100 acording to even
 
+
 seed_dict = {80: [24296,84160,79210], 83: [35701,84452,85253],
              85: [34105,10800,42330,89027,21504,40454],
              90: [80577,25262,14194,82798,96793,76957],

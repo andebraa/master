@@ -39,7 +39,7 @@ def get_load_curves():
 
     
     #fourth push, 700 long
-    seeds = [97841,88985,79749] #80
+    #seeds = [97841,88985,79749] #80
     #seeds = [81474,90347,79290] #83
     #seeds = [40328,90215,62491,80371,12038,48116] # 85
     #seeds = [61347,50189,68738, 19022,23781,73474] #90
@@ -53,7 +53,16 @@ def get_load_curves():
 
     heights = [80]#,83,85,90,93,95,100,103,105,109] 
 
-    for height in heights:
+    seed_dict = {80: [97841,88985,79749], 83: [81474,90347,79290],
+             85: [40328,90215,62491,80371,12038,48116],
+             90: [61347,50189,68738, 19022,23781,73474],
+             95: [27598,75257,74926,17821,40450,80080],
+             93: [14130,95349,16972],
+             100: [64180,63781,84634, 64308,93573,48127, 78231,43336,42599],
+             103: [28782,23246,41573], 105: [48834,99626,28475],
+             109: [89090,40422,52257]}
+
+    for height, seeds in seed_dict.items():
         for seed in seeds:
             print(f"seed: {seed}")
             orig_logfile = template_logfiles.format(orientation, height, temp, 
@@ -79,6 +88,6 @@ def get_load_curves():
             print('load curves written to: \n', template_lc.format(temp, vel, force,
                                                                          orientation, seed,
                                                                      grid[0], grid[1]))
-            
+        
 if __name__ == '__main__':
     get_load_curves()
