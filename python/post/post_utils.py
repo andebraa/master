@@ -266,12 +266,8 @@ def extract_load_curves(logfile, delta=None, init_time=0, window=1,
         outifle_max_static[0]+f'_asperity{asperity}' 
         outfile_max_static.join() 
    
-    if rerun:
-        f_lc = open(outfile_load_curves, 'a')
-        f_ms = open(outfile_max_static, 'a')
-    else:
-        f_lc = open(outfile_load_curves, 'w')
-        f_ms = open(outfile_max_static, 'w+')
+    f_lc = open(outfile_load_curves, 'w')
+    f_ms = open(outfile_max_static, 'w+')
     f_lc.write(header_load_curves)
     f_ms.write(header_max_static)
 
