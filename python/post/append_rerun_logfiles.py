@@ -51,7 +51,6 @@ def get_load_curves():
     #seeds = [48834,99626,28475] # 105
     #seeds = [89090,40422,52257] #109
 
-    heights = [80]#,83,85,90,93,95,100,103,105,109] 
 
     seed_dict = {80: [97841,88985,79749], 83: [81474,90347,79290],
              85: [40328,90215,62491,80371,12038,48116],
@@ -76,7 +75,7 @@ def get_load_curves():
             print('orig_logfile', orig_logfile)
             print('rerun_logfile', rerun_logfile)
             # extract load curves
-            extract_load_curves(orig_logfile, None, 0, 5000, 
+            extract_load_curves(orig_logfile, None, orig_time, 5000, 
                                 outfile_load_curves = template_lc.format(temp, vel, force, 
                                                                          orientation, seed, 
                                                                          grid[0], grid[1]),
