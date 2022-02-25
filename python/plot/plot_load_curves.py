@@ -38,9 +38,10 @@ def load_load_curves(temp, vel, force, orientation, grid, template_lc, template_
     load_curves_all = np.array(load_curves_all)
     shortest = np.argmin(load_curves_all) 
 
+    
     load_curves = mean(load_curves_all, axis=0)
-
-    load_curves = load_curves.reshape(-1, 1401, 2)   # assuming that all curves have 1001 points
+    print(np.shape(load_curves))
+    load_curves = load_curves.reshape(-1, np.shape(load_curves)[0], 2)   # assuming that all curves have 1001 points
     
     return load_curves_all, load_curves
 
