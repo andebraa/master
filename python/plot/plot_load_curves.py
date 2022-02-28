@@ -131,12 +131,12 @@ def plot_load_curves_as_funciton_of_top_thiccness():
     
             ms_all = load_max_static(temp, vel, force, orientation, grid,
                                      template_lc, template_ms, seed)
-            
+            print(ms_all)
             c = plt.cm.viridis((max_hup - hup[i])/(max_hup - min_hup + 0.01))
             axs[j].plot(load_curves[0,:,0], load_curves[0,:,1], c=c, label = f'hup {hup[i]}' )
             for l in range(len(seed)):
                 # ms_all contains tuples (time, ms) 
-                axs[j].plot(ms_all[l], 'o',c=c)
+                axs[j].plot(ms_all[l][0], ms_all[l][1]/100, 'o',c=c)
                 axs[j].plot(load_curves_all[l,:,0], load_curves_all[l,:,1], '--', alpha = 0.5, c=c)
             axs[j].legend()
             i += 1
