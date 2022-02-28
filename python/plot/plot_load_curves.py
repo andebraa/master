@@ -136,7 +136,7 @@ def plot_load_curves_as_funciton_of_top_thiccness():
             axs[j].plot(load_curves[0,:,0], load_curves[0,:,1], c=c, label = f'hup {hup[i]}' )
             for l in range(len(seed)):
                 # ms_all contains tuples (time, ms) 
-                #axs[j].plot(ms_all[l], 'o',c=c)
+                axs[j].plot(ms_all[l], 'o',c=c)
                 axs[j].plot(load_curves_all[l,:,0], load_curves_all[l,:,1], '--', alpha = 0.5, c=c)
             axs[j].legend()
             i += 1
@@ -148,7 +148,7 @@ def plot_load_curves_as_funciton_of_top_thiccness():
     #plt.xlabel(r"$t_p$ [ns]")
     #plt.ylabel(r"$f$ [$\mu$N]")
     fig.suptitle(f"Mean of three runs, for varying upper plate thicness")
-    plt.savefig(fig_dir + 'png/load_curves_thicc_runs3_foursquare.png', dpi = 500)
+    plt.savefig(fig_dir + 'png/load_curves_varying_hup_ms.png', dpi = 500)
 
 
 def plot_all_curves_and_mean(temp, vel, force, orientation, grid, template_lc, template_ms, seeds):
