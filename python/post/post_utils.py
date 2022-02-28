@@ -272,8 +272,8 @@ def extract_load_curves(logfile, delta=None, init_time=0, window=1,
     f_ms.write(header_max_static)
 
     #for i, logfile in enumerate(logfiles):
-    push_time = init_time +  delta   # moment when we start pushing
-
+    #push_time = init_time +  delta   # moment when we start pushing
+    push_time = 0
     # read log file
     log_obj = File(logfile)
 
