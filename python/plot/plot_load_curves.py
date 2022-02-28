@@ -121,7 +121,9 @@ def plot_load_curves_as_funciton_of_top_thiccness():
     max_hup = hup[-1]
 
     fig, axs = plt.subplots(2,2)
-   
+    fig2 = plt.figure()
+    axs2 = fig2.add_subplot(111)
+
     axs = axs.ravel()
     i = 0
     for j, seeds in enumerate([_seeds1, _seeds2, _seeds3, _seeds4]):
@@ -136,6 +138,7 @@ def plot_load_curves_as_funciton_of_top_thiccness():
             for l in range(len(seed)):
                 # ms_all contains tuples (time, ms)
                 print(ms_all[l][0], ms_all[l][1])
+                axs2.plot(ms_all[l][0]*vel, ms_all[l][1])
                 axs[j].plot(ms_all[l][0], ms_all[l][1], 'o',c=c)
                 axs[j].plot(load_curves_all[l,:,0], load_curves_all[l,:,1], '--', alpha = 0.5, c=c)
             axs[j].legend()
@@ -147,9 +150,14 @@ def plot_load_curves_as_funciton_of_top_thiccness():
         
     #plt.xlabel(r"$t_p$ [ns]")
     #plt.ylabel(r"$f$ [$\mu$N]")
+    fig2.savefig(fig_dir + 'png/displacement_vs_maxstatic.png')
     fig.suptitle(f"Mean of three runs, for varying upper plate thicness")
-    plt.savefig(fig_dir + 'png/load_curves_varying_hup_ms.png', dpi = 500)
+    fig.savefig(fig_dir + 'png/load_curves_varying_hup_ms.png', dpi = 500)
 
+    
+    plt.close()
+
+    
 
 def plot_all_curves_and_mean(temp, vel, force, orientation, grid, template_lc, template_ms, seeds):
     load_curves_all, load_curves = load_load_curves(temp, vel, force, orientation, grid, template_lc,template_ms, seeds) 
@@ -190,7 +198,8 @@ def plot_mean_of_multiple(temp, vel, force, orientation, grid, template_lc, temp
     plt.title(f"mean of multiple load curves relax seeds, force {force}, vel {vel}")
     plt.legend()
     plt.savefig(fig_dir + 'png/means_of_multiple.png')
-    
+
+
 
 if __name__ == '__main__':
 
