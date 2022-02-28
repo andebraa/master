@@ -139,7 +139,7 @@ def plot_load_curves_as_funciton_of_top_thiccness():
             for l in range(len(seed)):
                 # ms_all contains tuples (time, ms)
                 print(ms_all[l][0], ms_all[l][1])
-                axs2.plot(ms_all[l][0]*vel, ms_all[l][1], 'o')
+                #axs2.plot(ms_all[l][0]*vel, ms_all[l][1], 'o')
                 axs[j].plot(ms_all[l][0], ms_all[l][1], 'o',c=c)
                 axs[j].plot(load_curves_all[l,:,0], load_curves_all[l,:,1], '--', alpha = 0.5, c=c)
             axs[j].legend()
