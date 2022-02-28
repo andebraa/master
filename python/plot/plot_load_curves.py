@@ -46,6 +46,23 @@ def load_load_curves(temp, vel, force, orientation, grid, template_lc, template_
     return load_curves_all, load_curves
 
 
+def load_max_static(temp, vel, force, orientation, grid, template_lc, template_ms, seeds):
+    
+    ms_files = template_ms.format(temp, vel, force, orientation, grid[0], grid[1])
+    ms_all = []
+    
+    files = glob(ms_files)
+    # ms files: time [nS] max friction [mN] 
+    assert files != []
+    for file in glob(ms_files):
+        for seed in seeds:
+            if str(seed) in str(file):
+                time, ms = loadtxt(file)
+                ms_all.append((time,ms))
+
+    #mean_static = mean(ms_all, axis = 0)
+    return ms_all#, mean_static
+
 """
 # extract push times
 push_times = []
@@ -68,60 +85,6 @@ def plot_load_curves_as_funciton_of_top_thiccness():
     project_dir = '../../'
     fig_dir = project_dir + 'fig/'
 
-    """ #first run vel 5
-    seeds_5 =  [88753, 12754, 91693] # thicc 80
-    seeds_8 =  [50219, 31693, 19478] # thicc 83
-    seeds_9 =  [81094, 81717, 10840] # thicc 85
-    seeds_11 = [89936, 25987, 82860] # thicc 85
-    seeds_12 = [63620, 46351, 18735] # thicc 90
-    seeds_14 = [62648, 89682, 30607] # thicc 90
-    seeds_16 = [17767, 58195, 19686] # thicc 95
-    seeds_18 = [11084, 50879, 83355] # thicc 93
-    seeds_20 = [81955, 86485, 61282] # thicc 95
-    seeds_22 = [96804, 43682, 88372] # thicc 100
-    seeds_24 = [64771, 82158, 63871] # thicc 100
-    seeds_26 = [95317, 18462, 11729]#thicc 100
-    seeds_28 = [54648,88413,94253] #thicc 103
-    seeds_30 = [92651,19224,85380] #thicc 105
-    seeds_33 = [64798,34149] #thicc 109
-
-    """
-    """
-    # second push run vel 5
-    seeds_5 = [71361,91111,63445] # 80
-    seeds_8 = [12890,62608,29899] # 83
-    seeds_9 = [70529,45585,64900]
-    seeds_11 = [66909,27035,43111] # 85 
-    seeds_12 = [81809,93141,56900] 
-    seeds_14 = [33447,88504,79793] # 90
-    seeds_18 = [75942,21663,49508] # 93
-    seeds_16 = [67321,29830,36667] 
-    seeds_20 = [77113,99307,62931] # 95
-    seeds_22 = [47606,72506,44762] 
-    seeds_24 = [47009,37801,56714] 
-    seeds_26 = [54238,10257,73002] # 100
-    seeds_28 = [71970,74062,60542] # 103
-    seeds_30 = [81636,35286,69718] # 105
-    seeds_33 = [90953,90762,47980] # 109
-    """
-    """
-        #third push run
-    seeds_5 = [76532,67473,86988]
-    seeds_8 = [22135,54054,39337]
-    seeds_9 = [15007,95692,61395]
-    seeds_11 = [31234,92172,49033]
-    seeds_12 = [27448,57576,83094] 
-    seeds_14 = [68672,65867,65400]
-    seeds_16 = [57652,77804,75056]
-    seeds_18 = [37474,72730,76985] 
-    seeds_20 = [16010,24858,24113]
-    seeds_22 = [19590,75450,95072] 
-    seeds_24 = [63988,78860,45476] 
-    seeds_26 = [35593,21768,33674]
-    seeds_28 = [81910,33465] #46388 missing
-    seeds_30 = [23317,44679,86430]
-    seeds_33 = [66411,52069,63812]
-    """
 
     #fourth push, 700 long
     seeds_5 = [97841,88985,79749] #80
@@ -165,9 +128,15 @@ def plot_load_curves_as_funciton_of_top_thiccness():
         for k,seed in enumerate(seeds):
             load_curves_all, load_curves = load_load_curves(temp, vel, force, orientation, 
                                                             grid, template_lc,template_ms, seed)
+    
+            ms_all = load_max_static(temp, vel, force, orientation, grid,
+                                     template_lc, template_ms, seed)
+            
             c = plt.cm.viridis((max_hup - hup[i])/(max_hup - min_hup + 0.01))
             axs[j].plot(load_curves[0,:,0], load_curves[0,:,1], c=c, label = f'hup {hup[i]}' )
             for l in range(len(seed)):
+                # ms_all contains tuples (time, ms) 
+                axs[j].plot(ms_all[l], c=c)
                 axs[j].plot(load_curves_all[l,:,0], load_curves_all[l,:,1], '--', alpha = 0.5, c=c)
             axs[j].legend()
             i += 1
@@ -308,4 +277,60 @@ if __name__ == '__main__':
     seeds_28 = [47223,86471,56804]
     seeds_30 = [55262,76203,84098]
     seeds_33 = [39463,84117,53537]
+    """
+
+
+    """ #first run vel 5
+    seeds_5 =  [88753, 12754, 91693] # thicc 80
+    seeds_8 =  [50219, 31693, 19478] # thicc 83
+    seeds_9 =  [81094, 81717, 10840] # thicc 85
+    seeds_11 = [89936, 25987, 82860] # thicc 85
+    seeds_12 = [63620, 46351, 18735] # thicc 90
+    seeds_14 = [62648, 89682, 30607] # thicc 90
+    seeds_16 = [17767, 58195, 19686] # thicc 95
+    seeds_18 = [11084, 50879, 83355] # thicc 93
+    seeds_20 = [81955, 86485, 61282] # thicc 95
+    seeds_22 = [96804, 43682, 88372] # thicc 100
+    seeds_24 = [64771, 82158, 63871] # thicc 100
+    seeds_26 = [95317, 18462, 11729]#thicc 100
+    seeds_28 = [54648,88413,94253] #thicc 103
+    seeds_30 = [92651,19224,85380] #thicc 105
+    seeds_33 = [64798,34149] #thicc 109
+
+    """
+    """
+    # second push run vel 5
+    seeds_5 = [71361,91111,63445] # 80
+    seeds_8 = [12890,62608,29899] # 83
+    seeds_9 = [70529,45585,64900]
+    seeds_11 = [66909,27035,43111] # 85 
+    seeds_12 = [81809,93141,56900] 
+    seeds_14 = [33447,88504,79793] # 90
+    seeds_18 = [75942,21663,49508] # 93
+    seeds_16 = [67321,29830,36667] 
+    seeds_20 = [77113,99307,62931] # 95
+    seeds_22 = [47606,72506,44762] 
+    seeds_24 = [47009,37801,56714] 
+    seeds_26 = [54238,10257,73002] # 100
+    seeds_28 = [71970,74062,60542] # 103
+    seeds_30 = [81636,35286,69718] # 105
+    seeds_33 = [90953,90762,47980] # 109
+    """
+    """
+        #third push run
+    seeds_5 = [76532,67473,86988]
+    seeds_8 = [22135,54054,39337]
+    seeds_9 = [15007,95692,61395]
+    seeds_11 = [31234,92172,49033]
+    seeds_12 = [27448,57576,83094] 
+    seeds_14 = [68672,65867,65400]
+    seeds_16 = [57652,77804,75056]
+    seeds_18 = [37474,72730,76985] 
+    seeds_20 = [16010,24858,24113]
+    seeds_22 = [19590,75450,95072] 
+    seeds_24 = [63988,78860,45476] 
+    seeds_26 = [35593,21768,33674]
+    seeds_28 = [81910,33465] #46388 missing
+    seeds_30 = [23317,44679,86430]
+    seeds_33 = [66411,52069,63812]
     """
