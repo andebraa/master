@@ -143,6 +143,7 @@ def plot_load_curves_as_funciton_of_top_thiccness():
                 axs[j].plot(ms_all[l][0], ms_all[l][1], 'o',c=c)
                 axs[j].plot(load_curves_all[l,:,0], load_curves_all[l,:,1], '--', alpha = 0.5, c=c)
             axs[j].legend()
+            axs2.legend()
             i += 1
             
     for ax in axs.flat:
@@ -151,6 +152,9 @@ def plot_load_curves_as_funciton_of_top_thiccness():
         
     #plt.xlabel(r"$t_p$ [ns]")
     #plt.ylabel(r"$f$ [$\mu$N]")
+    axs2.set_xlabel('displacement [nm]')
+    axs2.set_ylabel(r"$f$ [$\mu$N]")
+    fig2.suptitle(f'max static vs displacement for various thicnessess of upper plate')
     fig2.savefig(fig_dir + 'png/displacement_vs_maxstatic.png')
     fig.suptitle(f"Mean of three runs, for varying upper plate thicness")
     fig.savefig(fig_dir + 'png/load_curves_varying_hup_ms.png', dpi = 500)
