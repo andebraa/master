@@ -58,7 +58,7 @@ def load_max_static(temp, vel, force, orientation, grid, template_lc, template_m
         for seed in seeds:
             if str(seed) in str(file):
                 time, ms = loadtxt(file)
-                ms_all.append((time,ms))
+                ms_all.append((time/1000,ms))
 
     #mean_static = mean(ms_all, axis = 0)
     return ms_all#, mean_static
@@ -131,7 +131,6 @@ def plot_load_curves_as_funciton_of_top_thiccness():
     
             ms_all = load_max_static(temp, vel, force, orientation, grid,
                                      template_lc, template_ms, seed)
-            print(ms_all)
             c = plt.cm.viridis((max_hup - hup[i])/(max_hup - min_hup + 0.01))
             axs[j].plot(load_curves[0,:,0], load_curves[0,:,1], c=c, label = f'hup {hup[i]}' )
             for l in range(len(seed)):
