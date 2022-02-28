@@ -30,10 +30,10 @@ def dump_aux(orientation, height, grid, erratic, output_dir, relax_time, relax_s
     """
     #find aux file from relax
     if erratic:
-        relax_dir = f'../../simulations/sys_or{orientation}_hi{height}/relax/erratic/sim_temp{temp}_force{force}_time{relax_time}_seed{relax_seed}_errgrid{grid[0]}_{grid[1]}'
+        relax_dir = f'../../simulations/sys_or{orientation}_hi{height}/relax/erratic/sim_temp{temp}_force{force}_time{relax_time}_seed{relax_seed}_errgrid{grid[0]}_{grid[1]}_chess'
     
         auxiliary_relax_dir = relax_dir + \
-        f"/system_or{orientation}_hi{height}_seed{relax_seed}_errgrid{grid[0]}_{grid[1]}_auxiliary.json"
+                f"/system_or{orientation}_hi{height}_seed{relax_seed}_errgrid{grid[0]}_{grid[1]}_chess_auxiliary.json"
     
     elif not erratic:
         relax_dir = f'../../simulations/sys_or{orientation}_hi{height}/relax/grid/sim_temp{temp}_force{force}_time{relax_time}_seed{relax_seed}_errgrid{grid[0]}_{grid[1]}'
@@ -52,7 +52,7 @@ def dump_aux(orientation, height, grid, erratic, output_dir, relax_time, relax_s
 
     if grid:
         if erratic:
-            with open(output_dir +'/system_or{}_hi{}_seed{}_errgrid{}_{}_auxiliary.json'.format(orientation, height, push_seed, grid[0], grid[1]), 'w') as outfile:
+            with open(output_dir +'/system_or{}_hi{}_seed{}_errgrid{}_{}_chess_auxiliary.json'.format(orientation, height, push_seed, grid[0], grid[1]), 'w') as outfile:
                 json.dump(data, outfile)
         else:
             with open(output_dir + '/system_or{}_hi{}_seed{}_grid{}_{}_auxiliary.json'.format(orientation, height, push_seed, grid[0], grid[1]), 'w') as outfile:
@@ -89,15 +89,15 @@ relax_steps = 500000
 #push_steps = 25000 # how long we push for (ps maybe, or timesteps)
 push_time = 700 #piko seconds. breaks around 100 acording to even
 
+seed_dict = {80: [71424,85741,73137], 83: [72691,39884,80139],
+             85: [21198,58061,17428,62980,13991,79683],
+             90: [46370,98610,23592,88599,28049,93977],
+             95: [58451,57111,93529,27304,80162,16582],
+             93: [30723,33420,33487], 
+             100: [92744,25900,33840,79132,10567,79447,23268,10484,56434],
+             103: [11541,98986,88325], 105: [45482,15650,35672],
+             109: [33568,70179,45300]}
 
-seed_dict = {80: [24296,84160,79210], 83: [35701,84452,85253],
-             85: [34105,10800,42330,89027,21504,40454],
-             90: [80577,25262,14194,82798,96793,76957],
-             95: [81147,61987,51593,70164,14798,28863],
-             93: [51735,44709,45053], 
-             100: [43346,72761,24220,41110,27848,58248,29628,48780,22090],
-             103: [47223,86471,56804], 105: [55262,76203,84098],
-             109: [39463,84117,53537]}
 run_number = 4 #which run is this
 
 for height, seeds in seed_dict.items(): #used: 37144, 48329, 94514
@@ -120,7 +120,7 @@ for height, seeds in seed_dict.items(): #used: 37144, 48329, 94514
         if grid:
             if erratic:
 
-                restartfile = relax_dir + f"sim_temp{temp}_force{force}_time{relax_time}_seed{relax_seed}_errgrid{grid[0]}_{grid[1]}/time.{relax_steps}.restart"
+                restartfile = relax_dir + f"sim_temp{temp}_force{force}_time{relax_time}_seed{relax_seed}_errgrid{grid[0]}_{grid[1]}_chess/time.{relax_steps}.restart"
                 
             else:
                 restartfile = relax_dir + f"sim_temp{temp}_force{force}_time{relax_time}_seed{relax_seed}_grid{grid[0]}_{grid[1]}/time.{relax_steps}.restart"
@@ -141,7 +141,7 @@ for height, seeds in seed_dict.items(): #used: 37144, 48329, 94514
         if grid: #system might not be erratic, but it could still be grid 
             
             if erratic:
-                output_dir = push_dir + f"sim_temp{temp}_vel{vel}_force{force}_time{push_time}_seed{push_seed}_errgrid{grid[0]}_{grid[1]}"
+                output_dir = push_dir + f"sim_temp{temp}_vel{vel}_force{force}_time{push_time}_seed{push_seed}_errgrid{grid[0]}_{grid[1]}_chess"
                 
                 sim = Simulator(directory=push_dir + f"sim_temp{temp}_vel{vel}_force{force}_time{push_time}_seed{push_seed}_errgrid{grid[0]}_{grid[1]}", overwrite=True)
                 with open(project_dir + 'runs/push/erratic/run_{run_number}', 'a') as file_object:
@@ -169,3 +169,18 @@ for height, seeds in seed_dict.items(): #used: 37144, 48329, 94514
         dump_aux(orientation, height, grid, erratic, output_dir, relax_time, relax_seed, push_seed)
         
         sim.run(computer=SlurmGPU(lmp_exec="lmp_python", slurm_args={'job-name': f'p{push_seed}'}, lmp_args={'-pk': 'kokkos newton on neigh full'}))
+
+
+
+        '''
+        
+        seed_dict = {80: [24296,84160,79210], 83: [35701,84452,85253],
+             85: [34105,10800,42330,89027,21504,40454],
+             90: [80577,25262,14194,82798,96793,76957],
+             95: [81147,61987,51593,70164,14798,28863],
+             93: [51735,44709,45053], 
+             100: [43346,72761,24220,41110,27848,58248,29628,48780,22090],
+             103: [47223,86471,56804], 105: [55262,76203,84098],
+             109: [39463,84117,53537]}
+
+        ''' 

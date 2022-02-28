@@ -135,7 +135,7 @@ def plot_load_curves_as_funciton_of_top_thiccness():
                                      template_lc, template_ms, seed)
             c = plt.cm.viridis((max_hup - hup[i])/(max_hup - min_hup + 0.01))
             axs[j].plot(load_curves[0,:,0], load_curves[0,:,1], c=c, label = f'hup {hup[i]}' )
-            axs2.plot(ms_mean[0], ms_mean[1], label = f'hup {hup[i]}', c=c)
+            axs2.plot(ms_mean[0], ms_mean[1],'*', label = f'hup {hup[i]}', c=c)
             for l in range(len(seed)):
                 # ms_all contains tuples (time, ms)
                 print(ms_all[l][0], ms_all[l][1])
