@@ -60,8 +60,8 @@ def load_max_static(temp, vel, force, orientation, grid, template_lc, template_m
                 time, ms = loadtxt(file)
                 ms_all.append((time,ms))
 
-    #mean_static = mean(ms_all, axis = 0)
-    return ms_all#, mean_static
+    mean_static = mean(ms_all, axis = 0)
+    return ms_all, mean_static
 
 """
 # extract push times
@@ -131,10 +131,11 @@ def plot_load_curves_as_funciton_of_top_thiccness():
             load_curves_all, load_curves = load_load_curves(temp, vel, force, orientation, 
                                                             grid, template_lc,template_ms, seed)
     
-            ms_all = load_max_static(temp, vel, force, orientation, grid,
+            ms_all, ms_mean = load_max_static(temp, vel, force, orientation, grid,
                                      template_lc, template_ms, seed)
             c = plt.cm.viridis((max_hup - hup[i])/(max_hup - min_hup + 0.01))
             axs[j].plot(load_curves[0,:,0], load_curves[0,:,1], c=c, label = f'hup {hup[i]}' )
+            axs2.plot(ms_mean[0], ms_mean[1], label = f'hup {hup[i]}', c=c)
             for l in range(len(seed)):
                 # ms_all contains tuples (time, ms)
                 print(ms_all[l][0], ms_all[l][1])
