@@ -52,6 +52,7 @@ def dump_aux(orientation, height, grid, erratic, output_dir, relax_time, relax_s
 
     if grid:
         if erratic:
+            print(os.path.exists(output_dir)) 
             with open(output_dir +'/system_or{}_hi{}_seed{}_errgrid{}_{}_chess_auxiliary.json'.format(orientation, height, push_seed, grid[0], grid[1]), 'w') as outfile:
                 json.dump(data, outfile)
         else:
@@ -89,6 +90,7 @@ relax_steps = 500000
 #push_steps = 25000 # how long we push for (ps maybe, or timesteps)
 push_time = 700 #piko seconds. breaks around 100 acording to even
 
+'''
 seed_dict = {80: [71424,85741,73137], 83: [72691,39884,80139],
              85: [21198,58061,17428,62980,13991,79683],
              90: [46370,98610,23592,88599,28049,93977],
@@ -97,7 +99,8 @@ seed_dict = {80: [71424,85741,73137], 83: [72691,39884,80139],
              100: [92744,25900,33840,79132,10567,79447,23268,10484,56434],
              103: [11541,98986,88325], 105: [45482,15650,35672],
              109: [33568,70179,45300]}
-
+'''
+seed_dict = {103: [98986, 88325], 105: [45482, 15650, 35672], 109: [33568, 70179, 45300]}
 run_number = 4 #which run is this
 
 for height, seeds in seed_dict.items(): #used: 37144, 48329, 94514
@@ -143,7 +146,7 @@ for height, seeds in seed_dict.items(): #used: 37144, 48329, 94514
             if erratic:
                 output_dir = push_dir + f"sim_temp{temp}_vel{vel}_force{force}_time{push_time}_seed{push_seed}_errgrid{grid[0]}_{grid[1]}_chess"
                 
-                sim = Simulator(directory=push_dir + f"sim_temp{temp}_vel{vel}_force{force}_time{push_time}_seed{push_seed}_errgrid{grid[0]}_{grid[1]}", overwrite=True)
+                sim = Simulator(directory=output_dir, overwrite=True)
                 with open(project_dir + 'runs/push/erratic/run_{run_number}', 'a') as file_object:
                     file_object.write(str(height) + ', ' + str(relax_seed)+'\n')
                 
@@ -151,7 +154,7 @@ for height, seeds in seed_dict.items(): #used: 37144, 48329, 94514
 
                 output_dir = push_dir + f"sim_temp{temp}_vel{vel}_force{force}_time{push_time}_seed{push_seed}_grid{grid[0]}_{grid[1]}"
 
-                sim = Simulator(directory=push_dir + f"sim_temp{temp}_vel{vel}_force{force}_time{push_time}_seed{push_seed}_grid{grid[0]}_{grid[1]}", overwrite=True)
+                sim = Simulator(directory=output_dir, overwrite=True)
         
                 with open(project_dir + f'runs/push/grid/run_{run_number}.csv', 'a') as file_object:
                     file_object.write(str(height) + ', ' +str(relax_seed) +'\n')
@@ -159,7 +162,7 @@ for height, seeds in seed_dict.items(): #used: 37144, 48329, 94514
         else:
             output_dir = push_dir + f"sim_temp{temp}_vel{vel}_force{force}_time{relax_steps}_seed{push_seed}"
 
-            sim = Simulator(directory=push_dir + f"sim_temp{temp}_vel{vel}_force{force}_time{relax_steps}_seed{push_seed}", overwrite=True)
+            sim = Simulator(directory=output_dir, overwrite=True)
         
         #read aux file from relax, write to push directory, append 
 
