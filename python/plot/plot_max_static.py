@@ -116,7 +116,7 @@ def plot_max_static_vs_thiccness():
             plt.plot(hup[i], mean_static, colours[vel], label=vel)
             #for ms in ms_all:
             #    plt.plot(hup[i], ms, 'ob')
-        plt.legend()
+    plt.legend()
     plt.xlabel(r"$hup$ [pm]")
     plt.ylabel(r"$f$ [$\mu$N]")
     plt.title('mean max static vs upper plate thicness')
