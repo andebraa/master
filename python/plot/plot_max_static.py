@@ -106,13 +106,14 @@ def plot_max_static_vs_thiccness():
     all_mean_static = np.zeros(len(seeds[1.25])*2)
 
     fig_num = 0
-    
+   
+    colours = {1.25: 'go', 5:'ro'}
     for vel, _seeds in seeds.items():
         for i, seed in enumerate(_seeds):
             ms_all, mean_static = load_max_static(temp, vel, force, orientation, grid, 
                                                   template_lc, template_ms, seed) 
             all_mean_static[i] = mean_static
-            plt.plot(hup[i], mean_static, 'o', label=vel)
+            plt.plot(hup[i], mean_static, colours[vel], label=vel)
             #for ms in ms_all:
             #    plt.plot(hup[i], ms, 'ob')
         plt.legend()
