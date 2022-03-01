@@ -63,6 +63,10 @@ def load_max_static(temp, vel, force, orientation, grid, template_lc, template_m
     mean_static = mean(ms_all, axis = 0)
     return ms_all, mean_static
 
+
+def plot_max_static_for_speeds():
+
+
 """
 # extract push times
 push_times = []
