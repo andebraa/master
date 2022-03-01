@@ -112,7 +112,7 @@ def plot_max_static_vs_thiccness():
             ms_all, mean_static = load_max_static(temp, vel, force, orientation, grid, 
                                                   template_lc, template_ms, seed) 
             all_mean_static[i] = mean_static
-            plt.plot(hup[i], mean_static, label=vel)
+            plt.plot(hup[i], mean_static, 'o', label=vel)
             #for ms in ms_all:
             #    plt.plot(hup[i], ms, 'ob')
         plt.legend()
