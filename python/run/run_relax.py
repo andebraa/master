@@ -16,7 +16,7 @@ from lammps_simulator.computer import GPU, CPU, SlurmGPU
 #dt = 0.002
 #number of timesteps is simtime/dt
 # User input
-temp = 2300
+temp = 1800
 simtime = 1000 #picosekunder
 force = 0.001
 height = input('height ')
@@ -89,7 +89,10 @@ if erratic:
     for init_seed in init_seeds:
         print(re.findall('\d+', init_seed)[-3])
 
-    init_seed = input('select seed ')
+    if len(init_seeds) == 1:
+        init_seed = re.findall('\d+', init_seed)[-3]
+    else:
+        init_seed = input('select seed ')
     
     datafile = project_dir + f"initial_system/erratic/system_or{orientation}_hi{height}_seed{init_seed}_errgrid{grid[0]}_{grid[1]}_chess.data"
     #datafile = project_dir + f"initial_system/erratic/system_or{orientation}_hi{height}_rep{grid[0]}{grid[1]}_removed00.data"
@@ -154,29 +157,29 @@ if erratic:
                     slurm_args={'job-name': f'err{relax_seed}'}, 
                     lmp_args={'-pk': 'kokkos newton on neigh full'}))
         else:
-            sim.run(computer=GPU(lmp_exec = 'lmp_python'), stdout = None)
+            sim.run(computer=GPU(lmp_exec = 'lmp_test'), stdout = None)
     else:
         sim.run(computer=CPU(num_procs=2, lmp_exec="lmp"), stdout=None)
 
 elif grid:
     if gpu:
         if slurm:
-            sim.run(computer=SlurmGPU(lmp_exec="lmp_python", 
+            sim.run(computer=SlurmGPU(lmp_exec="lmp_test", 
                                       slurm_args={'job-name': f'grid{relax_seed}'}, 
                                       lmp_args={'-pk': 'kokkos newton on neigh full'}))
         else:
-            sim.run(computer=GPU(lmp_exec = 'lmp_python'), stdout = None)
+            sim.run(computer=GPU(lmp_exec = 'lmp_test'), stdout = None)
     else:
         sim.run(computer=CPU(num_procs=2, lmp_exec="lmp"), stdout=None)
 
 else:
     if gpu:
         if slurm:
-            sim.run(computer=SlurmGPU(lmp_exec="lmp_python", 
+            sim.run(computer=SlurmGPU(lmp_exec="lmp_test", 
                 slurm_args={'job-name': f'{relax_seed}'}, 
                 lmp_args={'-pk': 'kokkos newton on neigh full'}))
         else:
-            sim.run(computer=GPU(lmp_exec = 'lmp_python'), stdout = None)
+            sim.run(computer=GPU(lmp_exec = 'lmp_test'), stdout = None)
 
     else:
         sim.run(computer=CPU(num_procs=2, lmp_exec="lmp"), stdout=None)

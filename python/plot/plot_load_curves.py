@@ -36,7 +36,9 @@ def load_load_curves(temp, vel, force, orientation, grid, template_lc, template_
     print('load curves shape: ', np.shape(load_curves_all))
     load_curves_all[1] = load_curves_all[1][:len(load_curves_all[0])]
     load_curves_all = np.array(load_curves_all)
-    shortest = np.argmin(load_curves_all) 
+    print('load curves all', load_curves_all)
+    print(np.shape(load_curves_all))
+    #shortest = np.argmin(load_curves_all) 
 
     
     load_curves = mean(load_curves_all, axis=0)
@@ -64,7 +66,7 @@ def load_max_static(temp, vel, force, orientation, grid, template_lc, template_m
     return ms_all, mean_static
 
 
-def plot_max_static_for_speeds():
+#def plot_max_static_for_speeds():
 
 
 """
@@ -90,36 +92,23 @@ def plot_load_curves_as_funciton_of_top_thiccness():
     fig_dir = project_dir + 'fig/'
 
 
-    #fourth push, 700 long
-    seeds_5 = [97841,88985,79749] #80
-    seeds_8 = [81474,90347,79290] #83
-    seeds_9 = [40328,90215,62491]
-    seeds_11 = [80371,12038,48116] # 85
-    seeds_12 = [61347,50189,68738]
-    seeds_14 = [19022,23781,73474] #90
-    seeds_16 = [27598,75257,74926] # 95
-    seeds_20 = [17821,40450,80080] # 95
-    seeds_18 = [14130,95349,16972] #93
-    seeds_22 = [64180,63781,84634] 
-    seeds_24 = [64308,93573,48127] 
-    seeds_26 = [78231,43336,42599] # 100
-    seeds_28 = [28782,23246,41573] # 103
-    seeds_30 = [48834,99626,28475] # 105
-    seeds_33 = [89090,40422,52257] #109
 
 
-    _seeds1 = [seeds_5, seeds_8, seeds_9, seeds_11]
-    _seeds2 = [seeds_12, seeds_14, seeds_16, seeds_18]
-    _seeds3 = [seeds_20, seeds_22, seeds_24, seeds_26]
-    _seeds4 = [seeds_28, seeds_30, seeds_33]
+    seed_dict = {80: [48908,22499,76617], 83: [21221,72821,85115],
+             #85: [40106,41914,39938,90583,54727,99635],
+             93: [49129,53798,78101],
+             100: [19120,90679,26450,80070,65417,20704,78741,89763],
+             103: [88748,28146], 105: [61779,74230,11638],
+             109: [89150,36554,97741]}
+
 
     hup = [5,8,9,11,12,14,16,18,20,22,24,26,28,30,33]
 
     load_curve_dir = project_dir + 'txt/load_curves/erratic/'
     max_static_dir = project_dir + 'txt/max_static/erratic/'
 
-    template_lc = load_curve_dir + 'load_curves_temp{}_vel{}_force{}_or{}_seed*_errgrid{}_{}.txt'
-    template_ms = max_static_dir + 'max_static_temp{}_vel{}_force{}_or{}_seed*_errgrid{}_{}.txt'
+    template_lc = load_curve_dir + 'load_curves_temp{}_vel{}_force{}_or{}_seed*_errgrid{}_{}_chess.txt'
+    template_ms = max_static_dir + 'max_static_temp{}_vel{}_force{}_or{}_seed*_errgrid{}_{}_chess.txt'
     style.use('seaborn') 
     min_hup = np.min(hup)
     max_hup = hup[-1]
@@ -130,25 +119,25 @@ def plot_load_curves_as_funciton_of_top_thiccness():
 
     axs = axs.ravel()
     i = 0
-    for j, seeds in enumerate([_seeds1, _seeds2, _seeds3, _seeds4]):
-        for k,seed in enumerate(seeds):
-            load_curves_all, load_curves = load_load_curves(temp, vel, force, orientation, 
-                                                            grid, template_lc,template_ms, seed)
-    
-            ms_all, ms_mean = load_max_static(temp, vel, force, orientation, grid,
-                                     template_lc, template_ms, seed)
-            c = plt.cm.viridis((max_hup - hup[i])/(max_hup - min_hup + 0.01))
-            axs[j].plot(load_curves[0,:,0], load_curves[0,:,1], c=c, label = f'hup {hup[i]}' )
-            axs2.plot(ms_mean[0], ms_mean[1],'*', label = f'hup {hup[i]}', c=c)
-            for l in range(len(seed)):
-                # ms_all contains tuples (time, ms)
-                print(ms_all[l][0], ms_all[l][1])
-                #axs2.plot(ms_all[l][0]*vel, ms_all[l][1], 'o')
-                axs[j].plot(ms_all[l][0], ms_all[l][1], 'o',c=c)
-                axs[j].plot(load_curves_all[l,:,0], load_curves_all[l,:,1], '--', alpha = 0.5, c=c)
-            axs[j].legend()
-            axs2.legend()
-            i += 1
+    for j, (height, seeds) in enumerate(seed_dict.items()):
+        print(seeds)
+        load_curves_all, load_curves = load_load_curves(temp, vel, force, orientation, 
+                                                        grid, template_lc,template_ms, seeds)
+
+        ms_all, ms_mean = load_max_static(temp, vel, force, orientation, grid,
+                                 template_lc, template_ms, seeds)
+        c = plt.cm.viridis((max_hup - hup[i])/(max_hup - min_hup + 0.01))
+        axs[j].plot(load_curves[0,:,0], load_curves[0,:,1], c=c, label = f'hup {hup[i]}' )
+        axs2.plot(ms_mean[0], ms_mean[1],'*', label = f'hup {hup[i]}', c=c)
+        for l in range(len(seeds)):
+            # ms_all contains tuples (time, ms)
+            print(ms_all[l][0], ms_all[l][1])
+            #axs2.plot(ms_all[l][0]*vel, ms_all[l][1], 'o')
+            axs[j].plot(ms_all[l][0], ms_all[l][1], 'o',c=c)
+            axs[j].plot(load_curves_all[l,:,0], load_curves_all[l,:,1], '--', alpha = 0.5, c=c)
+        axs[j].legend()
+        axs2.legend()
+        i += 1
             
     for ax in axs.flat:
         ax.set(xlabel=r"$t_p$ [ns]", ylabel = r"$f$ [$\mu$N]")
@@ -159,9 +148,9 @@ def plot_load_curves_as_funciton_of_top_thiccness():
     axs2.set_xlabel('displacement [nm]')
     axs2.set_ylabel(r"$f$ [$\mu$N]")
     fig2.suptitle(f'max static vs displacement for various thicnessess of upper plate')
-    fig2.savefig(fig_dir + 'png/displacement_vs_maxstatic.png')
+    fig2.savefig(fig_dir + 'png/displacement_vs_maxstatic_chess.png')
     fig.suptitle(f"Mean of three runs, for varying upper plate thicness")
-    fig.savefig(fig_dir + 'png/load_curves_varying_hup_ms.png', dpi = 500)
+    fig.savefig(fig_dir + 'png/load_curves_varying_hup_ms_chess.png', dpi = 500)
 
     
     plt.close()
@@ -352,3 +341,23 @@ if __name__ == '__main__':
     seeds_30 = [23317,44679,86430]
     seeds_33 = [66411,52069,63812]
     """
+
+
+    '''
+    #fourth push, 700 long
+    seeds_5 = [97841,88985,79749] #80
+    seeds_8 = [81474,90347,79290] #83
+    seeds_9 = [40328,90215,62491]
+    seeds_11 = [80371,12038,48116] # 85
+    seeds_12 = [61347,50189,68738]
+    seeds_14 = [19022,23781,73474] #90
+    seeds_16 = [27598,75257,74926] # 95
+    seeds_20 = [17821,40450,80080] # 95
+    seeds_18 = [14130,95349,16972] #93
+    seeds_22 = [64180,63781,84634] 
+    seeds_24 = [64308,93573,48127] 
+    seeds_26 = [78231,43336,42599] # 100
+    seeds_28 = [28782,23246,41573] # 103
+    seeds_30 = [48834,99626,28475] # 105
+    seeds_33 = [89090,40422,52257] #109
+    '''

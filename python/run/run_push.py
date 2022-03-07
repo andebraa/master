@@ -166,12 +166,12 @@ for height, seeds in seed_dict.items(): #used: 37144, 48329, 94514
         
         #read aux file from relax, write to push directory, append 
 
-        sim.copy_to_wd(restartfile, lammps_dir + "SiC.vashishta", "sigmoid.py")
+        sim.copy_to_wd(restartfile, lammps_dir + "SiC.vashishta")
         sim.set_input_script(lammps_dir + "in.push", **var)
         
         dump_aux(orientation, height, grid, erratic, output_dir, relax_time, relax_seed, push_seed)
         
-        sim.run(computer=SlurmGPU(lmp_exec="lmp_python", slurm_args={'job-name': f'p{push_seed}'}, lmp_args={'-pk': 'kokkos newton on neigh full'}))
+        sim.run(computer=SlurmGPU(lmp_exec="lmp_test", slurm_args={'job-name': f'p{push_seed}'}, lmp_args={'-pk': 'kokkos newton on neigh full'}))
 
 
 

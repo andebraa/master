@@ -14,7 +14,6 @@ def get_load_curves():
     # user input
     temp = 2300
     orientation = "100"
-    height = 80
     vel = 1.25
     force = 0.001
     
@@ -40,9 +39,9 @@ def get_load_curves():
     
    
     if erratic:
-        template_logfiles = push_dir + 'sim_temp{}_vel{}_force{}_time{}_seed{}_errgrid{}_{}/log.lammps'
-        template_lc = lc_dir + 'load_curves_temp{}_vel{}_force{}_or{}_seed{}_errgrid{}_{}.txt'
-        template_ms = ms_dir + 'max_static_temp{}_vel{}_force{}_or{}_seed{}_errgrid{}_{}.txt'
+        template_logfiles = push_dir + 'sim_temp{}_vel{}_force{}_time{}_seed{}_errgrid{}_{}_chess/log.lammps'
+        template_lc = lc_dir + 'load_curves_temp{}_vel{}_force{}_or{}_seed{}_errgrid{}_{}_chess.txt'
+        template_ms = ms_dir + 'max_static_temp{}_vel{}_force{}_or{}_seed{}_errgrid{}_{}_chess.txt'
     elif grid:
         template_logfiles = push_dir + 'sim_temp{}_vel{}_force{}_time{}_seed{}_grid{}_{}/log.lammps'
         template_lc = lc_dir + 'load_curves_temp{}_vel{}_force{}_or{}_seed{}_grid{}_{}.txt'
@@ -54,7 +53,6 @@ def get_load_curves():
     
 
     # collect log files
-    times = [300]
 
     #seeds = [12589, 50887]  
     #seeds = [88753,12754,91693] #thicc height 80
@@ -106,27 +104,35 @@ def get_load_curves():
     #seeds = [48834,99626,28475] # 105
     #seeds = [89090,40422,52257] #109
 
-    for seed in seeds:
+    seed_dict = {80: [48908,22499,76617], 83: [21221,72821,85115],
+             85: [40106,41914,39938,90583,54727,99635],
+             93: [49129,53798,78101], 
+             100: [19120,90679,26450,80070,65417,20704,78741,89763],
+             103: [88748,28146], 105: [61779,74230,11638],
+             109: [89150,36554,97741]}
+
+    time = 700
+    for height, seeds in seed_dict.items():
         logfiles = []
-        for time in times:
+        for seed in seeds:
             print(f"seed: {seed}   time: {time}")
             logfile = template_logfiles.format(orientation, height, temp, vel, force, time, seed, grid[0], grid[1])
             print(logfile)
             logfiles.append(logfile)
 
 
-        # extract load curves
-        extract_load_curves(logfiles, None, 0, 5000, 
-                            outfile_load_curves = template_lc.format(temp, vel, force, 
-                                                                     orientation, seed, 
-                                                                     grid[0], grid[1]),
+            # extract load curves
+            extract_load_curves(logfile, None, 0, 5000, 
+                                outfile_load_curves = template_lc.format(temp, vel, force, 
+                                                                         orientation, seed, 
+                                                                         grid[0], grid[1]),
 
-                            outfile_max_static = template_ms.format(temp, vel, force, 
-                                                                    orientation, seed, 
-                                                                    grid[0], grid[1]))
-        print('load curves written to: \n', template_lc.format(temp, vel, force,
-                                                                     orientation, seed,
-                                                                     grid[0], grid[1]))
+                                outfile_max_static = template_ms.format(temp, vel, force, 
+                                                                        orientation, seed, 
+                                                                        grid[0], grid[1]))
+            print('load curves written to: \n', template_lc.format(temp, vel, force,
+                                                                         orientation, seed,
+                                                                         grid[0], grid[1]))
 
 if __name__ == '__main__':
     get_load_curves()
