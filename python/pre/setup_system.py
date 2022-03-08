@@ -13,8 +13,7 @@ import argparse
 import numpy as np
 import json
 
-#hu: [60,65,65,65,70,70,75,75,75,80,80,80,85,85,90]
-# hup: [5,8,9,11,12,14,16,18,20,22,24,26,28,30,33]
+unit_cell = 4.3956
 
 parser = argparse.ArgumentParser()
 # user-input
@@ -22,9 +21,13 @@ lx = 99.9       # system length x-dir
 ly = 100        # system length y-dir
 ax = 50         # initial x-coordinate of asperity
 ay = 50         # initial y-coordinate of asperity
+az = 53         # height of asperity
 hl = 20         # height of lower surface/plate
-hu = 89         # height of upper surface #thin: 65, thicc: 75, thiccer: 90
-hup = 20        # thickness of upper plate #thin: 2, thicc: 20, thiccer: 35
+#hup = 9         # thickness of upper plate #thin: 2, thicc: 20, thiccer: 35
+#hup = np.arange(5)*unit_cell
+hup = unit_cell*3 
+hu = az+hup         # height of upper surface #thin: 65, thicc: 75, thiccer: 90
+
 lz = hl + hu    #total system height
 octa_d = 1 * 39.0 #The multiplyer has to be an integer
 dode_d = 1 * 37.3
