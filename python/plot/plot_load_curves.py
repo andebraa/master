@@ -103,6 +103,7 @@ def plot_load_curves_as_funciton_of_top_thiccness():
 
 
     hup = [5,8,9,11,12,14,16,18,20,22,24,26,28,30,33]
+    seed_groups = {80:0,83:0,93:1,100:1,103:2,105:2,109:3}
 
     load_curve_dir = project_dir + 'txt/load_curves/erratic/'
     max_static_dir = project_dir + 'txt/max_static/erratic/'
@@ -121,21 +122,26 @@ def plot_load_curves_as_funciton_of_top_thiccness():
     i = 0
     for j, (height, seeds) in enumerate(seed_dict.items()):
         print(seeds)
+        print('i :',i)
+        print('j :',j)
+        k = seed_groups[height]
+        print('k :',k)
         load_curves_all, load_curves = load_load_curves(temp, vel, force, orientation, 
                                                         grid, template_lc,template_ms, seeds)
 
         ms_all, ms_mean = load_max_static(temp, vel, force, orientation, grid,
                                  template_lc, template_ms, seeds)
         c = plt.cm.viridis((max_hup - hup[i])/(max_hup - min_hup + 0.01))
-        axs[j].plot(load_curves[0,:,0], load_curves[0,:,1], c=c, label = f'hup {hup[i]}' )
+        axs[k].plot(load_curves[0,:,0], load_curves[0,:,1], c=c, label = f'hup {hup[i]}' )
         axs2.plot(ms_mean[0], ms_mean[1],'*', label = f'hup {hup[i]}', c=c)
         for l in range(len(seeds)):
+            print('l :',l)
             # ms_all contains tuples (time, ms)
             print(ms_all[l][0], ms_all[l][1])
             #axs2.plot(ms_all[l][0]*vel, ms_all[l][1], 'o')
-            axs[j].plot(ms_all[l][0], ms_all[l][1], 'o',c=c)
-            axs[j].plot(load_curves_all[l,:,0], load_curves_all[l,:,1], '--', alpha = 0.5, c=c)
-        axs[j].legend()
+            axs[k].plot(ms_all[l][0], ms_all[l][1], 'o',c=c)
+            axs[k].plot(load_curves_all[l,:,0], load_curves_all[l,:,1], '--', alpha = 0.5, c=c)
+        axs[k].legend()
         axs2.legend()
         i += 1
             
