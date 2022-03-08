@@ -48,8 +48,8 @@ args = {'lx': lx, 'ly':ly, 'ax':ax, 'ay':ay, 'hl':hl, 'hu': hu, 'hup': hup, 'gri
 
 if erratic and grid:
     
-    system_file = path + f"erratic/system_or{lower_orient}_hi{lz}_seed{seed}_errgrid{grid[0]}_{grid[1]}_chess"
-    aux_path = path + f"erratic/aux/system_or{lower_orient}_hi{lz}_seed{seed}_errgrid{grid[0]}_{grid[1]}_chess_auxiliary.json"
+    system_file = path + f"erratic/gapfix/system_or{lower_orient}_hi{lz}_seed{seed}_errgrid{grid[0]}_{grid[1]}_chess"
+    aux_path = path + f"erratic/gapfix/aux/system_or{lower_orient}_hi{lz}_seed{seed}_errgrid{grid[0]}_{grid[1]}_chess_auxiliary.json"
 
     system = gen_erratic_system(lx, ly, ax, ay, hl, hu, hup, octa_d, dode_d, lower_orient,
                                 remove_atoms, aux_path=aux_path, grid=grid, 
