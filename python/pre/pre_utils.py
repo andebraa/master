@@ -315,7 +315,7 @@ def gen_erratic_system(lx=99.9, ly=100, ax=50, ay=50, hl=50, hu=60, hup=2,
     """
     
     # total system height
-    lz = hl + 53 + hup
+    lz = hl + 51 + hup
 
     # create lower surface
     if lower_orient == "100":

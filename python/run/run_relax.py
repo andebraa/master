@@ -41,9 +41,9 @@ init_dir = project_dir + f"initial_system/"
 init_auxiliary = project_dir + 'initial_system/erratic/gapfix/aux/system_or{}_uc{}_seed{}_errgrid{}_{}_chess_auxiliary.json'
 
 unit_cell = 4.3596
-uc = 5 #unit cells height
+uc = 1 #unit cells height
 
-height = uc*unit_cell+20+55
+height = uc*unit_cell+20+51
 
 
 def dump_aux(orientation, uc, grid, erratic, output_dir, relax_seed, init_seed = 0):
