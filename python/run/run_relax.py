@@ -23,6 +23,13 @@ force = 0.001
 orientation = "100"
 num_restart_points = 5
 
+
+unit_cell = 4.3596
+uc = 6 #unit cells height
+
+
+height = uc*unit_cell+20+51
+
 grid = (4,4) 
 slurm = True
 gpu = True
@@ -35,15 +42,11 @@ print('relax_seed', relax_seed)
 #project_dir = "/run/user/1004/andebraa_masterdata/"
 project_dir = '../../'
 lammps_dir = project_dir + "lammps/"
-relax_dir = project_dir + "simulations/sys_or{}_hi{}/relax/gapfix/"
+relax_dir = project_dir + f"simulations/sys_or{orientation}_uc{uc}/relax/"
 init_dir = project_dir + f"initial_system/"
 
 init_auxiliary = project_dir + 'initial_system/erratic/gapfix/aux/system_or{}_uc{}_seed{}_errgrid{}_{}_chess_auxiliary.json'
 
-unit_cell = 4.3596
-uc = 1 #unit cells height
-
-height = uc*unit_cell+20+51
 
 
 def dump_aux(orientation, uc, grid, erratic, output_dir, relax_seed, init_seed = 0):
