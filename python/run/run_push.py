@@ -22,7 +22,7 @@ from lammps_simulator.computer import SlurmGPU, GPU
 
 today = date.today()
 
-def dump_aux(orientation, height, grid, erratic, output_dir, relax_time, relax_seed, push_seed):
+def dump_aux(orientation, uc, grid, erratic, output_dir, relax_time, relax_seed, push_seed):
     """
     Function that reads in auxiliary directory, adds relax_seed and copies file to sim directory
 
@@ -30,16 +30,16 @@ def dump_aux(orientation, height, grid, erratic, output_dir, relax_time, relax_s
     """
     #find aux file from relax
     if erratic:
-        relax_dir = f'../../simulations/sys_or{orientation}_hi{height}/relax/erratic/sim_temp{temp}_force{force}_time{relax_time}_seed{relax_seed}_errgrid{grid[0]}_{grid[1]}_chess'
+        relax_dir = f'../../simulations/sys_or{orientation}_uc{uc}/relax/erratic/sim_temp{temp}_force{force}_time{relax_time}_seed{relax_seed}_errgrid{grid[0]}_{grid[1]}_chess'
     
         auxiliary_relax_dir = relax_dir + \
-                f"/system_or{orientation}_hi{height}_seed{relax_seed}_errgrid{grid[0]}_{grid[1]}_chess_auxiliary.json"
+                f"/system_or{orientation}_uc{uc}_seed{relax_seed}_errgrid{grid[0]}_{grid[1]}_chess_auxiliary.json"
     
     elif not erratic:
-        relax_dir = f'../../simulations/sys_or{orientation}_hi{height}/relax/grid/sim_temp{temp}_force{force}_time{relax_time}_seed{relax_seed}_errgrid{grid[0]}_{grid[1]}'
+        relax_dir = f'../../simulations/sys_or{orientation}_uc{uc}/relax/grid/sim_temp{temp}_force{force}_time{relax_time}_seed{relax_seed}_errgrid{grid[0]}_{grid[1]}'
 
         auxiliary_relax_dir = relax_dir + \
-        f"/system_or{orientation}_hi{height}_seed{relax_seed}_grid{grid[0]}_{grid[1]}_auxiliary.json"
+        f"/system_or{orientation}_uc{uc}_seed{relax_seed}_grid{grid[0]}_{grid[1]}_auxiliary.json"
 
 
 
@@ -53,20 +53,20 @@ def dump_aux(orientation, height, grid, erratic, output_dir, relax_time, relax_s
     if grid:
         if erratic:
             print(os.path.exists(output_dir)) 
-            with open(output_dir +'/system_or{}_hi{}_seed{}_errgrid{}_{}_chess_auxiliary.json'.format(orientation, height, push_seed, grid[0], grid[1]), 'w') as outfile:
+            with open(output_dir +'/system_or{}_hi{}_seed{}_errgrid{}_{}_chess_auxiliary.json'.format(orientation, uc, push_seed, grid[0], grid[1]), 'w') as outfile:
                 json.dump(data, outfile)
         else:
-            with open(output_dir + '/system_or{}_hi{}_seed{}_grid{}_{}_auxiliary.json'.format(orientation, height, push_seed, grid[0], grid[1]), 'w') as outfile:
+            with open(output_dir + '/system_or{}_hi{}_seed{}_grid{}_{}_auxiliary.json'.format(orientation, uc, push_seed, grid[0], grid[1]), 'w') as outfile:
                 json.dump(data, outfile)
     return 1
 
 
 
 # user inputs
-temp = 2300
+temp = 1800
 #seed = np.random.randint(10000, 100000)
 force = 0.001
-vel = 5/4
+vel = 5
 #pushtime = 500000 #timestep to start pushing
 
 #height = 109 #90, 95, 110 or 115
@@ -91,35 +91,33 @@ relax_steps = 500000
 push_time = 700 #piko seconds. breaks around 100 acording to even
 
 '''
-seed_dict = {80: [71424,85741,73137], 83: [72691,39884,80139],
-             85: [21198,58061,17428,62980,13991,79683],
-             90: [46370,98610,23592,88599,28049,93977],
-             95: [58451,57111,93529,27304,80162,16582],
-             93: [30723,33420,33487], 
-             100: [92744,25900,33840,79132,10567,79447,23268,10484,56434],
-             103: [11541,98986,88325], 105: [45482,15650,35672],
-             109: [33568,70179,45300]}
+seed_dict = {1: [27316, 20096, 98340],
+             2: [88677, 29850, 56303],
+             3: [68632, 43355, 86711],
+             4: [23973, 23150, 10912],
+             5: [51967, 36425, 50455],
+             6: [96821, 35991, 31437]}
 '''
-seed_dict = {103: [98986, 88325], 105: [45482, 15650, 35672], 109: [33568, 70179, 45300]}
+seed_dict = {6: [96821]}
 run_number = 4 #which run is this
 
-for height, seeds in seed_dict.items(): #used: 37144, 48329, 94514
+for uc, seeds in seed_dict.items(): #used: 37144, 48329, 94514
 
 
     if erratic:
-        relax_dir = project_dir + f"simulations/sys_or{orientation}_hi{height}/relax/erratic/"
-        push_dir = project_dir + f"simulations/sys_or{orientation}_hi{height}/push/erratic/"    
+        relax_dir = project_dir + f"simulations/sys_or{orientation}_uc{uc}/relax/erratic/"
+        push_dir = project_dir + f"simulations/sys_or{orientation}_uc{uc}/push/erratic/"    
     elif grid:
-        relax_dir = project_dir + f"simulations/sys_or{orientation}_hi{height}/relax/grid/"
-        push_dir = project_dir + f"simulations/sys_or{orientation}_hi{height}/push/grid/"
+        relax_dir = project_dir + f"simulations/sys_or{orientation}_uc{uc}/relax/grid/"
+        push_dir = project_dir + f"simulations/sys_or{orientation}_uc{uc}/push/grid/"
 
     else:
-        relax_dir = project_dir + f"simulations/sys_or{orientation}_hi{height}/relax/"
-        push_dir = project_dir + f"simulations/sys_or{orientation}_hi{height}/push/"
+        relax_dir = project_dir + f"simulations/sys_or{orientation}_uc{uc}/relax/"
+        push_dir = project_dir + f"simulations/sys_or{orientation}_uc{uc}/push/"
 
     for relax_seed in seeds:
         push_seed = np.random.randint(10000, 100000)
-        print(height, push_seed)
+        print(uc, push_seed)
         if grid:
             if erratic:
 
@@ -147,8 +145,8 @@ for height, seeds in seed_dict.items(): #used: 37144, 48329, 94514
                 output_dir = push_dir + f"sim_temp{temp}_vel{vel}_force{force}_time{push_time}_seed{push_seed}_errgrid{grid[0]}_{grid[1]}_chess"
                 
                 sim = Simulator(directory=output_dir, overwrite=True)
-                with open(project_dir + 'runs/push/erratic/run_{run_number}', 'a') as file_object:
-                    file_object.write(str(height) + ', ' + str(relax_seed)+'\n')
+                #with open(project_dir + 'runs/push/erratic/run_{run_number}', 'a') as file_object:
+                #    file_object.write(str(height) + ', ' + str(relax_seed)+'\n')
                 
             else:
 
@@ -156,8 +154,8 @@ for height, seeds in seed_dict.items(): #used: 37144, 48329, 94514
 
                 sim = Simulator(directory=output_dir, overwrite=True)
         
-                with open(project_dir + f'runs/push/grid/run_{run_number}.csv', 'a') as file_object:
-                    file_object.write(str(height) + ', ' +str(relax_seed) +'\n')
+                #with open(project_dir + f'runs/push/grid/run_{run_number}.csv', 'a') as file_object:
+                #    file_object.write(str(height) + ', ' +str(relax_seed) +'\n')
 
         else:
             output_dir = push_dir + f"sim_temp{temp}_vel{vel}_force{force}_time{relax_steps}_seed{push_seed}"
@@ -169,7 +167,7 @@ for height, seeds in seed_dict.items(): #used: 37144, 48329, 94514
         sim.copy_to_wd(restartfile, lammps_dir + "SiC.vashishta")
         sim.set_input_script(lammps_dir + "in.push", **var)
         
-        dump_aux(orientation, height, grid, erratic, output_dir, relax_time, relax_seed, push_seed)
+        dump_aux(orientation, uc, grid, erratic, output_dir, relax_time, relax_seed, push_seed)
         
         sim.run(computer=SlurmGPU(lmp_exec="lmp_test", slurm_args={'job-name': f'p{push_seed}'}, lmp_args={'-pk': 'kokkos newton on neigh full'}))
 
