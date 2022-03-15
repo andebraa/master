@@ -16,7 +16,7 @@ from lammps_simulator.computer import GPU, CPU, SlurmGPU
 #dt = 0.002
 #number of timesteps is simtime/dt
 # User input
-temp = 2300
+temp = 1800
 simtime = 1000 #picosekunder
 force = 0.001
 
