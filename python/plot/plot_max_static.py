@@ -79,9 +79,9 @@ def plot_max_static_vs_thiccness():
                 plt.plot(uc, ms, 'ob')
     
 
-    plt.xlabel(r"$hup$ [pm]")
+    plt.xlabel(r"unit cells top plate thicness (4.3956*uc) [pm]")
     plt.ylabel(r"$f$ [$\mu$N]")
-    plt.title('mean max static vs upper plate thicness, green: 1.25, red: 5')
+    plt.title('mean max static vs upper plate thicness, red is average of blue')
     plt.savefig(fig_dir + 'png/max_static_chess.png')
 
     
