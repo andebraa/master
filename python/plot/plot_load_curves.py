@@ -80,7 +80,7 @@ with open(load_curve_file, 'r') as f:
 """
 def plot_load_curves_as_funciton_of_top_thiccness():
     # user input
-    temp = 1800
+    temp = 2300
     vel = 5
     force = 0.001
     orientation = 100
@@ -93,11 +93,17 @@ def plot_load_curves_as_funciton_of_top_thiccness():
     fig_dir = project_dir + 'fig/'
 
 
+    seed_dict = {1: [40525,37063,90058],
+                 2: [30643,69590,85108],
+                 3: [33852,81835,65387],
+                 4: [23383,57218,24832],
+                 5: [22125,97481,26403],
+                 6: [84340,13006,94745]}
 
 
-    seed_dict = {1: [36015,37461,77220], 2: [49156,64486,73803],
-                 3: [30642,74822,90272], 4: [20939,86781,87609],
-                 5: [25642,46012,71581], 6: [86406,91501]}
+#    seed_dict = {1: [36015,37461,77220], 2: [49156,64486,73803],
+#                 3: [30642,74822,90272], 4: [20939,86781,87609],
+#                 5: [25642,46012,71581], 6: [86406,91501]}
 
 
     load_curve_dir = project_dir + 'txt/load_curves/erratic/'
@@ -150,7 +156,7 @@ def plot_load_curves_as_funciton_of_top_thiccness():
     fig2.suptitle(f'max static vs displacement for various thicnessess of upper plate')
     fig2.savefig(fig_dir + 'png/displacement_vs_maxstatic_chess.png')
     fig.suptitle(f"Mean of three runs, for varying upper plate thicness temp {temp}")
-    fig.savefig(fig_dir + 'png/load_curves_varying_uc_ms_chess.png', dpi = 500)
+    fig.savefig(fig_dir + 'png/load_curves_varying_uc_ms_chess_2300.png', dpi = 500)
 
     
     plt.close()
