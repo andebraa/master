@@ -69,7 +69,7 @@ def plot_max_static_vs_thiccness():
     seed_dict_18 = {1: [36015,37461,77220], 2: [49156,64486,73803],
                     3: [30642,74822,90272], 4: [20939,86781,87609],
                     5: [25642,46012,71581], 6: [86406,91501]}
-    colours = {1800: 'go', 2300:'ro'}
+    colours = {1800: 'g', 2300:'r'}
     
     temp_seed_uc = {1800: seed_dict_18, 2300: seed_dict_23}
     
@@ -80,9 +80,9 @@ def plot_max_static_vs_thiccness():
             ms_all, mean_static = load_max_static(temp, vel, force, orientation, grid, 
                                                   template_lc, template_ms, seed) 
             #all_mean_static[i] = mean_static
-            plt.plot(uc, mean_static, colours[temp])
-            #for ms in ms_all:
-            #    plt.plot(uc, ms, 'ob')
+            plt.plot(uc, mean_static, colours[temp]+'o')
+            for ms in ms_all:
+                plt.plot(uc, ms, colours[temp]+'*')
     
 
     plt.xlabel(r"unit cells top plate thicness (4.3956*uc) [pm]")
