@@ -39,12 +39,12 @@ def load_max_static(temp, vel, force, orientation, grid, template_lc, template_m
 
 def plot_max_static_vs_thiccness():
     # user input
-    temp = 1800
+    #temp = 1800
     force = 0.001
     orientation = 100
     grid = (4,4)
     erratic = True
-
+    vel = 5
 
     # paths
     project_dir = '../../'
@@ -59,30 +59,36 @@ def plot_max_static_vs_thiccness():
     style.use('seaborn') 
     #fig, ax = plt.subplots(2,15)
     #axs = axs.ravel()
+    seed_dict_23 = {1: [40525,37063,90058],
+                 2: [30643,69590,85108],
+                 3: [33852,81835,65387],
+                 4: [23383,57218,24832],
+                 5: [22125,97481,26403],
+                 6: [84340,13006,94745]}
 
-    seed_dict_5 = {1: [36015,37461,77220], 2: [49156,64486,73803],
-                 3: [30642,74822,90272], 4: [20939,86781,87609],
-                 5: [25642,46012,71581], 6: [86406,91501]}
-    colours = {1.25: 'go', 5:'ro'}
+    seed_dict_18 = {1: [36015,37461,77220], 2: [49156,64486,73803],
+                    3: [30642,74822,90272], 4: [20939,86781,87609],
+                    5: [25642,46012,71581], 6: [86406,91501]}
+    colours = {1800: 'go', 2300:'ro'}
     
-    vel_seed_uc = {5: seed_dict_5} #, 1.25: seed_dict_125}
+    temp_seed_uc = {1800: seed_dict_18, 2300: seed_dict_23}
     
-    all_mean_static = np.zeros(len(seed_dict_5)) #num keys
+    all_mean_static = np.zeros(len(seed_dict_23)) #num keys
     
-    for vel, seed_dict in vel_seed_uc.items():
+    for temp, seed_dict in temp_seed_uc.items():
         for i, (uc, seed) in enumerate(seed_dict.items()):
             ms_all, mean_static = load_max_static(temp, vel, force, orientation, grid, 
                                                   template_lc, template_ms, seed) 
-            all_mean_static[i] = mean_static
-            plt.plot(uc, mean_static, colours[vel])
-            for ms in ms_all:
-                plt.plot(uc, ms, 'ob')
+            #all_mean_static[i] = mean_static
+            plt.plot(uc, mean_static, colours[temp])
+            #for ms in ms_all:
+            #    plt.plot(uc, ms, 'ob')
     
 
     plt.xlabel(r"unit cells top plate thicness (4.3956*uc) [pm]")
     plt.ylabel(r"$f$ [$\mu$N]")
-    plt.title('mean max static vs upper plate thicness, red is average of blue')
-    plt.savefig(fig_dir + 'png/max_static_chess.png')
+    plt.title('mean max static vs upper plate thicness, red is 2300, blue is 1800')
+    plt.savefig(fig_dir + 'png/max_static_chess_2300_1800.png')
 
     
 
