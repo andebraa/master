@@ -9,11 +9,10 @@ import json
 import glob
 import re
 import os
+import sys
 import numpy as np
 from lammps_simulator import Simulator
 from lammps_simulator.computer import GPU, CPU, SlurmGPU
-sys.path.insert(0,'/home/users/andebraa/master/python')
-from runlogger import runlogger
 sys.path.insert(0,'/home/users/andebraa/master/python')
 from runlogger import runlogger
 
@@ -29,7 +28,7 @@ num_restart_points = 5
 
 
 unit_cell = 4.3596
-uc = 6 #unit cells height
+uc = 7 #unit cells height
 
 
 height = uc*unit_cell+20+51
@@ -172,6 +171,7 @@ if erratic:
             sim.run(computer=GPU(lmp_exec = 'lmp_test'), stdout = None)
     else:
         sim.run(computer=CPU(num_procs=2, lmp_exec="lmp"), stdout=None)
+    runlogger('relax', uc, temp, 0, force, simtime, relax_seed, grid = 'erratic', push_speed = 0)
 
 elif grid:
     if gpu:
@@ -183,6 +183,7 @@ elif grid:
             sim.run(computer=GPU(lmp_exec = 'lmp_test'), stdout = None)
     else:
         sim.run(computer=CPU(num_procs=2, lmp_exec="lmp"), stdout=None)
+    runlogger('relax', uc, temp, 0, force, simtime, relax_seed, grid = 'grid', push_speed = 0)
 
 else:
     if gpu:
@@ -195,3 +196,4 @@ else:
 
     else:
         sim.run(computer=CPU(num_procs=2, lmp_exec="lmp"), stdout=None)
+    runlogger('relax', uc, temp, 0, force, simtime, relax_seed, grid = 'single', push_speed = 0)

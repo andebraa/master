@@ -28,7 +28,7 @@ az = 53         # height of asperity
 hl = 20         # height of lower surface/plate
 #hup = 9         # thickness of upper plate #thin: 2, thicc: 20, thiccer: 35
 #hup = np.arange(5)*unit_cell
-num_unit_cells = 1
+num_unit_cells = 10
 hup = unit_cell*num_unit_cells 
 hu = az+hup         # height of upper surface #thin: 65, thicc: 75, thiccer: 90
 
@@ -63,7 +63,8 @@ if erratic and grid:
                                 asperities = asperities, seed = seed)
 
 
-    #system.write(system_file +'.data', format="lammps-data", atom_style = 'atomic') #alternate write method that fixes error?
+    system.write(system_file +'.data', format="lammps-data", atom_style = 'atomic') #alternate write method that fixes error?
+
     print("System written to: ", system_file+'.data')
     runlogger('init', num_unit_cells, 0, 0, 0, 0,relax_seed = seed, grid= 'erratic', push_seed = 0)
 

@@ -66,7 +66,7 @@ def dump_aux(orientation, uc, grid, erratic, output_dir, relax_time, relax_seed,
 # user inputs
 temp = 2300
 #seed = np.random.randint(10000, 100000)
-force = 0.00005
+force = 0.000001
 vel = 5
 #pushtime = 500000 #timestep to start pushing
 
@@ -109,7 +109,7 @@ seed_dict = {3: [55990],
              6: [17164,85696,98609]}
 '''
 
-seed_dict = {6:[33375]}
+seed_dict = {6:[71957]}
 run_number = 4 #which run is this
 
 for uc, seeds in seed_dict.items(): #used: 37144, 48329, 94514
@@ -145,7 +145,7 @@ for uc, seeds in seed_dict.items(): #used: 37144, 48329, 94514
                'paramfile': "SiC.vashishta",
                'temp': temp,
                'seed': push_seed,
-               'force': 0.001,
+               'force': force,
                'simtime': push_time, #even called it simetime, no idea what it is
                'pushtime': relax_steps, #steps until push
                'vel': vel} #m/s
