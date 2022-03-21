@@ -6,12 +6,15 @@ Script for generating intial system, standard is tiny system
 This project is distributed under the GNU General Public License v3.
 For more information, see the LICENSE file in the top-level dictionary.
 """
-
+import sys 
 from molecular_builder import write
 from pre_utils import gen_system, gen_grid_system, gen_erratic_system
 import argparse
 import numpy as np
 import json
+
+sys.path.insert(0,'/home/users/andebraa/master/python')
+from runlogger import runlogger
 
 unit_cell = 4.3956
 
@@ -60,8 +63,9 @@ if erratic and grid:
                                 asperities = asperities, seed = seed)
 
 
-    system.write(system_file +'.data', format="lammps-data", atom_style = 'atomic') #alternate write method that fixes error?
+    #system.write(system_file +'.data', format="lammps-data", atom_style = 'atomic') #alternate write method that fixes error?
     print("System written to: ", system_file+'.data')
+    runlogger('init', num_unit_cells, 0, 0, 0, 0,relax_seed = seed, grid= 'erratic', push_seed = 0)
 
 elif grid:
     system_file = path + f"grid/system_or{lower_orient}_uc{num_unit_cells}_grid{grid[0]}_{grid[1]}"
@@ -75,6 +79,7 @@ elif grid:
     print("System written to: ", system_file+'.data')
 
 
+    runlogger('init', num_unit_cells, 0, 0, 0, 0, relax_seed = seed, grid = 'grid', push_seed = 0)
 
 else:
     
@@ -86,3 +91,4 @@ else:
 
     print("System written to: ", system_file)
 
+    runlogger('init', num_unit_cells, 0, 0, 0, seed, 'single', 0)

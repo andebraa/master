@@ -12,13 +12,17 @@ import os
 import numpy as np
 from lammps_simulator import Simulator
 from lammps_simulator.computer import GPU, CPU, SlurmGPU
+sys.path.insert(0,'/home/users/andebraa/master/python')
+from runlogger import runlogger
+sys.path.insert(0,'/home/users/andebraa/master/python')
+from runlogger import runlogger
 
 #dt = 0.002
 #number of timesteps is simtime/dt
 # User input
 temp = 2300
 simtime = 1000 #picosekunder
-force = 0.001
+force = 0.000001
 
 orientation = "100"
 num_restart_points = 5

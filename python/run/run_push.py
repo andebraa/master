@@ -62,10 +62,11 @@ def dump_aux(orientation, uc, grid, erratic, output_dir, relax_time, relax_seed,
 
 
 
+
 # user inputs
-temp = 1800
+temp = 2300
 #seed = np.random.randint(10000, 100000)
-force = 0.001
+force = 0.00005
 vel = 5
 #pushtime = 500000 #timestep to start pushing
 
@@ -98,7 +99,17 @@ seed_dict = {1: [27316, 20096, 98340],
              5: [51967, 36425, 50455],
              6: [96821, 35991, 31437]}
 '''
-seed_dict = {6: [96821]}
+#seed_dict = {1: [93072,70369,46165],
+             #2: [89830,53394,35679],
+             #3: [78023,61174,
+'''
+seed_dict = {3: [55990],
+             4: [27507,84438,67405],
+             5: [23889,65297,46413],
+             6: [17164,85696,98609]}
+'''
+
+seed_dict = {6:[33375]}
 run_number = 4 #which run is this
 
 for uc, seeds in seed_dict.items(): #used: 37144, 48329, 94514
