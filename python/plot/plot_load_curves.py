@@ -242,6 +242,7 @@ def plot_single_curve():
     plt.ylabel(r"$f$ [$\mu$N]")
     plt.title(f"temp {temp}, force {force}, vel {vel}")
     plt.legend()
+    plt.savefig(fig_dir + 'single_curve_2300_5_6_1e-6.png')
 
 if __name__ == '__main__':
 
