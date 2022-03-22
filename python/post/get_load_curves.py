@@ -15,7 +15,7 @@ def get_load_curves():
     temp = 2300
     orientation = "100"
     vel = 5
-    force = 1e-06
+    force = 1e-04
     
     grid = (4,4)
     erratic = True
@@ -59,7 +59,7 @@ def get_load_curves():
     #             4: [23383,57218,24832],
     #             5: [22125,97481,26403],
     #             6: [84340,13006,94745]}
-    seed_dict = {6: [95687]}
+    seed_dict = {6: [49172]}
 
     time = 700
     for height, seeds in seed_dict.items():

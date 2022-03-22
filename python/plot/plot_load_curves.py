@@ -206,7 +206,7 @@ def plot_mean_of_multiple(temp, vel, force, orientation, grid, template_lc, temp
 
 
 
-def plot_single_curve():
+def load_vs_normal_force():
     # user input
     temp = 2300
     vel = 5
@@ -227,22 +227,23 @@ def plot_single_curve():
     template_lc = load_curve_dir + 'load_curves_temp{}_vel{}_force{}_or{}_seed*_errgrid{}_{}_chess.txt'
     template_ms = max_static_dir + 'max_static_temp{}_vel{}_force{}_or{}_seed*_errgrid{}_{}_chess.txt'
 
-    seeds = [95687]
-    seeds += seeds #adding seeds to itself so mean won't complain?
+    seeds = {1e-6: [95687, 95687], 5e-5: [96658,96658], 1e-4: [49172,49172]}
 
-    load_curves_all, load_curves = load_load_curves(temp, vel, force, orientation,
-                                                    grid, template_lc,template_ms, seeds)
+    for force, seed in seeds.items():
+        
+        load_curves_all, load_curves = load_load_curves(temp, vel, force, orientation,
+                                                    grid, template_lc,template_ms, seed)
 
-    ms_all, ms_mean = load_max_static(temp, vel, force, orientation, grid,
-                             template_lc, template_ms, seeds)
+        ms_all, ms_mean = load_max_static(temp, vel, force, orientation, grid,
+                             template_lc, template_ms, seed)
 
     
-    plt.plot(load_curves[0,:,0], load_curves[0,:,1])
+        plt.plot(load_curves[0,:,0], load_curves[0,:,1], label = f'force {force}')
     plt.xlabel(r"$t_p$ [ns]")
     plt.ylabel(r"$f$ [$\mu$N]")
     plt.title(f"temp {temp}, force {force}, vel {vel}")
     plt.legend()
-    plt.savefig(fig_dir + 'single_curve_2300_5_6_1e-6.png')
+    plt.savefig(fig_dir + 'various_normalforce.png')
 
 if __name__ == '__main__':
 
@@ -283,7 +284,7 @@ if __name__ == '__main__':
     #plot_all_curves_and_mean(temp, vel, force, orientation, grid, template_lc, template_ms, seeds)    
     #plot_mean_of_multiple(temp, vel, force, orientation, grid, template_lc, template_ms, [seeds1, seeds2, seeds3])
     #plot_load_curves_as_funciton_of_top_thiccness()
-    plot_single_curve()
+    load_vs_normal_force()
     """
     stop
 
