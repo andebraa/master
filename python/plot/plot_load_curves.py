@@ -202,8 +202,46 @@ def plot_mean_of_multiple(temp, vel, force, orientation, grid, template_lc, temp
     plt.title(f"mean of multiple load curves relax seeds, force {force}, vel {vel}")
     plt.legend()
     plt.savefig(fig_dir + 'png/means_of_multiple.png')
+    
 
 
+
+def plot_single_curve():
+    # user input
+    temp = 2300
+    vel = 5
+    force = 1e-06
+    orientation = 100
+    grid = (4,4)
+    erratic = True
+
+
+    # paths
+    project_dir = '../../'
+    fig_dir = project_dir + 'fig/'
+
+
+    load_curve_dir = project_dir + 'txt/load_curves/erratic/'
+    max_static_dir = project_dir + 'txt/max_static/erratic/'
+
+    template_lc = load_curve_dir + 'load_curves_temp{}_vel{}_force{}_or{}_seed*_errgrid{}_{}_chess.txt'
+    template_ms = max_static_dir + 'max_static_temp{}_vel{}_force{}_or{}_seed*_errgrid{}_{}_chess.txt'
+
+    seeds = [95687]
+    seeds += seeds #adding seeds to itself so mean won't complain?
+
+    load_curves_all, load_curves = load_load_curves(temp, vel, force, orientation,
+                                                    grid, template_lc,template_ms, seeds)
+
+    ms_all, ms_mean = load_max_static(temp, vel, force, orientation, grid,
+                             template_lc, template_ms, seeds)
+
+    
+    plt.plot(load_curves[0,:,0], load_curves[0,:,1])
+    plt.xlabel(r"$t_p$ [ns]")
+    plt.ylabel(r"$f$ [$\mu$N]")
+    plt.title(f"temp {temp}, force {force}, vel {vel}")
+    plt.legend()
 
 if __name__ == '__main__':
 
@@ -243,7 +281,8 @@ if __name__ == '__main__':
 
     #plot_all_curves_and_mean(temp, vel, force, orientation, grid, template_lc, template_ms, seeds)    
     #plot_mean_of_multiple(temp, vel, force, orientation, grid, template_lc, template_ms, [seeds1, seeds2, seeds3])
-    plot_load_curves_as_funciton_of_top_thiccness()
+    #plot_load_curves_as_funciton_of_top_thiccness()
+    plot_single_curve()
     """
     stop
 
