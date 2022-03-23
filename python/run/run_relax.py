@@ -21,14 +21,14 @@ from runlogger import runlogger
 # User input
 temp = 2300
 simtime = 1000 #picosekunder
-force = 0.000001
+force = 0.001
 
 orientation = "100"
-num_restart_points = 5
+num_restart_points = 3
 
 
 unit_cell = 4.3596
-uc = 7 #unit cells height
+uc = 8 #unit cells height
 
 
 height = uc*unit_cell+20+51
@@ -171,7 +171,7 @@ if erratic:
             sim.run(computer=GPU(lmp_exec = 'lmp_test'), stdout = None)
     else:
         sim.run(computer=CPU(num_procs=2, lmp_exec="lmp"), stdout=None)
-    runlogger('relax', uc, temp, 0, force, simtime, relax_seed, grid = 'erratic', push_speed = 0)
+    runlogger('relax', uc, temp, 0, force, simtime, relax_seed, grid = 'erratic', push_seed = 0)
 
 elif grid:
     if gpu:
@@ -183,7 +183,7 @@ elif grid:
             sim.run(computer=GPU(lmp_exec = 'lmp_test'), stdout = None)
     else:
         sim.run(computer=CPU(num_procs=2, lmp_exec="lmp"), stdout=None)
-    runlogger('relax', uc, temp, 0, force, simtime, relax_seed, grid = 'grid', push_speed = 0)
+    runlogger('relax', uc, temp, 0, force, simtime, relax_seed, grid = 'grid', push_seed = 0)
 
 else:
     if gpu:
@@ -196,4 +196,4 @@ else:
 
     else:
         sim.run(computer=CPU(num_procs=2, lmp_exec="lmp"), stdout=None)
-    runlogger('relax', uc, temp, 0, force, simtime, relax_seed, grid = 'single', push_speed = 0)
+    runlogger('relax', uc, temp, 0, force, simtime, relax_seed, grid = 'single', push_seed = 0)
