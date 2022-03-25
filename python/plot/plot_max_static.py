@@ -91,7 +91,7 @@ def plot_max_static_vs_thiccness():
 
     plt.xlabel(r"unit cells top plate thicness (4.3956*uc) [pm]")
     plt.ylabel(r"$f$ [$\mu$N]")
-    plt.title('mean max static vs upper plate thicness, red is 2300, blue is 1800')
+    plt.title('mean max static vs upper plate thicness, temp 2300')
     plt.savefig(fig_dir + 'png/max_static_chess_2300_1800.png')
 
     
