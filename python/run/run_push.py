@@ -87,7 +87,7 @@ lammps_dir = project_dir + "lammps/"
 
 # push asperity
 relax_time = 1000 #ps time until we push
-relax_steps = 500000
+relax_steps = 499998
 #push_steps = 25000 # how long we push for (ps maybe, or timesteps)
 push_time = 700 #piko seconds. breaks around 100 acording to even
 
@@ -109,9 +109,8 @@ seed_dict = {3: [55990],
              6: [17164,85696,98609]}
 '''
 
-seed_dict = {7: [31752,95421,63625],
-             8: [58348,84795,34844],
-             9: [65889,84890,21200]}
+seed_dict = {7: [54650,26772,73541],
+             8: [58880,39205]}
 
 run_number = 4 #which run is this
 
