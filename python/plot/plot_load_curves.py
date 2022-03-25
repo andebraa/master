@@ -100,7 +100,7 @@ def plot_load_curves_as_funciton_of_top_thiccness():
                  5: [22125,97481,26403],
                  6: [84340,13006,94745],
                  7: [94340,52540,92005],
-                 8: [11394]}
+                 8: [11394, 11394]}
 
 
 #    seed_dict = {1: [36015,37461,77220], 2: [49156,64486,73803],
@@ -115,9 +115,9 @@ def plot_load_curves_as_funciton_of_top_thiccness():
     template_ms = max_static_dir + 'max_static_temp{}_vel{}_force{}_or{}_seed*_errgrid{}_{}_chess.txt'
     style.use('seaborn') 
     min_hup = 1
-    max_hup = 6
+    max_hup = 8
 
-    fig, axs = plt.subplots(3,2)
+    fig, axs = plt.subplots(4,2)
     fig2 = plt.figure()
     axs2 = fig2.add_subplot(111)
 
@@ -133,8 +133,9 @@ def plot_load_curves_as_funciton_of_top_thiccness():
         ms_all, ms_mean = load_max_static(temp, vel, force, orientation, grid,
                                  template_lc, template_ms, seeds)
         c = plt.cm.viridis((max_hup - uc)/(max_hup - min_hup + 0.01))
-        axs[j].plot(load_curves[0,:,0], load_curves[0,:,1], c=c, label = f'uc {uc}' )
-        axs2.plot(ms_mean[0], ms_mean[1],'*', label = f'uc {uc}', c=c)
+        if len(seeds) > 2:
+            axs[j].plot(load_curves[0,:,0], load_curves[0,:,1], c=c, label = f'uc {uc}' )
+            axs2.plot(ms_mean[0], ms_mean[1],'*', label = f'uc {uc}', c=c)
         print(np.shape(ms_all))
         for l in range(len(seeds)):
             print('l :',l)
@@ -285,8 +286,8 @@ if __name__ == '__main__':
 
     #plot_all_curves_and_mean(temp, vel, force, orientation, grid, template_lc, template_ms, seeds)    
     #plot_mean_of_multiple(temp, vel, force, orientation, grid, template_lc, template_ms, [seeds1, seeds2, seeds3])
-    #plot_load_curves_as_funciton_of_top_thiccness()
-    load_vs_normal_force()
+    plot_load_curves_as_funciton_of_top_thiccness()
+    #load_vs_normal_force()
     """
     stop
 
