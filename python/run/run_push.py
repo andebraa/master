@@ -19,6 +19,8 @@ import numpy as np
 from datetime import date
 from lammps_simulator import Simulator
 from lammps_simulator.computer import SlurmGPU, GPU
+sys.path.insert(0,'/home/users/andebraa/master/python')
+from runlogger import runlogger
 
 today = date.today()
 
@@ -160,12 +162,15 @@ for uc, seeds in seed_dict.items(): #used: 37144, 48329, 94514
                 #with open(project_dir + 'runs/push/erratic/run_{run_number}', 'a') as file_object:
                 #    file_object.write(str(height) + ', ' + str(relax_seed)+'\n')
                 
+                runlogger('push', uc, temp, 0, force, simtime, relax_seed, grid = 'erratic', push_seed = push_seed)
             else:
 
                 output_dir = push_dir + f"sim_temp{temp}_vel{vel}_force{force}_time{push_time}_seed{push_seed}_grid{grid[0]}_{grid[1]}"
 
                 sim = Simulator(directory=output_dir, overwrite=True)
         
+
+                runlogger('push', uc, temp, 0, force, simtime, relax_seed, grid = 'grid', push_seed = push_seed)
                 #with open(project_dir + f'runs/push/grid/run_{run_number}.csv', 'a') as file_object:
                 #    file_object.write(str(height) + ', ' +str(relax_seed) +'\n')
 
@@ -174,6 +179,7 @@ for uc, seeds in seed_dict.items(): #used: 37144, 48329, 94514
 
             sim = Simulator(directory=output_dir, overwrite=True)
         
+            runlogger('push', uc, temp, 0, force, simtime, relax_seed, grid = 'single', push_seed = push_seed)
         #read aux file from relax, write to push directory, append 
 
         sim.copy_to_wd(restartfile, lammps_dir + "SiC.vashishta")
@@ -182,7 +188,6 @@ for uc, seeds in seed_dict.items(): #used: 37144, 48329, 94514
         dump_aux(orientation, uc, grid, erratic, output_dir, relax_time, relax_seed, push_seed)
         
         sim.run(computer=SlurmGPU(lmp_exec="lmp_test", slurm_args={'job-name': f'p{push_seed}'}, lmp_args={'-pk': 'kokkos newton on neigh full'}))
-
 
 
         '''
