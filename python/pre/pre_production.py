@@ -1,4 +1,6 @@
 import os 
+import json
+import random
 import numpy as np
 import itertools 
 from tqdm import tqdm
@@ -40,17 +42,18 @@ def shift(direction, p):
 def nums2matrix(nums):
     mapping = nums2coords()
     print(nums)
+    print('mapping ',mapping)
     indx = np.zeros((4*4)) 
     matrix = np.zeros((4,4))
     for item in nums:
+        print('num: ', item)
+        print('map of item: ', mapping[item])
         matrix[mapping[item]] = 1
         indx[item] = 1 
-    print(indx)
-    print(indx.reshape((4,4)))
-    #print(matrix)
+    print(matrix)
     return matrix
 
-def gen_config_library():
+def gen_config_library(store_json = False):
     '''
     Script that generates a csv of all unique 2d boolean matrix, wrt
     periodic boundary conditions in the x and y direction. 
@@ -107,13 +110,22 @@ def gen_config_library():
             flipped_coords = []
             flipped_nums = [] 
 
-            
-    #print(removed_comb)
-    print(len(all_comb.difference(removed_comb)))
+    res = all_comb.difference(removed_comb)    
+    if store_json:
+        keys = range(len(res))
+        ran_res = random.sample(list(res), k = len(res))
+        print(len(ran_res))
+        res_dict = dict(zip(keys, ran_res))
+        print('res_dict ', res_dict)
+        print(len(res_dict))
+        print(len(ran_res))
+        with open('config_library.json', 'w') as fp:
+            json.dump(res_dict, fp)
+        #outdict = {key = res[key] for key in keys} 
+
     return all_comb.difference(removed_comb)
     
 
 if __name__ == '__main__':
-    #unique_comb = gen_config_library()
-    #print(unique_comb)
-    matrix = nums2matrix([1,14])
+    unique_comb = gen_config_library(store_json = True)
+    #matrix = nums2matrix([1,14])
