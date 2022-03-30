@@ -17,6 +17,7 @@ sys.path.insert(0,'/home/users/andebraa/master/python')
 from runlogger import runlogger
 
 def setup_system(production = False): 
+
     unit_cell = 4.3956
 
     parser = argparse.ArgumentParser()
@@ -36,8 +37,10 @@ def setup_system(production = False):
     lz = hl + hu    #total system height
     octa_d = 1 * 39.0 #The multiplyer has to be an integer
     dode_d = 1 * 37.3
-
-    grid = (4,4) 
+    if production:
+        grid = production
+    else:
+        grid = (4,4) 
     porosity = 0.5
 
     asperities = int(grid[0]*grid[1]*porosity)
@@ -49,7 +52,7 @@ def setup_system(production = False):
     seed = np.random.randint(10000, 100000)
 
 
-    path = '../../initial_system/'
+    path = '../../initial_system/production'
 
     args = {'lx': lx, 'ly':ly, 'ax':ax, 'ay':ay, 'hl':hl, 'hu': hu, 'hup': hup, 'grid': grid, 'asperities':asperities,
             'lower_orient': lower_orient, 'erratic': erratic}
@@ -61,7 +64,7 @@ def setup_system(production = False):
 
         system = gen_erratic_system(lx, ly, ax, ay, hl, hu, hup, octa_d, dode_d, lower_orient,
                                     remove_atoms, aux_path=aux_path, grid=grid, 
-                                    asperities = asperities, seed = seed)
+                                    asperities = asperities, seed = seed, production = production)
 
 
         system.write(system_file +'.data', format="lammps-data", atom_style = 'atomic') #alternate write method that fixes error?
