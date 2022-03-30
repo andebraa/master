@@ -1,9 +1,15 @@
 import os 
 import json
+from json import JSONEncoder
 import random
 import numpy as np
 import itertools 
 from tqdm import tqdm
+class NumpyArrayEncoder(JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, np.ndarray):
+            return obj.tolist()
+        return JSONEncoder.default(self, obj)
 def nums2coords(nums=None): 
     #convert tuple of asperity numbers to cordinates
     #(1,3) -> [[1,0],[1,0]] 
@@ -107,7 +113,7 @@ def gen_config_library(store_json = False):
             print('key, value ',key, value)
             res_dict[key] = nums2matrix(value)
         with open('config_library.json', 'w') as fp:
-            json.dump(res_dict, fp)
+            json.dump(res_dict,fp,cls=NumpyArrayEncoder)
         #outdict = {key = res[key] for key in keys} 
 
     return all_comb.difference(removed_comb)
