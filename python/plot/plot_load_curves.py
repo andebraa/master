@@ -92,15 +92,14 @@ def plot_load_curves_as_funciton_of_top_thiccness():
     project_dir = '../../'
     fig_dir = project_dir + 'fig/'
 
-
-    seed_dict = {1: [40525,37063,90058],
-                 2: [30643,69590,85108],
-                 3: [33852,81835,65387],
-                 4: [23383,57218,24832],
-                 5: [22125,97481,26403],
-                 6: [84340,13006,94745],
-                 7: [94340,52540,92005],
-                 8: [11394, 11394]}
+    #seed_dict = {1: [40525,37063,90058],
+    #             2: [30643,69590,85108],
+    #             3: [33852,81835,65387],
+    #             4: [23383,57218,24832],
+    #             5: [22125,97481,26403],
+    #             6: [84340,13006,94745],
+    #             7: [94340,52540,92005],
+    #             8: [11394, 11394]}
 
 
 #    seed_dict = {1: [36015,37461,77220], 2: [49156,64486,73803],
@@ -207,7 +206,38 @@ def plot_mean_of_multiple(temp, vel, force, orientation, grid, template_lc, temp
     plt.savefig(fig_dir + 'png/means_of_multiple.png')
     
 
+def plot_single_loadcurve():
+    # user input
+    temp = 2300
+    vel = 5
+    force = 0
+    orientation = 100
+    grid = (4,4)
+    erratic = True
 
+
+    # paths
+    project_dir = '../../'
+    fig_dir = project_dir + 'fig/'
+
+
+    load_curve_dir = project_dir + 'txt/load_curves/erratic/'
+    max_static_dir = project_dir + 'txt/max_static/erratic/'
+
+    template_lc = load_curve_dir + 'load_curves_temp{}_vel{}_force{}_or{}_seed*_errgrid{}_{}_chess.txt'
+    template_ms = max_static_dir + 'max_static_temp{}_vel{}_force{}_or{}_seed*_errgrid{}_{}_chess.txt'
+    style.use('seaborn')
+    min_hup = 1
+    max_hup = 8
+    seeds = [44066, 44066]
+
+
+    load_curve, load_curves_mean = load_load_curves(temp, vel,
+                                                                force, orientation,
+                                                                grid, template_lc,
+                                                                template_ms, seeds)
+    plt.plot(load_curves_mean[:,0],load_curves_mean[:,1])
+    plt.savefig(fig_dir + 'no_force.png')
 
 def load_vs_normal_force():
     # user input
@@ -286,8 +316,9 @@ if __name__ == '__main__':
 
     #plot_all_curves_and_mean(temp, vel, force, orientation, grid, template_lc, template_ms, seeds)    
     #plot_mean_of_multiple(temp, vel, force, orientation, grid, template_lc, template_ms, [seeds1, seeds2, seeds3])
-    plot_load_curves_as_funciton_of_top_thiccness()
+    #plot_load_curves_as_funciton_of_top_thiccness()
     #load_vs_normal_force()
+    plot_single_loadcurve()
     """
     stop
 
