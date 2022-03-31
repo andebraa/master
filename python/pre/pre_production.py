@@ -106,27 +106,25 @@ def gen_config_library(store_json = False):
             flipped_nums = [] 
 
     res = all_comb.difference(removed_comb)    
+    matrix_list = np.zeros((len(res), 4, 4))
     if store_json:
         keys = range(len(res))
         ran_res = random.sample(list(res), k = len(res))
         res_dict = dict(zip(keys, ran_res))
         for key, value in res_dict.items():
             print('key, value ',key, value)
-            res_dict[key] = nums2matrix(value)
-        with open('config_library.json', 'w') as fp:
-            json.dump(res_dict,fp,cls=NumpyArrayEncoder)
+            matrix_list[key,:,:] = nums2matrix(value)
+        print(matrix_list)
+        print(matrix_list.shape)
+        np.save('config_list.npy', matrix_list)
         #outdict = {key = res[key] for key in keys} 
 
     return all_comb.difference(removed_comb)
     
 def test_asperity_number():
-    with open('config_library.json', 'r') as infile:
-        
-        data_json = json.load(infile)
-        for key, matrix in data_json.items():
-            print('key, matrix: ', key, matrix)
-            print(np.sum(matrix))
-            assert np.sum(matrix) == 8
+    matrices = np.load('config_list.npy')     
+    for i, matrix in enumerate(matrices):
+        assert np.sum(matrix) == 8
 if __name__ == '__main__':
     #unique_comb = gen_config_library(store_json = True)
     test_asperity_number()

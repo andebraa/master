@@ -2,11 +2,9 @@ import numpy as np
 import json 
 from setup_system import setup_system
 
-with open('config_library.json') as json_file:
-    configjson = json.load(json_file)
-
-print(configjson)
-
-for num in configjson.keys():
-    setup_system(configjson[num])
+config_matrix = np.load('config_list.npy')
+print(config_matrix)
+print(config_matrix.shape)
+for matrix in config_matrix:
+    setup_system(matrix)
     stop
