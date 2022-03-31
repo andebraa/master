@@ -236,8 +236,14 @@ def plot_single_loadcurve():
                                                                 force, orientation,
                                                                 grid, template_lc,
                                                                 template_ms, seeds)
-    print(load_curves_mean.shape)
-    plt.plot(load_curves_mean[:,:,0],load_curves_mean[:,:,1])
+    
+    print(load_curve.shape)
+    plt.plot(load_curve[0,:,0], load_curve[0,:,1])
+    #plt.plot(load_curves_mean[:,:,0],load_curves_mean[:,:,1])
+    plt.xlabel(r"$t_p$ [ns]")
+    plt.ylabel(r"$f$ [$\mu$N]")
+
+    plt.title(f'temp {temp}, vel {vel}, force{force}, 4x4 chess')
     plt.savefig(fig_dir + 'no_force.png')
 
 def load_vs_normal_force():

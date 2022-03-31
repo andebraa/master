@@ -22,15 +22,15 @@ from runlogger import runlogger
 
 def run_relax():
     temp = 2300
-    simtime = 1000 #picosekunder
-    force = 0.001
+    simtime = 500 #picosekunder
+    force = 0
 
     orientation = "100"
     num_restart_points = 3
 
 
     unit_cell = 4.3596
-    uc = 8 #unit cells height
+    uc = 5 #unit cells height
 
 
     height = uc*unit_cell+20+51
@@ -50,15 +50,13 @@ def run_relax():
     relax_dir = project_dir + f"simulations/sys_or{orientation}_uc{uc}/relax/"
     init_dir = project_dir + f"initial_system/"
 
-    init_auxiliary = project_dir + 'initial_system/erratic/gapfix/aux/system_or{}_uc{}_seed{}_errgrid{}_{}_chess_auxiliary.json'
-
-
-
+    init_auxiliary = project_dir + 'initial_system/erratic/aux/system_or{}_uc{}_seed{}_errgrid{}_{}_chess_auxiliary.json'
     def dump_aux(orientation, uc, grid, erratic, output_dir, relax_seed, init_seed = 0):
         """
         Function that reads in auxiliary directory, adds relax_seed and copies file to sim directory,
         note; should not alter init auxiliary
         """
+        init_auxiliary = project_dir + 'initial_system/erratic/aux/system_or{}_uc{}_seed{}_errgrid{}_{}_chess_auxiliary.json'
 
         #opening auxiliary file, and copying this to the directory
         with open(init_auxiliary.format(orientation, uc, init_seed, grid[0], grid[1], 'r+')) as auxfile:
@@ -88,11 +86,10 @@ def run_relax():
                     json.dump(data, outfile)
         return 1
 
-
     # Finding the init datafile
     if erratic:
         #finding all files in directory, printing the seeds and having user write in desired seed
-        template_dump = init_dir +f"erratic/gapfix/system_or{orientation}_uc{uc}_seed*_errgrid{grid[0]}_{grid[1]}_chess.data"
+        template_dump = init_dir +f"erratic/system_or{orientation}_uc{uc}_seed*_errgrid{grid[0]}_{grid[1]}_chess.data"
         print(template_dump)
         init_seeds = glob.glob(template_dump)
        
@@ -107,7 +104,7 @@ def run_relax():
         else:
             init_seed = input('select seed ')
         
-        datafile = project_dir + f"initial_system/erratic/gapfix/system_or{orientation}_uc{uc}_seed{init_seed}_errgrid{grid[0]}_{grid[1]}_chess.data"
+        datafile = project_dir + f"initial_system/erratic/system_or{orientation}_uc{uc}_seed{init_seed}_errgrid{grid[0]}_{grid[1]}_chess.data"
         #datafile = project_dir + f"initial_system/erratic/system_or{orientation}_hi{height}_rep{grid[0]}{grid[1]}_removed00.data"
 
         print(datafile)
@@ -201,4 +198,4 @@ def run_relax():
         runlogger('relax', uc, temp, 0, force, simtime, relax_seed, grid = 'single', push_seed = 0)
 
 if __name__ == '__main__':
-
+    run_relax()

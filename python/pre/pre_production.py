@@ -54,6 +54,7 @@ def nums2matrix(nums):
         print('map of item: ', mapping[item])
         matrix[mapping[item]] = 1
     print(matrix)
+    assert np.sum(matrix) == 8
     return matrix
 
 def gen_config_library(store_json = False):
@@ -118,7 +119,15 @@ def gen_config_library(store_json = False):
 
     return all_comb.difference(removed_comb)
     
-
+def test_asperity_number():
+    with open('config_library.json', 'r') as infile:
+        
+        data_json = json.load(infile)
+        for key, matrix in data_json.items():
+            print('key, matrix: ', key, matrix)
+            print(np.sum(matrix))
+            assert np.sum(matrix) == 8
 if __name__ == '__main__':
-    unique_comb = gen_config_library(store_json = True)
+    #unique_comb = gen_config_library(store_json = True)
+    test_asperity_number()
     #matrix = nums2matrix([1,14])
