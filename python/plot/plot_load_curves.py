@@ -236,7 +236,8 @@ def plot_single_loadcurve():
                                                                 force, orientation,
                                                                 grid, template_lc,
                                                                 template_ms, seeds)
-    plt.plot(load_curves_mean[:,0],load_curves_mean[:,1])
+    print(load_curves_mean.shape)
+    plt.plot(load_curves_mean[:,:,0],load_curves_mean[:,:,1])
     plt.savefig(fig_dir + 'no_force.png')
 
 def load_vs_normal_force():
