@@ -1,1 +1,0 @@
-ffmpeg -i video.avi -t 5 out.gif

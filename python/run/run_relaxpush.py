@@ -83,7 +83,7 @@ def fetch_initial_system(run_num = 0, random_choice = False):
 
 
 
-def run_relax(init_num = 0):
+def run_relaxpush(init_num = 0, run_num = 0):
     temp = 2300
     reltime = 200 #picosekunder
     pushtime = 200
@@ -105,13 +105,11 @@ def run_relax(init_num = 0):
     erratic = True
 
     
-    print('relax_seed', relax_seed)
-
     # paths
     #project_dir = "/run/user/1004/andebraa_masterdata/"
     project_dir = '../../'
     lammps_dir = project_dir + "lammps/"
-    relax_dir = project_dir + f"simulations/sys_or{orientation}_uc{uc}/relax/"
+    output_dir = project_dir + f"simulations/sys_or{orientation}_uc{uc}/production/"
     init_dir = project_dir + f"initial_system/production"
 
     init_auxiliary = project_dir + 'initial_system/erratic/aux/system_or{}_uc{}_seed{}_errgrid{}_{}_chess_auxiliary.json'
@@ -124,8 +122,7 @@ def run_relax(init_num = 0):
         raise IndexError('no files found')
     
     
-    datafile = project_dir + f"initial_system/erratic/system_or{orientation}_uc{uc}_seed{init_seed}_errgrid{grid[0]}_{grid[1]}.data"
-
+    datafile = fetch_initial_system(run_num, random_choice=False
     print(datafile)
 
 
@@ -144,59 +141,25 @@ def run_relax(init_num = 0):
 
 
     # Initializing the run with correct output script
-    output_dir = directory=relax_dir + \
+    sim_dir = relax_dir + \
     f"erratic/sim_temp{temp}_force{force}_time{simtime}_seed{relax_seed}_errgrid{grid[0]}_{grid[1]}_chess"
     
-    sim = Simulator(directory = output_dir, overwrite=True)
+    sim = Simulator(directory = sim_dir, overwrite=True)
 
 
     sim.copy_to_wd(datafile, lammps_dir + "SiC.vashishta")
-    sim.set_input_script(lammps_dir + "in.relax", **var)
+    sim.set_input_script(lammps_dir + "in.relaxpush", **var)
 
     #read aux from init and copy to sim folder whilst appending relax_seed
-    if grid and erratic:
-        dump_aux(orientation, uc, grid, erratic, output_dir, relax_seed, init_seed) 
-    elif erratic:
-        dump_aux(orientation, uc, grid, erratic, output_dir, relax_seed) 
+    dump_aux(orientation, uc, grid, erratic, output_dir, run_num) 
         
 
     # calling lammps simulator dependent on erratic or grid
-    if erratic:
-        if gpu:
-            if slurm:
-                sim.run(computer=SlurmGPU(lmp_exec="lmp_python", 
-                        slurm_args={'job-name': f'err{relax_seed}'}, 
-                        lmp_args={'-pk': 'kokkos newton on neigh full'}))
-            else:
-                sim.run(computer=GPU(lmp_exec = 'lmp_test'), stdout = None)
-        else:
-            sim.run(computer=CPU(num_procs=2, lmp_exec="lmp"), stdout=None)
-        runlogger('relax', uc, temp, 0, force, simtime, relax_seed, grid = 'erratic', push_seed = 0)
+    sim.run(computer=SlurmGPU(lmp_exec="lmp_python", 
+            slurm_args={'job-name': f'prod#{run_num}'}, 
+            lmp_args={'-pk': 'kokkos newton on neigh full'}))
+    runlogger('relaxpush', uc, temp, 0, force, simtime, relax_seed, grid = 'production', push_seed = run_num)
 
-    elif grid:
-        if gpu:
-            if slurm:
-                sim.run(computer=SlurmGPU(lmp_exec="lmp_test", 
-                                          slurm_args={'job-name': f'grid{relax_seed}'}, 
-                                          lmp_args={'-pk': 'kokkos newton on neigh full'}))
-            else:
-                sim.run(computer=GPU(lmp_exec = 'lmp_test'), stdout = None)
-        else:
-            sim.run(computer=CPU(num_procs=2, lmp_exec="lmp"), stdout=None)
-        runlogger('relax', uc, temp, 0, force, simtime, relax_seed, grid = 'grid', push_seed = 0)
-
-    else:
-        if gpu:
-            if slurm:
-                sim.run(computer=SlurmGPU(lmp_exec="lmp_test", 
-                    slurm_args={'job-name': f'{relax_seed}'}, 
-                    lmp_args={'-pk': 'kokkos newton on neigh full'}))
-            else:
-                sim.run(computer=GPU(lmp_exec = 'lmp_test'), stdout = None)
-
-        else:
-            sim.run(computer=CPU(num_procs=2, lmp_exec="lmp"), stdout=None)
-        runlogger('relax', uc, temp, 0, force, simtime, relax_seed, grid = 'single', push_seed = 0)
 
 if __name__ == '__main__':
-    run_relax()
+    run_relaxpush()
