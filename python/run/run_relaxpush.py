@@ -60,6 +60,7 @@ def dump_aux(orientation, uc, grid, erratic, output_dir, seed, init_seed = 0):
             with open(output_aux, 'w') as outfile:
                 
                 json.dump(data, outfile)
+    print(f'auxiliary file written to {output_aux}')
     return 1
 
 def fetch_initial_system(initnum = 0, random_choice = False, uc = 5, orientation = 100, grid = (4,4)):
@@ -78,8 +79,8 @@ def fetch_initial_system(initnum = 0, random_choice = False, uc = 5, orientation
 
 def run_relaxpush(init_num = 0, run_num = 0):
     temp = 2300
-    reltime = 200 #picosekunder
-    pushtime = 200
+    reltime = 500 #picosekunder
+    pushtime = 700
     simtime = reltime + pushtime
     force = 0
     vel = 5 #m/s
@@ -104,10 +105,10 @@ def run_relaxpush(init_num = 0, run_num = 0):
     #project_dir = "/run/user/1004/andebraa_masterdata/"
     project_dir = '../../'
     lammps_dir = project_dir + "lammps/"
-    relax_dir = project_dir + f"simulations/sys_or{orientation}_uc{uc}/relax/"
+    relax_dir = project_dir + f"simulations/sys_or{orientation}_uc{uc}/production/"
     init_dir = project_dir + f"initial_system/production/erratic/"
 
-    init_auxiliary = project_dir + 'initial_system/production/erratic/aux/system_or{}_uc{}_seed{}_errgrid{}_{}_auxiliary.json'
+    init_auxiliary = project_dir + 'initial_system/production/aux/system_or{}_uc{}_seed{}_errgrid{}_{}_auxiliary.json'
 
     # Finding the init datafile
     #finding all files in directory, printing the seeds and having user write in desired seed
@@ -120,7 +121,6 @@ def run_relaxpush(init_num = 0, run_num = 0):
     datafile = init_dir +  fetch_initial_system(run_num, random_choice=False)
 
 
-    print(datafile)
     var = {'datafile': datafile.split("/")[-1],
            'paramfile': "SiC.vashishta",
            'temp': temp,
@@ -137,10 +137,10 @@ def run_relaxpush(init_num = 0, run_num = 0):
 
     # Initializing the run with correct output script
     sim_dir = relax_dir + \
-    f"erratic/sim_temp{temp}_force{force}_time{simtime}_initnum{init_num}_errgrid{grid[0]}_{grid[1]}"
+    f"sim_temp{temp}_force{force}_time{simtime}_initnum{init_num}_errgrid{grid[0]}_{grid[1]}"
     
     sim = Simulator(directory = sim_dir, overwrite=True)
-
+    print(sim_dir)
 
     sim.copy_to_wd(datafile, lammps_dir + "SiC.vashishta")
     sim.set_input_script(lammps_dir + "in.relaxpush", **var)
@@ -151,7 +151,7 @@ def run_relaxpush(init_num = 0, run_num = 0):
 
     # calling lammps simulator dependent on erratic or grid
     sim.run(computer=SlurmGPU(lmp_exec="lmp_python", 
-            slurm_args={'job-name': f'#{run_num}'}, 
+            slurm_args={'job-name': f'{run_num}'}, 
             lmp_args={'-pk': 'kokkos newton on neigh full'}))
     runlogger('relaxpush', uc, temp, 0, force, simtime, init_num, grid = 'production', push_seed = init_num)
 

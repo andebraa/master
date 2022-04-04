@@ -32,7 +32,8 @@ mass 1 12.011
 mass 2 28.079
 timestep 0.002
 
-variable simtime equal relaxtime + pushtime
+variable simtime equal v_relaxtime+v_pushtime
+variable seed equal 47281
 
 # set position of asperity in x- and y-dir. z-dir is free. 
 variable rx equal xcm(rigid_upper,x)
@@ -77,7 +78,7 @@ compute contact_temp all temp/region contact_block
 compute pressure all pressure contact_temp
 compute stress all stress/atom contact_temp
 compute stressavg all reduce/region contact_block sum c_stress[3]
-velocity mobile create ${temp} ${init_num}
+velocity mobile create ${temp} ${seed}
 
 # compute diffusion
 compute msd all msd 
@@ -86,8 +87,8 @@ variable diffusion_coeff equal v_msd/(6*(step*dt+1.0e-6))
 
 # define fixes
 fix 1 mobile nve
-fix 2 langevin_lower langevin ${temp} ${temp} 1.0 ${init_num}
-fix 3 langevin_upper langevin ${temp} ${temp} 1.0 ${init_num}
+fix 2 langevin_lower langevin ${temp} ${temp} 1.0 ${seed}
+fix 3 langevin_upper langevin ${temp} ${temp} 1.0 ${seed}
 fix 4 rigid_upper addforce 0.0 0.0 -${force}
 fix 5 all wall/reflect zhi $(v_height+5)
 fix 6 rigid_upper rigid/nvt single temp ${temp} ${temp} 1.0 force 1 off off on
