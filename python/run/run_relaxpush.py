@@ -31,15 +31,15 @@ today = date.today()
 project_dir = '../../'
 lammps_dir = project_dir + "lammps/"
 relax_dir = project_dir + f"simulations/sys_or{orientation}_uc{uc}/relax/"
-init_dir = project_dir + f"initial_system/"
+init_dir = project_dir + f"initial_system/production"
 
-init_auxiliary = project_dir + 'initial_system/erratic/aux/system_or{}_uc{}_seed{}_errgrid{}_{}_auxiliary.json'
+init_auxiliary = project_dir + 'initial_system/production/erratic/aux/system_or{}_uc{}_seed{}_errgrid{}_{}_auxiliary.json'
 def dump_aux(orientation, uc, grid, erratic, output_dir, seed, init_seed = 0):
     """
     Function that reads in auxiliary directory, adds relax_seed and copies file to sim directory,
     note; should not alter init auxiliary
     """
-    init_auxiliary = project_dir + 'initial_system/erratic/aux/system_or{}_uc{}_seed{}_errgrid{}_{}_auxiliary.json'
+    init_auxiliary = project_dir + 'initial_system/production/erratic/aux/system_or{}_uc{}_seed{}_errgrid{}_{}_auxiliary.json'
 
     #opening auxiliary file, and copying this to the directory
     with open(init_auxiliary.format(orientation, uc, init_seed, grid[0], grid[1], 'r+')) as auxfile:
@@ -69,118 +69,134 @@ def dump_aux(orientation, uc, grid, erratic, output_dir, seed, init_seed = 0):
                 json.dump(data, outfile)
     return 1
 
-def fetch_initial_system():
+def fetch_initial_system(run_num = 0, random_choice = False):
     '''
     all initial systems without symmetries etc are assumed to be located at 
     ~/master/initial_system/production
     '''
-
-    random.choice(os.listdir('~/master/initial_system/production'))
-
-
-
-# user inputs
-temp = 2300
-#seed = np.random.randint(10000, 100000)
-force = 0.001
-vel = 5
-#pushtime = 500000 #timestep to start pushing
-
-#height = 109 #90, 95, 110 or 115
-orientation = "100"
-
-grid = (4,4)
-slurm = True
-gpu = True
-erratic = True
-
-# paths
-
-project_dir = "../../"
-#project_dir = "/home/users/andebraa/master/"
-lammps_dir = project_dir + "lammps/"
+    if random_choice:
+        initfile = random.choice(os.listdir('~/master/initial_system/production'))
+    else:
+        initfile = f'system_or{orientation}_uc{uc}_initnum{initnum}_errgrid{grid[0]}_{grid[1]}.data' 
+    
+    return initfile
 
 
-# push asperity
-relax_time = 500 #ps time until we push
-relax_steps = 83333
-#push_steps = 25000 # how long we push for (ps maybe, or timesteps)
-push_time = 700 #piko seconds. breaks around 100 acording to even
+
+def run_relax(init_num = 0):
+    temp = 2300
+    reltime = 200 #picosekunder
+    pushtime = 200
+    force = 0
+
+    orientation = "100"
+    num_restart_points = 3
 
 
-seed_dict = {5: [72208]}
-
-run_number = 4 #which run is this
-
-for uc, seeds in seed_dict.items(): #used: 37144, 48329, 94514
+    unit_cell = 4.3596
+    uc = 5 #unit cells height
 
 
+    height = uc*unit_cell+20+51
+
+    grid = (4,4) 
+    slurm = True
+    gpu = True
+    erratic = True
+
+    
+    print('relax_seed', relax_seed)
+
+    # paths
+    #project_dir = "/run/user/1004/andebraa_masterdata/"
+    project_dir = '../../'
+    lammps_dir = project_dir + "lammps/"
+    relax_dir = project_dir + f"simulations/sys_or{orientation}_uc{uc}/relax/"
+    init_dir = project_dir + f"initial_system/production"
+
+    init_auxiliary = project_dir + 'initial_system/erratic/aux/system_or{}_uc{}_seed{}_errgrid{}_{}_chess_auxiliary.json'
+
+    # Finding the init datafile
+    #finding all files in directory, printing the seeds and having user write in desired seed
+    template_dump = init_dir +f"erratic/system_or{orientation}_uc{uc}_initnum{init_num}_errgrid{grid[0]}_{grid[1]}.data"
+   
+    if not template_dump:
+        raise IndexError('no files found')
+    
+    
+    datafile = project_dir + f"initial_system/erratic/system_or{orientation}_uc{uc}_seed{init_seed}_errgrid{grid[0]}_{grid[1]}.data"
+
+    print(datafile)
+
+
+    var = {'datafile': datafile.split("/")[-1],
+           'paramfile': "SiC.vashishta",
+           'temp': temp,
+           'init_num': init_num,
+           'force': force,
+           'freq': int(int(simtime/0.002)/num_restart_points), #timesteps
+           'height': height,
+           'vel': vel,
+           'relaxtime': relax_time,
+           'pushtime': push_time}
+
+
+
+
+    # Initializing the run with correct output script
+    output_dir = directory=relax_dir + \
+    f"erratic/sim_temp{temp}_force{force}_time{simtime}_seed{relax_seed}_errgrid{grid[0]}_{grid[1]}_chess"
+    
+    sim = Simulator(directory = output_dir, overwrite=True)
+
+
+    sim.copy_to_wd(datafile, lammps_dir + "SiC.vashishta")
+    sim.set_input_script(lammps_dir + "in.relax", **var)
+
+    #read aux from init and copy to sim folder whilst appending relax_seed
+    if grid and erratic:
+        dump_aux(orientation, uc, grid, erratic, output_dir, relax_seed, init_seed) 
+    elif erratic:
+        dump_aux(orientation, uc, grid, erratic, output_dir, relax_seed) 
+        
+
+    # calling lammps simulator dependent on erratic or grid
     if erratic:
-        push_dir = project_dir + f"simulations/sys_or{orientation}_uc{uc}/production"
+        if gpu:
+            if slurm:
+                sim.run(computer=SlurmGPU(lmp_exec="lmp_python", 
+                        slurm_args={'job-name': f'err{relax_seed}'}, 
+                        lmp_args={'-pk': 'kokkos newton on neigh full'}))
+            else:
+                sim.run(computer=GPU(lmp_exec = 'lmp_test'), stdout = None)
+        else:
+            sim.run(computer=CPU(num_procs=2, lmp_exec="lmp"), stdout=None)
+        runlogger('relax', uc, temp, 0, force, simtime, relax_seed, grid = 'erratic', push_seed = 0)
+
     elif grid:
-        relax_dir = project_dir + f"simulations/sys_or{orientation}_uc{uc}/relax/grid/"
-        push_dir = project_dir + f"simulations/sys_or{orientation}_uc{uc}/push/grid/"
+        if gpu:
+            if slurm:
+                sim.run(computer=SlurmGPU(lmp_exec="lmp_test", 
+                                          slurm_args={'job-name': f'grid{relax_seed}'}, 
+                                          lmp_args={'-pk': 'kokkos newton on neigh full'}))
+            else:
+                sim.run(computer=GPU(lmp_exec = 'lmp_test'), stdout = None)
+        else:
+            sim.run(computer=CPU(num_procs=2, lmp_exec="lmp"), stdout=None)
+        runlogger('relax', uc, temp, 0, force, simtime, relax_seed, grid = 'grid', push_seed = 0)
 
     else:
-        relax_dir = project_dir + f"simulations/sys_or{orientation}_uc{uc}/relax/"
-        push_dir = project_dir + f"simulations/sys_or{orientation}_uc{uc}/push/"
-
-    for seed in seeds:
-        push_seed = np.random.randint(10000, 100000)
-        print(uc, push_seed)
-        if grid:
-            if erratic:
-
-                restartfile = relax_dir + f"sim_temp{temp}_force{force}_time{relax_time}_seed{seed}_errgrid{grid[0]}_{grid[1]}/time.{relax_steps}.restart"
-                
+        if gpu:
+            if slurm:
+                sim.run(computer=SlurmGPU(lmp_exec="lmp_test", 
+                    slurm_args={'job-name': f'{relax_seed}'}, 
+                    lmp_args={'-pk': 'kokkos newton on neigh full'}))
             else:
-                restartfile = relax_dir + f"sim_temp{temp}_force{force}_time{relax_time}_seed{seed}_grid{grid[0]}_{grid[1]}/time.{relax_steps}.restart"
-
+                sim.run(computer=GPU(lmp_exec = 'lmp_test'), stdout = None)
 
         else:
-            restartfile = relax_dir + f"sim_temp{temp}_force{force}_time{relax_time}_seed{seed}/time.{relax_steps}.restart"
+            sim.run(computer=CPU(num_procs=2, lmp_exec="lmp"), stdout=None)
+        runlogger('relax', uc, temp, 0, force, simtime, relax_seed, grid = 'single', push_seed = 0)
 
-        var = {'restartfile': f"time.{relax_steps}.restart",
-               'paramfile': "SiC.vashishta",
-               'temp': temp,
-               'seed': push_seed,
-               'force': force,
-               'reltime': rel_time, #time to relax
-               'pushtime': push_time, #time for push
-               'pushtime': relax_steps, #steps until push
-               'vel': vel} #m/s
-
-        if grid: #system might not be erratic, but it could still be grid 
-            
-            if erratic:
-                output_dir = push_dir + f"sim_temp{temp}_vel{vel}_force{force}_time{push_time}_seed{push_seed}_errgrid{grid[0]}_{grid[1]}"
-                
-                sim = Simulator(directory=output_dir, overwrite=True)
-                
-                runlogger('push', uc, temp, 0, force, push_time, relax_seed, grid = 'erratic', push_seed = 'relaxpush')
-            else:
-
-                output_dir = push_dir + f"sim_temp{temp}_vel{vel}_force{force}_time{push_time}_seed{push_seed}_grid{grid[0]}_{grid[1]}"
-
-                sim = Simulator(directory=output_dir, overwrite=True)
-        
-
-                runlogger('push', uc, temp, 0, force, pushtime, relax_seed, grid = 'grid', push_seed = 'relaxpush')
-                #with open(project_dir + f'runs/push/grid/run_{run_number}.csv', 'a') as file_object:
-                #    file_object.write(str(height) + ', ' +str(relax_seed) +'\n')
-
-        else:
-            output_dir = push_dir + f"sim_temp{temp}_vel{vel}_force{force}_time{relax_steps}_seed{push_seed}"
-
-            sim = Simulator(directory=output_dir, overwrite=True)
-        
-            runlogger('push', uc, temp, 0, force, push_time, relax_seed, grid = 'single', push_seed = 'relaxpush')
-        #read aux file from relax, write to push directory, append 
-
-        sim.copy_to_wd(restartfile, lammps_dir + "SiC.vashishta")
-        sim.set_input_script(lammps_dir + "in.relaxpush", **var)
-        
-        dump_aux(orientation, uc, grid, erratic, output_dir, relax_time, relax_seed, push_seed)
-        
-        sim.run(computer=SlurmGPU(lmp_exec="lmp_test", slurm_args={'job-name': f'p{push_seed}'}, lmp_args={'-pk': 'kokkos newton on neigh full'}))
-
+if __name__ == '__main__':
+    run_relax()
