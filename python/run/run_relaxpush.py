@@ -26,20 +26,13 @@ from runlogger import runlogger
 
 today = date.today()
 
-# paths
-#project_dir = "/run/user/1004/andebraa_masterdata/"
-project_dir = '../../'
-lammps_dir = project_dir + "lammps/"
-relax_dir = project_dir + f"simulations/sys_or{orientation}_uc{uc}/relax/"
-init_dir = project_dir + f"initial_system/production"
-
-init_auxiliary = project_dir + 'initial_system/production/erratic/aux/system_or{}_uc{}_seed{}_errgrid{}_{}_auxiliary.json'
 def dump_aux(orientation, uc, grid, erratic, output_dir, seed, init_seed = 0):
     """
     Function that reads in auxiliary directory, adds relax_seed and copies file to sim directory,
     note; should not alter init auxiliary
     """
-    init_auxiliary = project_dir + 'initial_system/production/erratic/aux/system_or{}_uc{}_seed{}_errgrid{}_{}_auxiliary.json'
+    project_dir = '../../'
+    init_auxiliary = project_dir + 'initial_system/production/erratic/aux/system_or{}_uc{}_initnum{}_errgrid{}_{}_auxiliary.json'
 
     #opening auxiliary file, and copying this to the directory
     with open(init_auxiliary.format(orientation, uc, init_seed, grid[0], grid[1], 'r+')) as auxfile:
@@ -49,7 +42,7 @@ def dump_aux(orientation, uc, grid, erratic, output_dir, seed, init_seed = 0):
 
     if grid:
         if erratic:
-            output_aux = output_dir +'/system_or{}_uc{}_seed{}_errgrid{}_{}_auxiliary.json'.format(orientation, 
+            output_aux = output_dir +'/system_or{}_uc{}_initnum{}_errgrid{}_{}_auxiliary.json'.format(orientation, 
                                                                                                    uc, 
                                                                                                    seed,
                                                                                                    grid[0], 
@@ -59,7 +52,7 @@ def dump_aux(orientation, uc, grid, erratic, output_dir, seed, init_seed = 0):
                 json.dump(data, outfile)
         
         else: 
-            output_aux = output_dir + '/system_or{}_uc{}_seed{}_grid{}_{}_auxiliary.json'.format(orientation, 
+            output_aux = output_dir + '/system_or{}_uc{}_initnum{}_grid{}_{}_auxiliary.json'.format(orientation, 
                                                                                                  uc, 
                                                                                                  seed,
                                                                                                  grid[0], 
@@ -69,7 +62,7 @@ def dump_aux(orientation, uc, grid, erratic, output_dir, seed, init_seed = 0):
                 json.dump(data, outfile)
     return 1
 
-def fetch_initial_system(run_num = 0, random_choice = False):
+def fetch_initial_system(initnum = 0, random_choice = False, uc = 5, orientation = 100, grid = (4,4)):
     '''
     all initial systems without symmetries etc are assumed to be located at 
     ~/master/initial_system/production
@@ -87,7 +80,9 @@ def run_relaxpush(init_num = 0, run_num = 0):
     temp = 2300
     reltime = 200 #picosekunder
     pushtime = 200
+    simtime = reltime + pushtime
     force = 0
+    vel = 5 #m/s
 
     orientation = "100"
     num_restart_points = 3
@@ -109,10 +104,10 @@ def run_relaxpush(init_num = 0, run_num = 0):
     #project_dir = "/run/user/1004/andebraa_masterdata/"
     project_dir = '../../'
     lammps_dir = project_dir + "lammps/"
-    output_dir = project_dir + f"simulations/sys_or{orientation}_uc{uc}/production/"
-    init_dir = project_dir + f"initial_system/production"
+    relax_dir = project_dir + f"simulations/sys_or{orientation}_uc{uc}/relax/"
+    init_dir = project_dir + f"initial_system/production/erratic/"
 
-    init_auxiliary = project_dir + 'initial_system/erratic/aux/system_or{}_uc{}_seed{}_errgrid{}_{}_chess_auxiliary.json'
+    init_auxiliary = project_dir + 'initial_system/production/erratic/aux/system_or{}_uc{}_seed{}_errgrid{}_{}_auxiliary.json'
 
     # Finding the init datafile
     #finding all files in directory, printing the seeds and having user write in desired seed
@@ -122,10 +117,10 @@ def run_relaxpush(init_num = 0, run_num = 0):
         raise IndexError('no files found')
     
     
-    datafile = fetch_initial_system(run_num, random_choice=False
+    datafile = init_dir +  fetch_initial_system(run_num, random_choice=False)
+
+
     print(datafile)
-
-
     var = {'datafile': datafile.split("/")[-1],
            'paramfile': "SiC.vashishta",
            'temp': temp,
@@ -134,15 +129,15 @@ def run_relaxpush(init_num = 0, run_num = 0):
            'freq': int(int(simtime/0.002)/num_restart_points), #timesteps
            'height': height,
            'vel': vel,
-           'relaxtime': relax_time,
-           'pushtime': push_time}
+           'relaxtime': reltime,
+           'pushtime': pushtime}
 
 
 
 
     # Initializing the run with correct output script
     sim_dir = relax_dir + \
-    f"erratic/sim_temp{temp}_force{force}_time{simtime}_seed{relax_seed}_errgrid{grid[0]}_{grid[1]}_chess"
+    f"erratic/sim_temp{temp}_force{force}_time{simtime}_initnum{init_num}_errgrid{grid[0]}_{grid[1]}"
     
     sim = Simulator(directory = sim_dir, overwrite=True)
 
@@ -151,14 +146,14 @@ def run_relaxpush(init_num = 0, run_num = 0):
     sim.set_input_script(lammps_dir + "in.relaxpush", **var)
 
     #read aux from init and copy to sim folder whilst appending relax_seed
-    dump_aux(orientation, uc, grid, erratic, output_dir, run_num) 
+    dump_aux(orientation, uc, grid, erratic, sim_dir, run_num) 
         
 
     # calling lammps simulator dependent on erratic or grid
     sim.run(computer=SlurmGPU(lmp_exec="lmp_python", 
-            slurm_args={'job-name': f'prod#{run_num}'}, 
+            slurm_args={'job-name': f'#{run_num}'}, 
             lmp_args={'-pk': 'kokkos newton on neigh full'}))
-    runlogger('relaxpush', uc, temp, 0, force, simtime, relax_seed, grid = 'production', push_seed = run_num)
+    runlogger('relaxpush', uc, temp, 0, force, simtime, init_num, grid = 'production', push_seed = init_num)
 
 
 if __name__ == '__main__':
