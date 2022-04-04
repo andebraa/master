@@ -16,7 +16,7 @@ import json
 sys.path.insert(0,'/home/users/andebraa/master/python')
 from runlogger import runlogger
 
-def setup_system(production = False): 
+def setup_system(production = False, init_num = 0): 
 
     unit_cell = 4.3956
 
@@ -37,10 +37,7 @@ def setup_system(production = False):
     lz = hl + hu    #total system height
     octa_d = 1 * 39.0 #The multiplyer has to be an integer
     dode_d = 1 * 37.3
-    if production is not False:
-        grid = production
-    else:
-        grid = (4,4) 
+    grid = (4,4) 
     porosity = 0.5
 
     asperities = 8
@@ -57,10 +54,9 @@ def setup_system(production = False):
     args = {'lx': lx, 'ly':ly, 'ax':ax, 'ay':ay, 'hl':hl, 'hu': hu, 'hup': hup, 'grid': grid, 'asperities':asperities,
             'lower_orient': lower_orient, 'erratic': erratic}
 
-    if erratic and grid:
-        
-        system_file = path + f"erratic/system_or{lower_orient}_uc{num_unit_cells}_seed{seed}_errgrid{grid[0]}_{grid[1]}_chess"
-        aux_path = path + f"erratic/aux/system_or{lower_orient}_uc{num_unit_cells}_seed{seed}_errgrid{grid[0]}_{grid[1]}_chess_auxiliary.json"
+    if production is not None:
+        system_file = path + f"production/erratic/system_or{lower_orient}_uc{num_unit_cells}_initnum{init_num}_errgrid{grid[0]}_{grid[1]}"
+        aux_path = path + f"production/erratic/aux/system_or{lower_orient}_uc{num_unit_cells}_initnum{init_num}_errgrid{grid[0]}_{grid[1]}_auxiliary.json"
 
         system = gen_erratic_system(lx, ly, ax, ay, hl, hu, hup, octa_d, dode_d, lower_orient,
                                     remove_atoms, aux_path=aux_path, grid=grid, 
@@ -70,32 +66,48 @@ def setup_system(production = False):
         system.write(system_file +'.data', format="lammps-data", atom_style = 'atomic') #alternate write method that fixes error?
 
         print("System written to: ", system_file+'.data')
-        runlogger('init', num_unit_cells, 0, 0, 0, 0,relax_seed = seed, grid= 'erratic', push_seed = 0)
-
-    elif grid:
-        system_file = path + f"grid/system_or{lower_orient}_uc{num_unit_cells}_grid{grid[0]}_{grid[1]}"
-        aux_path = path + f"grid/aux/system_or{lower_orient}_uc{num_unit_cells}_grid{grid[0]}_{grid[1]}_auxiliary.json"
-
-        system = gen_grid_system(lx, ly, ax, ay, hl, hu, hup, octa_d, dode_d, lower_orient,
-                                 remove_atoms, aux_path=aux_path, grid=grid)
-
-        system.write(system_file +'.data', format="lammps-data", atom_style = 'atomic')
-
-        print("System written to: ", system_file+'.data')
-
-
-        runlogger('init', num_unit_cells, 0, 0, 0, 0, relax_seed = seed, grid = 'grid', push_seed = 0)
+        runlogger('init', num_unit_cells, 0, 0, 0, 0,relax_seed = seed, grid= 'production', push_seed = 0)
 
     else:
-        
-        system = gen_system(lx, ly, ax, ay, hl, hu, hup, octa_d, dode_d, lower_orient,
-                            remove_atoms, path)
+        if erratic and grid:
+            
+            system_file = path + f"erratic/system_or{lower_orient}_uc{num_unit_cells}_seed{seed}_errgrid{grid[0]}_{grid[1]}_chess"
+            aux_path = path + f"erratic/aux/system_or{lower_orient}_uc{num_unit_cells}_seed{seed}_errgrid{grid[0]}_{grid[1]}_chess_auxiliary.json"
 
-        system_file = path + f"system_or{lower_orient}_uc{num_unit_cells}.data"
-        system.write(system_file, format="lammps-data", atom_style = 'atomic')
+            system = gen_erratic_system(lx, ly, ax, ay, hl, hu, hup, octa_d, dode_d, lower_orient,
+                                        remove_atoms, aux_path=aux_path, grid=grid, 
+                                        asperities = asperities, seed = seed, production = production)
 
-        print("System written to: ", system_file)
 
-        runlogger('init', num_unit_cells, 0, 0, 0, seed, 'single', 0)
+            system.write(system_file +'.data', format="lammps-data", atom_style = 'atomic') #alternate write method that fixes error?
+
+            print("System written to: ", system_file+'.data')
+            runlogger('init', num_unit_cells, 0, 0, 0, 0,relax_seed = seed, grid= 'erratic', push_seed = 0)
+
+        elif grid:
+            system_file = path + f"grid/system_or{lower_orient}_uc{num_unit_cells}_grid{grid[0]}_{grid[1]}"
+            aux_path = path + f"grid/aux/system_or{lower_orient}_uc{num_unit_cells}_grid{grid[0]}_{grid[1]}_auxiliary.json"
+
+            system = gen_grid_system(lx, ly, ax, ay, hl, hu, hup, octa_d, dode_d, lower_orient,
+                                     remove_atoms, aux_path=aux_path, grid=grid)
+
+            system.write(system_file +'.data', format="lammps-data", atom_style = 'atomic')
+
+            print("System written to: ", system_file+'.data')
+
+
+            runlogger('init', num_unit_cells, 0, 0, 0, 0, relax_seed = seed, grid = 'grid', push_seed = 0)
+
+        else:
+            
+            system = gen_system(lx, ly, ax, ay, hl, hu, hup, octa_d, dode_d, lower_orient,
+                                remove_atoms, path)
+
+            system_file = path + f"system_or{lower_orient}_uc{num_unit_cells}.data"
+            system.write(system_file, format="lammps-data", atom_style = 'atomic')
+
+            print("System written to: ", system_file)
+
+            runlogger('init', num_unit_cells, 0, 0, 0, seed, 'single', 0)
 if __name__ == '__main__':
     setup_system()

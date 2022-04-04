@@ -13,6 +13,7 @@ grid has all asperities
 
 """
 import os
+import sys
 import json
 import time
 import numpy as np
@@ -88,8 +89,8 @@ lammps_dir = project_dir + "lammps/"
 
 
 # push asperity
-relax_time = 1000 #ps time until we push
-relax_steps = 500000
+relax_time = 500 #ps time until we push
+relax_steps = 83333
 #push_steps = 25000 # how long we push for (ps maybe, or timesteps)
 push_time = 700 #piko seconds. breaks around 100 acording to even
 
@@ -111,7 +112,7 @@ seed_dict = {3: [55990],
              6: [17164,85696,98609]}
 '''
 
-seed_dict = {3: [37726]}
+seed_dict = {5: [72208]}
 
 run_number = 4 #which run is this
 
@@ -162,7 +163,7 @@ for uc, seeds in seed_dict.items(): #used: 37144, 48329, 94514
                 #with open(project_dir + 'runs/push/erratic/run_{run_number}', 'a') as file_object:
                 #    file_object.write(str(height) + ', ' + str(relax_seed)+'\n')
                 
-                runlogger('push', uc, temp, 0, force, simtime, relax_seed, grid = 'erratic', push_seed = push_seed)
+                runlogger('push', uc, temp, 0, force, push_time, relax_seed, grid = 'erratic', push_seed = push_seed)
             else:
 
                 output_dir = push_dir + f"sim_temp{temp}_vel{vel}_force{force}_time{push_time}_seed{push_seed}_grid{grid[0]}_{grid[1]}"
@@ -170,7 +171,7 @@ for uc, seeds in seed_dict.items(): #used: 37144, 48329, 94514
                 sim = Simulator(directory=output_dir, overwrite=True)
         
 
-                runlogger('push', uc, temp, 0, force, simtime, relax_seed, grid = 'grid', push_seed = push_seed)
+                runlogger('push', uc, temp, 0, force, pushtime, relax_seed, grid = 'grid', push_seed = push_seed)
                 #with open(project_dir + f'runs/push/grid/run_{run_number}.csv', 'a') as file_object:
                 #    file_object.write(str(height) + ', ' +str(relax_seed) +'\n')
 
@@ -179,7 +180,7 @@ for uc, seeds in seed_dict.items(): #used: 37144, 48329, 94514
 
             sim = Simulator(directory=output_dir, overwrite=True)
         
-            runlogger('push', uc, temp, 0, force, simtime, relax_seed, grid = 'single', push_seed = push_seed)
+            runlogger('push', uc, temp, 0, force, push_time, relax_seed, grid = 'single', push_seed = push_seed)
         #read aux file from relax, write to push directory, append 
 
         sim.copy_to_wd(restartfile, lammps_dir + "SiC.vashishta")

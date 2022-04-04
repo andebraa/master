@@ -304,7 +304,7 @@ def gen_grid_system(lx=300, ly=300, ax=150, ay=150, hl=50, hu=150, hup=2,
 
 def gen_erratic_system(lx=99.9, ly=100, ax=50, ay=50, hl=50, hu=60, hup=2,
                octa_d=39.0, dode_d=37.3, lower_orient="100", remove_atoms=True,
-               aux_path = '', grid = (3,3), asperities = 1, seed = 0, production = False):
+               aux_path = '', grid = (4,4), asperities = 8, seed = 0, production = False):
     """
     Based on grid system. Makes a nXn grid with asperitites. Then calls gen_grid which
     returns a boolean grid which describes the positions of the asperities. Then removes
@@ -374,7 +374,7 @@ def gen_erratic_system(lx=99.9, ly=100, ax=50, ay=50, hl=50, hu=60, hup=2,
 
     #asperity removal
     
-    if production:
+    if production is not None:
         bool_grid = production
     else:
         #bool_grid = gen_grid(grid, asperities)

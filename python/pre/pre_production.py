@@ -126,6 +126,6 @@ def test_asperity_number():
     for i, matrix in enumerate(matrices):
         assert np.sum(matrix) == 8
 if __name__ == '__main__':
-    #unique_comb = gen_config_library(store_json = True)
+    unique_comb = gen_config_library(store_json = True)
     test_asperity_number()
     #matrix = nums2matrix([1,14])
