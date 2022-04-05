@@ -101,7 +101,7 @@ thermo 100
 thermo_style custom step temp time pzz pe ke press v_rz v_vz v_fz v_num_contact v_msd v_diffusion_coeff spcpu c_stressavg v_pzz_
 
 
-dump dumper all custom $(v_simtime/dt/1000) dump.bin id type x y z
+dump dumper all custom $(v_relaxtime/dt/1000) dump.bin id type x y z
 restart ${freq} time.*.restart
 run $(v_relaxtime/dt)
 
@@ -111,14 +111,13 @@ fix 7 rigid_upper move linear  $(v_vel/100) 0.0 NULL
 
 
 # compute stress xx yy zz xy xz yz
-compute stress all stress/atom NULL
 fix 8 all ave/atom ${thousand_steps} 1 ${thousand_steps} c_stress[*]
 
 
 # define output
 thermo 1
 thermo_style custom step temp time pxx pyy pzz pe press v_rx v_rz v_vx v_vz v_fx v_fz spcpu
-dump dumper all custom ${thousand_steps} dump.bin id type x y z c_stress[1] c_stress[3] c_stress[5]
+dump dumper all custom ${v_pushtime/dt/1000} dump.bin id type x y z c_stress[1] c_stress[3] c_stress[5]
 
 run $(v_pushtime/dt)
 
