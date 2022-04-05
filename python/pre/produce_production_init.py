@@ -6,17 +6,18 @@ class NumpyEncoder(json.JSONEncoder):
         if isinstance(obj, np.ndarray):
             return obj.tolist()
         return json.JSONEncoder.default(self, obj)
-#config_matrix = np.load('config_list.npy')
+config_matrix = np.load('2asp_config_list.npy')
 #print(config_matrix)
 #print(config_matrix.shape)
-config_matrix = [np.array([[0,1,0,1],[1,0,1,0],[0,1,0,1],[1,0,1,0]])]
-init_path = '~/master/initial_system/production'
+#config_matrix = [np.array([[0,1,0,1],[1,0,1,0],[0,1,0,1],[1,0,1,0]])]
+init_path = '~/master/initial_system/production/2asp/'
 
+asperities = 2
 init_dict = {}
 
 for i,matrix in enumerate(config_matrix):
     init_dict[i] = matrix
-    setup_system(matrix, i)
+    setup_system(matrix, i, asperities = 2)
 
-with open('init_dict.json', 'w') as fp:
+with open('2asp_init_dict.json', 'w') as fp:
     json.dump(init_dict, fp, cls = NumpyEncoder)

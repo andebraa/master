@@ -13,11 +13,11 @@ class NumpyArrayEncoder(JSONEncoder):
             return obj.tolist()
         return JSONEncoder.default(self,obj)
 
-def runlogger(runtype, uc, temp, vel, force, runtime, relax_seed,grid = 'erratic', push_seed = 0):
+def runlogger(runtype, uc, temp, vel, force, runtime, relax_seed,grid = 'erratic', push_seed = 0, asperities=8):
     curr_time = datetime.now()
     
     elems = {'time': curr_time.strftime('%Y-%m-%d %H:%M:%S'), 'runtype': runtype, 'uc': uc, 'temp': temp,
-             'vel': vel, 'force': force, 'runtime':runtime, 'relax_seed': relax_seed, 'push_seed': push_seed}
+            'vel': vel, 'force': force, 'runtime':runtime, 'relax_seed': relax_seed, 'push_seed': push_seed, 'asperities': asperities}
 
     with open(r'/home/users/andebraa/master/python/runlog.csv', 'a') as f:
         json.dump(elems, f, cls=NumpyArrayEncoder)

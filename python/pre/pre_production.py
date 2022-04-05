@@ -50,11 +50,11 @@ def nums2matrix(nums):
     indx = np.zeros((4*4)) 
     matrix = np.zeros((4,4))
     for item in nums:
-        print('num: ', item)
-        print('map of item: ', mapping[item])
+        #print('num: ', item)
+        #print('map of item: ', mapping[item])
         matrix[mapping[item]] = 1
-    print(matrix)
-    assert np.sum(matrix) == 8
+    #print(matrix)
+    #assert np.sum(matrix) == 8
     return matrix
 
 def gen_config_library(store_json = False):
@@ -64,47 +64,52 @@ def gen_config_library(store_json = False):
     Only conscidering translational symmetries
     '''
     grid_nums = list(range(1,4*4+1))
-    combinations = itertools.combinations(grid_nums, 8)
+    combinations = itertools.combinations(grid_nums, 2)
     all_comb = set()
     removed_comb = set() 
 
     nums2coords_map = nums2coords()
     coords2nums_map = {v: k for k, v in nums2coords_map.items()}
-
     test = set()
     for i in combinations:
+        test2 = []
         all_comb.add(i)
+        for j in i:
+            test2.append(j)
+        test2.sort()
+        test.add(tuple(test2))
     indx = [0,1,2,3]
     periodic_directions = [np.array((x,y)) for x in indx for y in indx if not (x==y==0)] 
+    
     for setup in tqdm(all_comb):
         if setup in removed_comb:
             continue #skip iteration if already removed
-        
+
         orig_coords = []
         for num in setup:
             orig_coords.append(nums2coords_map[num])
-            
 
-        for axis in (None, 0,1):
+
+        for axis in (None, 0, 1, (0,1)):
             if axis != None:
-                orig_coords = np.flip(orig_coords, axis=axis)
+                flip_coords = np.flip(orig_coords, axis=axis)
+            else:
+                flip_coords = orig_coords
             for direction in periodic_directions:
                 shifted_coords=[]
                 shifted_nums = [] 
-                for coord in orig_coords:
+                for coord in flip_coords:
                     shifted_coords.append(shift(direction, coord))
                 for coord in shifted_coords:
                     shifted_nums.append(coords2nums(coord))
 
                 #sort shifted nums, all_comb is always sorted
                 shifted_nums.sort()
-
+                shifted_nums = tuple(shifted_nums)
+                if shifted_nums == setup:
+                    continue 
                 removed_comb.add(tuple(shifted_nums)) #can't contain duplicates
         
-        for axis in (0,1):
-            flipped_coords = []
-            flipped_nums = [] 
-
     res = all_comb.difference(removed_comb)    
     matrix_list = np.zeros((len(res), 4, 4))
     if store_json:
@@ -114,9 +119,7 @@ def gen_config_library(store_json = False):
         for key, value in res_dict.items():
             print('key, value ',key, value)
             matrix_list[key,:,:] = nums2matrix(value)
-        print(matrix_list)
-        print(matrix_list.shape)
-        np.save('config_list.npy', matrix_list)
+        np.save('2asp_config_list.npy', matrix_list)
         #outdict = {key = res[key] for key in keys} 
 
     return all_comb.difference(removed_comb)
@@ -127,5 +130,5 @@ def test_asperity_number():
         assert np.sum(matrix) == 8
 if __name__ == '__main__':
     unique_comb = gen_config_library(store_json = True)
-    test_asperity_number()
+    #test_asperity_number()
     #matrix = nums2matrix([1,14])

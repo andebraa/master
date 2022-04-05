@@ -32,7 +32,7 @@ mass 1 12.011
 mass 2 28.079
 timestep 0.002
 
-variable simtime equal v_relaxtime+v_pushtime
+#variable simtime equal v_relaxtime+v_pushtime #not neccesary as i import this
 variable seed equal 47281
 
 # set position of asperity in x- and y-dir. z-dir is free. 
@@ -100,8 +100,11 @@ variable pzz_ equal c_pressure[3]
 thermo 100
 thermo_style custom step temp time pzz pe ke press v_rz v_vz v_fz v_num_contact v_msd v_diffusion_coeff spcpu c_stressavg v_pzz_
 
+# compute stress xx yy zz xy xz yz
+fix 8 all ave/atom $(v_pushtime/dt/100) 1 $(v_pushtime/dt/100) c_stress[*]
 
-dump dumper all custom $(v_relaxtime/dt/1000) dump.bin id type x y z
+# define output
+dump dumper all custom $(v_pushtime/dt/100) dump.bin id type x y z c_stress[1] c_stress[3] c_stress[5]
 restart ${freq} time.*.restart
 run $(v_relaxtime/dt)
 
@@ -109,15 +112,6 @@ run $(v_relaxtime/dt)
 # ----------------------------------------------------push
 fix 7 rigid_upper move linear  $(v_vel/100) 0.0 NULL
 
-
-# compute stress xx yy zz xy xz yz
-fix 8 all ave/atom ${thousand_steps} 1 ${thousand_steps} c_stress[*]
-
-
-# define output
-thermo 1
-thermo_style custom step temp time pxx pyy pzz pe press v_rx v_rz v_vx v_vz v_fx v_fz spcpu
-dump dumper all custom ${v_pushtime/dt/1000} dump.bin id type x y z c_stress[1] c_stress[3] c_stress[5]
 
 run $(v_pushtime/dt)
 
