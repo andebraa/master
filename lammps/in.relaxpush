@@ -103,6 +103,10 @@ thermo_style custom step temp time pzz pe ke press v_rz v_vz v_fz v_num_contact 
 # compute stress xx yy zz xy xz yz
 fix 8 all ave/atom $(v_pushtime/dt/100) 1 $(v_pushtime/dt/100) c_stress[*]
 
+fix 9 rigid_upper setforce 0.0 0.0 0.0
+run 0
+unfix 9
+
 # define output
 dump dumper all custom $(v_pushtime/dt/100) dump.bin id type x y z c_stress[1] c_stress[3] c_stress[5]
 restart ${freq} time.*.restart

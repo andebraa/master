@@ -150,12 +150,12 @@ def run_relaxpush(init_num = 0, run_num = 0, asperities = 8):
 
     # calling lammps simulator dependent on erratic or grid
     sim.run(computer=SlurmGPU(lmp_exec="lmp_python", 
-            slurm_args={'job-name': f'{run_num}'}, 
+            slurm_args={'job-name': f'{init_num}'}, 
             lmp_args={'-pk': 'kokkos newton on neigh full'}))
-    runlogger('relaxpush', uc, temp, 0, force, simtime, init_num, grid = 'production', push_seed = init_num, asperities = asperities)
+    runlogger('relaxpush', uc, temp, vel, force, simtime, init_num, grid = 'production', push_seed = init_num, asperities = asperities)
 
 
 if __name__ == '__main__':
-    for i in range(1,9):
-
-        run_relaxpush(init_num = i)
+    run_relaxpush(init_num = 0, asperities = 2)
+    #for i in range(0,9):
+    #    run_relaxpush(init_num = i)
