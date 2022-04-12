@@ -108,7 +108,7 @@ run 0
 unfix 9
 
 # define output
-#dump dumper all custom $(v_pushtime/dt/100) dump.bin id type x y z c_stress[1] c_stress[3] c_stress[5]
+dump dumper all custom $(v_pushtime/dt/100) dump.bin id type x y z c_stress[1] c_stress[3] c_stress[5]
 restart ${freq} time.*.restart
 run $(v_relaxtime/dt)
 
