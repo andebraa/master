@@ -39,7 +39,7 @@ def get_load_curves(asperities = 8, uc = 5):
     if erratic:
         template_logfiles = push_dir + 'sim_temp{}_force{}_asp{}_time{}_initnum{}_errgrid{}_{}/log.lammps'
         template_lc = lc_dir + 'load_curves_temp{}_vel{}_force{}_asp{}_initnum{}_errgrid{}_{}.txt'
-        template_ms = ms_dir + 'max_static_temp{}_vel{}_force{}_or{}_initnum{}_errgrid{}_{}.txt'
+        template_ms = ms_dir + 'max_static_temp{}_vel{}_force{}_asp{}_initnum{}_errgrid{}_{}.txt'
     elif grid:
         template_logfiles = push_dir + 'sim_temp{}_vel{}_force{}_time{}_initnum{}_grid{}_{}/log.lammps'
         template_lc = lc_dir + 'load_curves_temp{}_vel{}_force{}_asp{}_initnum{}_grid{}_{}.txt'
@@ -71,18 +71,16 @@ def get_load_curves(asperities = 8, uc = 5):
                                                                      grid[0], grid[1]))
 
 if __name__ == '__main__':
-    get_load_curves()
+    #get_load_curves()
 
-    '''
-    seed_dict = {1: [36015,37461,77220], 2: [49156,64486,73803],
-                 3: [30642,74822,90272], 4: [20939,86781,87609],
-                 5: [25642,46012,71581], 6: [86406,91501]}
-    '''
-    '''
-    #seed_dict = {1: [40525,37063,90058],
-    #             2: [30643,69590,85108],
-    #             3: [33852,81835,65387],
-    #             4: [23383,57218,24832],
-    #             5: [22125,97481,26403],
-    #             6: [84340,13006,94745]}
-    '''
+    asperities = 8
+    uc = 5
+    temp = 2300
+    vel = 5
+    time = 1000
+    initnum = 0
+    for force in [0, 0.0001, 0.001, 0.01]:
+        logfile = f'../../simulations/sys_asp{asperities}_uc{uc}/production/sim_temp{temp}_force{force}_asp{asperities}_time{time}_initnum{initnum}_errgrid4_4/log.lammps'
+        outfile_lc = '../../txt/load_curves/production/load_curves_temp{temp}_vel{vel}_force{force}_asp{asperities}_initnum{initnum}_errgrid4_4.txt'
+        outfile_ms = '../../txt/max_static/production/max_static_temp{temp}_vel{vel}_force{force}_asp{asperities}_initnum{initnum}_errgrid4_4.txt'
+        extract_load_curves(logfile, None, 0, 5000, outfile_load_curves = outfile_lc, outfile_max_static = outfile_ms)
