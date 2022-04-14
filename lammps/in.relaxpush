@@ -15,7 +15,7 @@
 # 8. vel: velocity of push
 # 9. pushtime
 # 10. relax_steps
-#
+# 11. seed
 
 # lower plate is 30x30x5 nm. 
 
@@ -33,7 +33,6 @@ mass 2 28.079
 timestep 0.002
 
 #variable simtime equal v_relaxtime+v_pushtime #not neccesary as i import this
-variable seed equal 47281
 
 # set position of asperity in x- and y-dir. z-dir is free. 
 variable rx equal xcm(rigid_upper,x)

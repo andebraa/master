@@ -160,11 +160,12 @@ def plot_load_curves_as_funciton_of_top_thiccness():
 
     
 
-def plot_all_curves_and_mean(temp, vel, force, orientation, grid, template_lc, template_ms, seeds):
+def plot_all_curves_and_mean(temp, vel, force, asperities, grid, template_lc, template_ms, initnum):
     load_curves_all, load_curves = load_load_curves(temp, vel, force, orientation, grid, template_lc,template_ms, seeds) 
 
     # load max static curves
-    max_point_files = template_ms.format(temp, vel, force, orientation, grid[0], grid[1])
+    max_point_files = template_ms.format(temp, vel, force, asperities, initnum, grid[0], grid[1])
+
     max_static_all = []
     for file in glob(max_point_files):
         for seed in seeds:
@@ -276,7 +277,9 @@ def load_vs_normal_force():
         #                     lc_files, ms_files, initnum)
 
     
-        plt.plot(load_curves[0,:,0], load_curves[0,:,1], label = f'force {force}')
+        print(load_curves.shape)
+        print(load_curves_all.shape)
+        plt.plot(load_curves_all[0,:,0], load_curves_all[0,:,1], label = f'force {force}')
     plt.xlabel(r"$t_p$ [ns]")
     plt.ylabel(r"$f$ [$\mu$N]")
     plt.title(f"temp {temp}, force {force}, vel {vel}")
@@ -298,12 +301,6 @@ if __name__ == '__main__':
     project_dir = '../../'
     fig_dir = project_dir + 'fig/'
 
-    #seeds1 = [27278,70295,98184,31906,35578,69872] 
-    #seeds2 = [42439,51019,79411,14943]
-    #seeds3 = [17744,77072,77201,88708]
-    #seeds4 = [58958,67466,85867]
-    #seeds5 = [12589, 50887] #thiccest
-   
 
     if erratic:
         load_curve_dir = project_dir + 'txt/load_curves/erratic/'

@@ -118,7 +118,7 @@ def run_relaxpush(force = 0.001, init_num = 0, run_num = 0, asperities = 8):
     
     datafile = init_dir +  fetch_initial_system(run_num, random_choice=False, asperities = 2)
 
-
+    seed = np.random.randint(10000, 100000)
     var = {'datafile': datafile.split("/")[-1],
            'paramfile': "SiC.vashishta",
            'temp': temp,
@@ -128,14 +128,15 @@ def run_relaxpush(force = 0.001, init_num = 0, run_num = 0, asperities = 8):
            'height': height,
            'vel': vel,
            'relaxtime': reltime,
-           'pushtime': pushtime}
+           'pushtime': pushtime,
+           'seed': seed}
 
 
 
 
     # Initializing the run with correct output script
     sim_dir = relax_dir + \
-    f"sim_temp{temp}_force{force}_asp{asperities}_time{simtime}_initnum{init_num}_errgrid{grid[0]}_{grid[1]}"
+    f"sim_temp{temp}_force{force}_asp{asperities}_time{simtime}_initnum{init_num}_seed{seed}_errgrid{grid[0]}_{grid[1]}"
     
     sim = Simulator(directory = sim_dir, overwrite=True)
     print(sim_dir)
@@ -156,7 +157,7 @@ def run_relaxpush(force = 0.001, init_num = 0, run_num = 0, asperities = 8):
 
 if __name__ == '__main__':
     #run_relaxpush(init_num = 0, asperities = 2)
-    #for force in [0, 0.0001, 0.001, 0.01]:
-    #    run_relaxpush(force = force)
-    for i in range(0,10):
-        run_relaxpush(init_num = i, asperities = 8)
+    for force in [0, 0.0001, 0.001, 0.01]:
+        run_relaxpush(force = force)
+    #for i in range(0,10):
+    #    run_relaxpush(init_num = i, asperities = 8)
