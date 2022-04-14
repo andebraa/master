@@ -290,7 +290,8 @@ def extract_load_curves(logfile, delta=None, init_time=0, window=1,
     
     print("Length of log file: ", len(time))
 
-
+    print(fx)
+    print(window)
     # smooth friction force
     fx = running_mean(fx, window)
 
