@@ -18,9 +18,8 @@ from matplotlib import style
 plt.style.use('seaborn')
 
 
-def load_load_curves(temp, vel, force, orientation, grid, template_lc, template_ms, seeds):
+def load_load_curves(temp, vel, force, orientation, grid, load_curve_files, template_ms, initnum):
     # load load curves
-    load_curve_files = template_lc.format(temp, vel, force, orientation, grid[0], grid[1])
     load_curves_all = []
    
 
@@ -28,12 +27,10 @@ def load_load_curves(temp, vel, force, orientation, grid, template_lc, template_
     assert files != []
     for _file in glob(load_curve_files):
         load_curves = loadtxt(_file)
-        for seed in seeds:
-            if str(seed) in str(_file):
-                print('found loadcurve ',_file)
-                load_curves_all.append(load_curves)
+        print('found loadcurve ',_file)
+        load_curves_all.append(load_curves)
     print('load curves shape: ', np.shape(load_curves_all))
-    load_curves_all[1] = load_curves_all[1][:len(load_curves_all[0])]
+    #load_curves_all[1] = load_curves_all[1][:len(load_curves_all[0])]
     load_curves_all = np.array(load_curves_all)
     print('load curves all', load_curves_all)
     print(np.shape(load_curves_all))
@@ -47,9 +44,7 @@ def load_load_curves(temp, vel, force, orientation, grid, template_lc, template_
     return load_curves_all, load_curves
 
 
-def load_max_static(temp, vel, force, orientation, grid, template_lc, template_ms, seeds):
-    
-    ms_files = template_ms.format(temp, vel, force, orientation, grid[0], grid[1])
+def load_max_static(temp, vel, force, orientation, grid, template_lc, ms_files, seeds):
     ms_all = []
     
     files = glob(ms_files)
@@ -250,10 +245,11 @@ def load_vs_normal_force():
     # user input
     temp = 2300
     vel = 5
-    force = 1e-06
     orientation = 100
     grid = (4,4)
     erratic = True
+    asperities = 8
+    initnum = 0
 
 
     # paths
@@ -261,21 +257,23 @@ def load_vs_normal_force():
     fig_dir = project_dir + 'fig/'
 
 
-    load_curve_dir = project_dir + 'txt/load_curves/erratic/'
-    max_static_dir = project_dir + 'txt/max_static/erratic/'
+    load_curve_dir = project_dir + 'txt/load_curves/production/'
+    max_static_dir = project_dir + 'txt/max_static/production/'
 
-    template_lc = load_curve_dir + 'load_curves_temp{}_vel{}_force{}_or{}_seed*_errgrid{}_{}_chess.txt'
-    template_ms = max_static_dir + 'max_static_temp{}_vel{}_force{}_or{}_seed*_errgrid{}_{}_chess.txt'
+    template_lc = load_curve_dir + 'load_curves_temp{}_vel{}_force{}_asp{}_initnum{}_errgrid{}_{}.txt'
+    template_ms = max_static_dir + 'max_static_temp{}_vel{}_force{}_asp{}_initnum{}_errgrid{}_{}.txt'
 
-    seeds = {1e-6: [95687, 95687], 5e-5: [96658,96658], 1e-4: [49172,49172]}
-
-    for force, seed in seeds.items():
+    
+    for force in [0, 0.0001, 0.001, 0.01]:
         
-        load_curves_all, load_curves = load_load_curves(temp, vel, force, orientation,
-                                                    grid, template_lc,template_ms, seed)
-
-        ms_all, ms_mean = load_max_static(temp, vel, force, orientation, grid,
-                             template_lc, template_ms, seed)
+        lc_files = template_lc.format(temp, vel, force, asperities, initnum, grid[0], grid[1])
+        print(lc_files)
+        load_curves_all, load_curves = load_load_curves(temp, vel, force, asperities,
+                                                    grid, lc_files,template_ms, initnum)
+        
+        ms_files = template_ms.format(temp, vel, force, asperities, initnum, grid[0], grid[1])
+        #ms_all, ms_mean = load_max_static(temp, vel, force, asperities, grid,
+        #                     lc_files, ms_files, initnum)
 
     
         plt.plot(load_curves[0,:,0], load_curves[0,:,1], label = f'force {force}')
@@ -283,7 +281,7 @@ def load_vs_normal_force():
     plt.ylabel(r"$f$ [$\mu$N]")
     plt.title(f"temp {temp}, force {force}, vel {vel}")
     plt.legend()
-    plt.savefig(fig_dir + 'various_normalforce.png')
+    plt.savefig(fig_dir + 'production_varying_normalforce.png')
 
 if __name__ == '__main__':
 
@@ -324,7 +322,7 @@ if __name__ == '__main__':
     #plot_all_curves_and_mean(temp, vel, force, orientation, grid, template_lc, template_ms, seeds)    
     #plot_mean_of_multiple(temp, vel, force, orientation, grid, template_lc, template_ms, [seeds1, seeds2, seeds3])
     #plot_load_curves_as_funciton_of_top_thiccness()
-    #load_vs_normal_force()
+    load_vs_normal_force()
     #plot_single_loadcurve()
     """
     stop
