@@ -269,7 +269,7 @@ def load_vs_normal_force():
         
         lc_files = template_lc.format(temp, vel, force, asperities, initnum, grid[0], grid[1])
         print(lc_files)
-        load_curves_all, load_curves = load_load_curves(temp, vel, force, asperities,
+        load_curves_all, load_curves_mean = load_load_curves(temp, vel, force, asperities,
                                                     grid, lc_files,template_ms, initnum)
         
         ms_files = template_ms.format(temp, vel, force, asperities, initnum, grid[0], grid[1])
@@ -277,9 +277,9 @@ def load_vs_normal_force():
         #                     lc_files, ms_files, initnum)
 
     
-        print(load_curves.shape)
-        print(load_curves_all.shape)
-        plt.plot(load_curves_all[0,:,0], load_curves_all[0,:,1], label = f'force {force}')
+        print('mean load curves shape: ',load_curves_mean.shape)
+        print('all load curves shape: ',load_curves_all.shape)
+        plt.plot(load_curves_mean[0,:,0], load_curves_mean[0,:,1], label = f'force {force}')
     plt.xlabel(r"$t_p$ [ns]")
     plt.ylabel(r"$f$ [$\mu$N]")
     plt.title(f"temp {temp}, force {force}, vel {vel}")
