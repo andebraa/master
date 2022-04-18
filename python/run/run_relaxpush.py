@@ -116,7 +116,7 @@ def run_relaxpush(force = 0.001, init_num = 0, run_num = 0, asperities = 8):
         raise IndexError('no files found')
     
     
-    datafile = init_dir +  fetch_initial_system(run_num, random_choice=False, asperities = 2)
+    datafile = init_dir +  fetch_initial_system(run_num, random_choice=False, asperities = asperities)
 
     seed = np.random.randint(10000, 100000)
     var = {'datafile': datafile.split("/")[-1],
