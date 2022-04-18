@@ -261,8 +261,8 @@ def load_vs_normal_force():
     load_curve_dir = project_dir + 'txt/load_curves/production/'
     max_static_dir = project_dir + 'txt/max_static/production/'
 
-    template_lc = load_curve_dir + 'load_curves_temp{}_vel{}_force{}_asp{}_initnum{}_errgrid{}_{}.txt'
-    template_ms = max_static_dir + 'max_static_temp{}_vel{}_force{}_asp{}_initnum{}_errgrid{}_{}.txt'
+    template_lc = load_curve_dir + 'load_curves_temp{}_vel{}_force{}_asp{}_initnum{}_seed*_errgrid{}_{}.txt'
+    template_ms = max_static_dir + 'max_static_temp{}_vel{}_force{}_asp{}_initnum{}_seed*_errgrid{}_{}.txt'
 
     
     for force in [0, 0.0001, 0.001, 0.01]:

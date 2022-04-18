@@ -6,7 +6,7 @@ Get load curves from push simulations
 This project is distributed under the GNU General Public License v3.
 For more information, see the LICENSE file in the top-level dictionary.
 """
-
+import re
 from glob import glob
 from post_utils import extract_load_curves
 
@@ -81,7 +81,11 @@ if __name__ == '__main__':
     init_time = 0
     initnum = 0
     for force in [0, 0.0001, 0.001, 0.01]:
-        logfile = f'../../simulations/sys_asp{asperities}_uc{uc}/production/sim_temp{temp}_force{force}_asp{asperities}_time{time}_initnum{initnum}_seed*_errgrid4_4/log.lammps'
-        outfile_lc = f'../../txt/load_curves/production/load_curves_temp{temp}_vel{vel}_force{force}_asp{asperities}_initnum{initnum}_seed*_errgrid4_4.txt'
-        outfile_ms = f'../../txt/max_static/production/max_static_temp{temp}_vel{vel}_force{force}_asp{asperities}_initnum{initnum}_seed*_errgrid4_4.txt'
-        extract_load_curves(logfile, None, 0, outfile_load_curves = outfile_lc, outfile_max_static = outfile_ms)
+        logfiles = f'../../simulations/sys_asp{asperities}_uc{uc}/production/sim_temp{temp}_force{force}_asp{asperities}_time{time}_initnum{initnum}_seed*_errgrid4_4/log.lammps'
+        
+        for logfile in glob(logfiles):
+            matches = re.findall('\d+', logfile)
+            seed = matches[-1]
+            outfile_lc = f'../../txt/load_curves/production/load_curves_temp{temp}_vel{vel}_force{force}_asp{asperities}_initnum{initnum}_seed{seed}_errgrid4_4.txt'
+            outfile_ms = f'../../txt/max_static/production/max_static_temp{temp}_vel{vel}_force{force}_asp{asperities}_initnum{initnum}_seed{seed}_errgrid4_4.txt'
+            extract_load_curves(logfile, None, 0, outfile_load_curves = outfile_lc, outfile_max_static = outfile_ms)
