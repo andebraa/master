@@ -85,7 +85,8 @@ if __name__ == '__main__':
         
         for logfile in glob(logfiles):
             matches = re.findall('\d+', logfile)
-            seed = matches[-1]
+            print(matches)
+            seed = matches[-3]
             outfile_lc = f'../../txt/load_curves/production/load_curves_temp{temp}_vel{vel}_force{force}_asp{asperities}_initnum{initnum}_seed{seed}_errgrid4_4.txt'
             outfile_ms = f'../../txt/max_static/production/max_static_temp{temp}_vel{vel}_force{force}_asp{asperities}_initnum{initnum}_seed{seed}_errgrid4_4.txt'
             extract_load_curves(logfile, None, 0, outfile_load_curves = outfile_lc, outfile_max_static = outfile_ms)
