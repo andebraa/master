@@ -30,7 +30,7 @@ def max_z_finder(asperities, uc, temp, time, initnum):
     
 def plot_max_z(asperities, uc, temp, time, initnum):
 
-    for force in [0, 0.001, 0.01, 0.1]:
+    for force in [0, 0.001, 0.01]:#, 0.1]:
         heights = []
         files = highz_dir + f"maxz_temp{temp}_force{force}_asp{asperities}_time{time}_initnum{initnum}_seed*.txt"
         for _file in glob(files):
