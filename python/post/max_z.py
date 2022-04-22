@@ -2,6 +2,7 @@ import pandas as pd
 from ovito.io import *
 import re
 from ovito.modifiers import *
+import numpy
 import numpy as np
 import matplotlib.pyplot as plt
 from glob import glob
@@ -14,7 +15,7 @@ def max_z_finder(asperities, uc, temp, time, initnum):
     highz_dir = '../../txt/high_z/'
     max_zs = []
     avg_max = []
-    for force in [0, 0.001, 0.01, 0.1]:
+    for force in [0, 0.0001, 0.001, 0.01]:
         dumpfiles = f'../../simulations/sys_asp{asperities}_uc{uc}/production/sim_temp{temp}_force{force}_asp{asperities}_time{time}_initnum{initnum}_seed*_errgrid4_4/dump.bin'
         for dumpfile in glob(dumpfiles):
 
@@ -32,7 +33,7 @@ def plot_max_z(asperities, uc, temp, time, initnum):
     fig, axs = plt.subplots(2,2)
 
     axs = axs.ravel()
-    for i, force in enumerate([0, 0.001, 0.01, 0.1]):
+    for i, force in enumerate([0, 0.0001, 0.001, 0.01]):
         heights = []
         files = highz_dir + f"maxz_temp{temp}_force{force}_asp{asperities}_time{time}_initnum{initnum}_seed*.txt"
         for _file in glob(files):
@@ -51,7 +52,6 @@ def plot_max_z(asperities, uc, temp, time, initnum):
             axs[i].plot(frames, heights[0])
             
         avg_max.append(np.mean(heights, axis = 0))
-        print(frames, avg_max)
         axs[i].set_title(str(force))
         axs[i].plot(frames, avg_max[0], label = 'average')
     plt.legend()
@@ -66,5 +66,5 @@ if __name__ == '__main__':
     highz_dir = '../../txt/high_z/'
     max_zs = []
     avg_max = []
-    #max_z_finder(asperities, uc, temp, time, initnum)
+    max_z_finder(asperities, uc, temp, time, initnum)
     plot_max_z(asperities, uc, temp, time, initnum)
