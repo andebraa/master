@@ -38,7 +38,8 @@ def plot_max_z(asperities, uc, temp, time, initnum):
         files = highz_dir + f"maxz_temp{temp}_force{force}_asp{asperities}_time{time}_initnum{initnum}_seed*.txt"
         for _file in glob(files):
             print(_file)
-            seed = re.findall(r'\d', _file)[-1]
+            seed = re.findall(r'\d+', _file)[-1]
+            print(seed)
             #df = pd.read_csv(_file, sep = '')
             data = np.loadtxt(_file)
             frames = []
@@ -49,12 +50,12 @@ def plot_max_z(asperities, uc, temp, time, initnum):
             frames = np.array(frames)
             height = np.array(height)
             heights.append(height)
-            axs[i].plot(frames, heights[0])
+            axs[i].plot(frames, heights[0], label = seed)
             
         avg_max.append(np.mean(heights, axis = 0))
         axs[i].set_title(str(force))
         axs[i].plot(frames, avg_max[0], label = 'average')
-    plt.legend()
+        plt.legend()
     plt.savefig('test.png')
 if __name__ == '__main__':
     asperities = 8
@@ -66,5 +67,5 @@ if __name__ == '__main__':
     highz_dir = '../../txt/high_z/'
     max_zs = []
     avg_max = []
-    max_z_finder(asperities, uc, temp, time, initnum)
+    #max_z_finder(asperities, uc, temp, time, initnum)
     plot_max_z(asperities, uc, temp, time, initnum)
