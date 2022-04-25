@@ -55,7 +55,8 @@ def plot_max_z(asperities, uc, temp, time, initnum):
         avg_max.append(np.mean(heights, axis = 0))
         axs[i].set_title(str(force))
         axs[i].plot(frames, avg_max[0], label = 'average')
-        plt.legend()
+        axs[i].get_legend()
+        #plt.legend()
     plt.savefig('test.png')
 if __name__ == '__main__':
     asperities = 8
