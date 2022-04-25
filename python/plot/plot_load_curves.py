@@ -264,8 +264,10 @@ def load_vs_normal_force():
     template_lc = load_curve_dir + 'load_curves_temp{}_vel{}_force{}_asp{}_initnum{}_seed*_errgrid{}_{}.txt'
     template_ms = max_static_dir + 'max_static_temp{}_vel{}_force{}_asp{}_initnum{}_seed*_errgrid{}_{}.txt'
 
+    fig, axs = plt.subplots(2,2, figsize = (10,10))
+    axs = axs.ravel()
     
-    for force in [0, 0.0001, 0.001, 0.01]:
+    for i, force in enumerate([0, 0.0001, 0.001, 0.01]):
         
         lc_files = template_lc.format(temp, vel, force, asperities, initnum, grid[0], grid[1])
         print(lc_files)
@@ -275,13 +277,14 @@ def load_vs_normal_force():
         ms_files = template_ms.format(temp, vel, force, asperities, initnum, grid[0], grid[1])
         #ms_all, ms_mean = load_max_static(temp, vel, force, asperities, grid,
         #                     lc_files, ms_files, initnum)
-
+        for curve in load_curves_all:
+            axs[i].plot(curve[:,0], curve[:,1])
     
         print('mean load curves shape: ',load_curves_mean.shape)
         print('all load curves shape: ',load_curves_all.shape)
-        plt.plot(load_curves_mean[0,:,0], load_curves_mean[0,:,1], label = f'force {force}')
-    plt.xlabel(r"$t_p$ [ns]")
-    plt.ylabel(r"$f$ [$\mu$N]")
+        axs[i].plot(load_curves_mean[0,:,0], load_curves_mean[0,:,1], label = 'average')
+        axs[i].set_xlabel(r"$t_p$ [ns]")
+        axs[i].set_ylabel(r"$f$ [$\mu$N]")
     plt.title(f"temp {temp}, force {force}, vel {vel}")
     plt.legend()
     plt.savefig(fig_dir + 'production_varying_normalforce.png')
