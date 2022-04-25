@@ -50,7 +50,7 @@ def plot_max_z(asperities, uc, temp, time, initnum):
             frames = np.array(frames)
             height = np.array(height)
             heights.append(height)
-            axs[i].plot(frames, heights[0], label = seed)
+            axs[i].plot(frames, height, label = seed)
             plt.legend()
             
         avg_max.append(np.mean(heights, axis = 0))
