@@ -28,8 +28,8 @@ def load_load_curves(temp, vel, force, orientation, grid, load_curve_files, temp
     for _file in glob(load_curve_files):
         load_curves = loadtxt(_file)
         print('found loadcurve ',_file)
+        print('load curves shape: ', np.shape(load_curves))
         load_curves_all.append(load_curves)
-    print('load curves shape: ', np.shape(load_curves_all))
     #load_curves_all[1] = load_curves_all[1][:len(load_curves_all[0])]
     load_curves_all = np.array(load_curves_all)
     print('load curves all', load_curves_all)
