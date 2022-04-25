@@ -30,7 +30,7 @@ def max_z_finder(asperities, uc, temp, time, initnum):
             export_file(pipeline, outfiles, "txt", columns=["Frame", "High_Z"], multiple_frames = True)
     
 def plot_max_z(asperities, uc, temp, time, initnum):
-    fig, axs = plt.subplots(2,2)
+    fig, axs = plt.subplots(2,2, figsize = (10,10))
 
     axs = axs.ravel()
     for i, force in enumerate([0, 0.0001, 0.001, 0.01]):
@@ -51,12 +51,12 @@ def plot_max_z(asperities, uc, temp, time, initnum):
             height = np.array(height)
             heights.append(height)
             axs[i].plot(frames, heights[0], label = seed)
+            plt.legend()
             
         avg_max.append(np.mean(heights, axis = 0))
         axs[i].set_title(str(force))
         axs[i].plot(frames, avg_max[0], label = 'average')
-        axs[i].get_legend()
-        #plt.legend()
+        plt.legend()
     plt.savefig('test.png')
 if __name__ == '__main__':
     asperities = 8
