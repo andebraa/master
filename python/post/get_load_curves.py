@@ -80,7 +80,8 @@ if __name__ == '__main__':
     time = 1000
     init_time = 0
     initnum = 0
-    for force in [0, 0.0001, 0.001, 0.01]:
+    force = 0.001
+    for initnum in range(10):
         logfiles = f'../../simulations/sys_asp{asperities}_uc{uc}/production/sim_temp{temp}_force{force}_asp{asperities}_time{time}_initnum{initnum}_seed*_errgrid4_4/log.lammps'
         
         for logfile in glob(logfiles):
