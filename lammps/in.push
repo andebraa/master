@@ -46,37 +46,11 @@ variable fx equal fcm(rigid_upper,x)
 variable fy equal fcm(rigid_upper,y)
 variable fz equal fcm(rigid_upper,z)
 
-# define regions
-# region strain_portion block INF INF INF INF zlo zhi # Assume z is up 
-region rigid_lower block INF INF INF INF INF 10.0
-region langevin_lower block INF INF INF INF 10.0 20.0
-region mobile block INF INF INF INF 20.0 $(v_height-10)
-region langevin_upper block INF INF INF INF $(v_height-20) $(v_height-10)
-region rigid_upper block INF INF INF INF $(v_height-10) INF
-region upper block INF INF INF INF 50.0 INF
-region contact_slice block INF INF INF INF 54.0 56.0
-region contact_block block INF INF INF INF 44.0 56.0
-
-# define groups
-group rigid_lower region rigid_lower
-group langevin_lower region langevin_lower
-group langevin_upper region langevin_upper
-group rigid_upper region rigid_upper
-group mobile subtract all rigid_lower rigid_upper
-group upper region upper
 
 # initialize temperature
 # compute new mobile temp/partial 0 1 1
-compute contact_temp all temp/region contact_block
-compute pressure all pressure contact_temp
-compute stress all stress/atom contact_temp
-compute stressavg all reduce/region contact_block sum c_stress[3]
-velocity mobile create ${temp} ${seed}
-
-# compute diffusion
-compute msd all msd
-variable msd equal c_msd[4]
-variable diffusion_coeff equal v_msd/(6*(step*dt+1.0e-6))
+# compute new mobile temp/region mobile
+velocity mobile create ${temp} ${seed} #temp new
 
 
 # define fixes
@@ -90,17 +64,23 @@ fix 7 rigid_upper move linear  $(v_vel/100) 0.0 NULL
 
 
 # compute stress xx yy zz xy xz yz
+compute stress all stress/atom NULL
 fix 8 all ave/atom ${thousand_steps} 1 ${thousand_steps} c_stress[*]
 
 
-# define output
-variable num_contact equal count(all,contact_slice)
-variable pzz_ equal c_pressure[3]
-thermo 1
-thermo_style custom step temp time pxx pyy pzz pe ke press v_rx v_rz v_vx v_vz v_fx v_fz v_num_contact v_msd v_diffusion_coeff spcpu c_stressavg v_pzz_
+# compute displacement
+compute chunks all chunk/atom bin/3d x 0.0 10.0 y 0.0 10.0 z 50.0 10.0 nchunk once ids once
+compute com all com/chunk chunks
+variable com_file string ../../../../../txt/com/com_temp${temp}_vel${vel}_force${force}_time${pushtime}_seed${seed}.txt
+fix com_avg all ave/time ${thousand_steps} 1 ${thousand_steps} c_com[1] mode vector file ${com_file}
 
+
+# define output
+thermo 1
+thermo_style custom step temp time pxx pyy pzz pe press v_rx v_rz v_vx v_vz v_fx v_fz spcpu
 dump dumper all custom ${thousand_steps} dump.bin id type x y z c_stress[1] c_stress[3] c_stress[5]
 
 run $(v_simtime/dt)
 
 write_restart push_restart.bin
+

@@ -98,10 +98,6 @@ for initnum in range(10):
 
     push_dir = project_dir + f"simulations/sys_asp{asperities}_uc{uc}/production/"    
     restartfile = push_dir + f"sim_temp{temp}_force{force}_asp{asperities}_time{prev_push_time}_initnum{initnum}_errgrid{grid[0]}_{grid[1]}/push_restart.bin"
-    orig_dir = push_dir + f"sim_temp{temp}_force{force}_asp{asperities}_time{prev_push_time}_initnum{initnum}_errgrid{grid[0]}_{grid[1]}"
-    #print(os.listdir(orig_dir))
-    #for binfile in glob(orig_dir + '/dump.bin'):
-    #    print(binfile)  
     restart_seed = np.random.randint(10000, 100000)
 
     var = {'restartfile': f"push_restart.bin",
@@ -121,7 +117,7 @@ for initnum in range(10):
             
 
     sim.copy_to_wd(restartfile, lammps_dir + "SiC.vashishta", "sigmoid.py")
-    sim.set_input_script(lammps_dir + "in.restartpush", **var)
+    sim.set_input_script(lammps_dir + "in.push", **var)
     
     
     sim.run(computer=SlurmGPU(lmp_exec="lmp_python", slurm_args={'job-name': f'rs{restart_seed}'}, lmp_args={'-pk': 'kokkos newton on neigh full'}))

@@ -70,7 +70,7 @@ compute contact_temp all temp/region contact_block
 compute pressure all pressure contact_temp
 compute stress all stress/atom contact_temp
 compute stressavg all reduce/region contact_block sum c_stress[3]
-velocity mobile create ${temp} ${seed}
+#velocity mobile create ${temp} ${seed}
 
 # compute diffusion
 compute msd all msd 
