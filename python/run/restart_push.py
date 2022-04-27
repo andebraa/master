@@ -117,7 +117,7 @@ for initnum in range(10):
             
 
     sim.copy_to_wd(restartfile, lammps_dir + "SiC.vashishta", "sigmoid.py")
-    sim.set_input_script(lammps_dir + "in.push", **var)
+    sim.set_input_script(lammps_dir + "in.relaxpush", **var)
     
     
     sim.run(computer=SlurmGPU(lmp_exec="lmp_python", slurm_args={'job-name': f'rs{restart_seed}'}, lmp_args={'-pk': 'kokkos newton on neigh full'}))
