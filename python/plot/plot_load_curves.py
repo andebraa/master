@@ -289,11 +289,54 @@ def load_vs_normal_force():
     plt.legend()
     plt.savefig(fig_dir + 'production_varying_normalforce.png')
 
+
+def plot_production(temp, vel, force, asperities, orientation, grid, erratic):
+    
+    # paths
+    project_dir = '../../'
+    fig_dir = project_dir + 'fig/'
+
+
+    load_curve_dir = project_dir + 'txt/load_curves/production/'
+    max_static_dir = project_dir + 'txt/max_static/production/'
+
+    template_lc = load_curve_dir + 'load_curves_temp{}_vel{}_force{}_asp{}_initnum{}_errgrid{}_{}.txt'
+    template_ms = max_static_dir + 'max_static_temp{}_vel{}_force{}_asp{}_initnum{}_errgrid{}_{}.txt'
+
+    fig, axs = plt.subplots(2,2, figsize = (10,10))
+    axs = axs.ravel()
+   
+    print(template_lc)
+    for i, initnum in enumerate(range(10)):
+        
+        lc_files = template_lc.format(temp, vel, force, asperities, initnum, grid[0], grid[1])
+        print(lc_files)
+        load_curves_all, load_curves_mean = load_load_curves(temp, vel, force, asperities,
+                                                    grid, lc_files,template_ms, initnum)
+        
+        ms_files = template_ms.format(temp, vel, force, asperities, initnum, grid[0], grid[1])
+        #ms_all, ms_mean = load_max_static(temp, vel, force, asperities, grid,
+        #                     lc_files, ms_files, initnum)
+        for curve in load_curves_all:
+            axs[i].plot(curve[:,0], curve[:,1])
+    
+        print('mean load curves shape: ',load_curves_mean.shape)
+        print('all load curves shape: ',load_curves_all.shape)
+        axs[i].plot(load_curves_mean[0,:,0], load_curves_mean[0,:,1], label = 'average')
+        axs[i].set_xlabel(r"$t_p$ [ns]")
+        axs[i].set_ylabel(r"$f$ [$\mu$N]")
+    plt.title(f"temp {temp}, force {force}, vel {vel}")
+    plt.legend()
+    plt.savefig(fig_dir + 'production_varying_initnum_first10.png')
+
+        
+
+
 if __name__ == '__main__':
 
     # user input
     temp = 2300
-    vel = 1.25
+    vel = 5
     force = 0.001
     orientation = 100
     grid = (4,4)
@@ -324,6 +367,7 @@ if __name__ == '__main__':
     #plot_load_curves_as_funciton_of_top_thiccness()
     load_vs_normal_force()
     #plot_single_loadcurve()
+    #plot_production(temp, vel, force, 8,orientation, grid, erratic)
     """
     stop
 

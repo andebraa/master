@@ -79,15 +79,13 @@ if __name__ == '__main__':
     vel = 5
     time = 1000
     init_time = 0
-    initnum = 0
     force = 0.001
     for initnum in range(10):
-        logfiles = f'../../simulations/sys_asp{asperities}_uc{uc}/production/sim_temp{temp}_force{force}_asp{asperities}_time{time}_initnum{initnum}_seed*_errgrid4_4/log.lammps'
-        
+        logfiles = f'../../simulations/sys_asp{asperities}_uc{uc}/production/sim_temp{temp}_force{force}_asp{asperities}_time{time}_initnum{initnum}_errgrid4_4/log.lammps'
+        print(logfiles) 
         for logfile in glob(logfiles):
             matches = re.findall('\d+', logfile)
-            print(matches)
             seed = matches[-3]
-            outfile_lc = f'../../txt/load_curves/production/load_curves_temp{temp}_vel{vel}_force{force}_asp{asperities}_initnum{initnum}_seed{seed}_errgrid4_4.txt'
-            outfile_ms = f'../../txt/max_static/production/max_static_temp{temp}_vel{vel}_force{force}_asp{asperities}_initnum{initnum}_seed{seed}_errgrid4_4.txt'
+            outfile_lc = f'../../txt/load_curves/production/load_curves_temp{temp}_vel{vel}_force{force}_asp{asperities}_initnum{initnum}_errgrid4_4.txt'
+            outfile_ms = f'../../txt/max_static/production/max_static_temp{temp}_vel{vel}_force{force}_asp{asperities}_initnum{initnum}_errgrid4_4.txt'
             extract_load_curves(logfile, None, 0, window = 5000, outfile_load_curves = outfile_lc, outfile_max_static = outfile_ms)
