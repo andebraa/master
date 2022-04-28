@@ -303,7 +303,7 @@ def plot_production(temp, vel, force, asperities, orientation, grid, erratic):
     template_lc = load_curve_dir + 'load_curves_temp{}_vel{}_force{}_asp{}_initnum{}_errgrid{}_{}.txt'
     template_ms = max_static_dir + 'max_static_temp{}_vel{}_force{}_asp{}_initnum{}_errgrid{}_{}.txt'
 
-    fig, axs = plt.subplots(2,2, figsize = (10,10))
+    fig, axs = plt.subplots(5,2, figsize = (10,10))
     axs = axs.ravel()
    
     print(template_lc)
@@ -365,9 +365,9 @@ if __name__ == '__main__':
     #plot_all_curves_and_mean(temp, vel, force, orientation, grid, template_lc, template_ms, seeds)    
     #plot_mean_of_multiple(temp, vel, force, orientation, grid, template_lc, template_ms, [seeds1, seeds2, seeds3])
     #plot_load_curves_as_funciton_of_top_thiccness()
-    load_vs_normal_force()
+    #load_vs_normal_force()
     #plot_single_loadcurve()
-    #plot_production(temp, vel, force, 8,orientation, grid, erratic)
+    plot_production(temp, vel, force, 8,orientation, grid, erratic)
     """
     stop
 
