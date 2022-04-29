@@ -208,7 +208,7 @@ def plot_single_loadcurve():
 
     # paths
     project_dir = '../../'
-    fig_dir = project_dir + 'fig/'
+    fig_dir = project_dir + 'fig/png/'
 
 
     load_curve_dir = project_dir + 'txt/load_curves/erratic/'
@@ -288,11 +288,11 @@ def load_vs_normal_force():
         timeframes = []
         height = []
         for row in data:
-            timeframes.append(row[0]*timestep)
+            timeframes.append(row[0]*timestep*0.001)
             height.append(row[1])
         timeframes = np.array(timeframes)
         height = np.array(height)
-        axs2[i].plot(timeframes, height, label = seed)
+        axs2[i].plot(timeframes, height, label = f'highest particle')
 
         #load plot
         #print('mean load curves shape: ',load_curves_mean.shape)
