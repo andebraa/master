@@ -129,7 +129,6 @@ dmypy.json
 .pyre/
 
 #other stuff
-/*/*.png
 /*/*.txt
 
 initial_system/*/*.json
