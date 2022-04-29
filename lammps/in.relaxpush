@@ -74,9 +74,9 @@ group upper region upper
 # initialize temperature
 # compute new mobile temp/partial 0 1 1
 compute contact_temp all temp/region contact_block
-compute pressure all pressure contact_temp
-compute stress all stress/atom contact_temp
-compute stressavg all reduce/region contact_block sum c_stress[3]
+#compute pressure all pressure contact_temp
+#compute stress all stress/atom contact_temp
+#compute stressavg all reduce/region contact_block sum c_stress[3]
 velocity mobile create ${temp} ${seed}
 
 # compute diffusion
@@ -95,20 +95,20 @@ fix 6 rigid_upper rigid/nvt single temp ${temp} ${temp} 1.0 force 1 off off on
 
 # define output
 variable num_contact equal count(all,contact_slice)
-variable pzz_ equal c_pressure[3]
-thermo 10
-thermo_style custom step temp time pxx pyy pzz pe ke press v_rx v_rz v_vx v_vz v_fx v_fz v_num_contact v_msd v_diffusion_coeff spcpu c_stressavg v_pzz_
+#variable pzz_ equal c_pressure[3]
+thermo 20
+thermo_style custom step temp time pe ke v_rx v_rz v_vx v_vz v_fx v_fz v_num_contact v_msd v_diffusion_coeff spcpu #v_pzz_ press c_stressavg
 
 # compute stress xx yy zz xy xz yz
-fix 8 all ave/atom $(v_pushtime/dt/100) 1 $(v_pushtime/dt/100) c_stress[*]
+#fix 8 all ave/atom $(v_pushtime/dt/100) 1 $(v_pushtime/dt/100) c_stress[*]
 
 fix 9 rigid_upper setforce 0.0 0.0 0.0
 run 0
 unfix 9
 
 # define output
-dump dumper all custom $(v_pushtime/dt/100) dump.bin id type x y z c_stress[1] c_stress[3] c_stress[5]
-restart ${freq} time.*.restart
+#dump dumper all custom $(v_pushtime/dt/100) dump.bin id type x y z c_stress[1] c_stress[3] c_stress[5]
+#restart ${freq} time.*.restart
 run $(v_relaxtime/dt)
 
 
