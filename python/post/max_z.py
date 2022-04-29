@@ -27,7 +27,7 @@ def max_z_finder(asperities, uc, temp, time, initnum):
             pipeline.modifiers.append(compute_max_z)
             output = pipeline.compute()
             outfiles = highz_dir + f"maxz_temp{temp}_force{force}_asp{asperities}_time{time}_initnum{initnum}_seed{seed}.txt"
-            export_file(pipeline, outfiles, "txt", columns=["Frame", "High_Z"], multiple_frames = True)
+            export_file(pipeline, outfiles, "txt", columns=["Timestep", "High_Z"], multiple_frames = True)
     
 def plot_max_z(asperities, uc, temp, time, initnum):
     fig, axs = plt.subplots(2,2, figsize = (10,10))
@@ -61,11 +61,11 @@ if __name__ == '__main__':
     asperities = 8
     uc = 5
     temp = 2300
-    time = 1000
+    time = 1800
     initnum = 0
 
     highz_dir = '../../txt/high_z/'
     max_zs = []
     avg_max = []
-    #max_z_finder(asperities, uc, temp, time, initnum)
-    plot_max_z(asperities, uc, temp, time, initnum)
+    max_z_finder(asperities, uc, temp, time, initnum)
+    #plot_max_z(asperities, uc, temp, time, initnum)

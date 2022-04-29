@@ -79,8 +79,8 @@ def fetch_initial_system(initnum = 0, random_choice = False, uc = 5,asperities =
 
 def run_relaxpush(force = 0.001, init_num = 0, run_num = 0, asperities = 8):
     temp = 2300
-    reltime = 700 #picosekunder
-    pushtime = 400
+    reltime = 800 #picosekunder
+    pushtime = 1000
     simtime = reltime + pushtime
     vel = 5 #m/s
 
