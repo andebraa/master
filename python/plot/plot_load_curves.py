@@ -307,7 +307,7 @@ def load_vs_normal_force():
         #print('mean load curves shape: ',load_curves_mean.shape)
         #print('all load curves shape: ',load_curves_all.shape)
         axs[i].plot(load_curves_mean[0,:,0], load_curves_mean[0,:,1], label = 'average')
-        axs[i].plot(np.linspace(0, time, len(pushdist)), pushdist, label = 'push distance')
+        axs[i].plot(np.linspace(0, time, len(pushdist)), pushdist*0.001, label = 'push distance')
         axs[i].set_xlabel(r"$t_p$ [ns]")
         axs[i].set_ylabel(r"$f$ [$\mu$N]")
         axs[i].set_title(f'normal force {force}')
