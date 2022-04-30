@@ -57,6 +57,20 @@ def plot_max_z(asperities, uc, temp, time, initnum):
         axs[i].plot(frames, avg_max[i], label = 'average')
         axs[i].legend()
     plt.savefig('test.png')
+
+def displacement_x(asperities, uc, temp, time, initnum):
+    xdist_dir = '../../txt/xdist/'
+
+    for force in [0, 0.0001, 0.001, 0.01]:
+        dumpfiles = f'../../simulations/sys_asp{asperities}_uc{uc}/production/sim_temp{temp}_force{force}_asp{asperities}_time{time}_initnum{initnum}_seed*_errgrid4_4/dump.bin'
+        for dumpfile in dumpfiles:
+            pipeline = import_file(dumpfile)
+            pipeline.modifiers.CalculateDisplacementsModifier()
+            output = pipeline.compute()
+
+            outfiles = xdist_dir + f"xdist_temp{temp}_force{force}_asp{asperities}_time{time}_initnum{initnum}_seed{seed}.txt"
+            export_file(pipeline, outfiles, "txt", columns=["Timestep", "Displacement.X"], multiple_frames = True)
+
 if __name__ == '__main__':
     asperities = 8
     uc = 5
@@ -68,4 +82,5 @@ if __name__ == '__main__':
     max_zs = []
     avg_max = []
     max_z_finder(asperities, uc, temp, time, initnum)
+    displacement_x(asperities, uc, temp, time, initnum)
     #plot_max_z(asperities, uc, temp, time, initnum)
