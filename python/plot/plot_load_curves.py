@@ -256,6 +256,7 @@ def load_vs_normal_force():
     pushdist = np.linspace(0,time, 1000)
     pushdist = np.concatenate((reldist, pushdist)) 
 
+    lc_len = 361
     # paths
     project_dir = '../../'
     fig_dir = project_dir + 'fig/'
@@ -302,10 +303,12 @@ def load_vs_normal_force():
         height = np.array(height)
         axs2[i].plot(timeframes, height, label = f'highest particle')
         axs2[i].grid(False)
+        axs2[i].set_ylabel('Height [Å]')
 
         #load plot
         #print('mean load curves shape: ',load_curves_mean.shape)
         #print('all load curves shape: ',load_curves_all.shape)
+        print(len(load_curves_mean[0,:,0]))
         axs[i].plot(load_curves_mean[0,:,0], load_curves_mean[0,:,1], label = 'average')
         axs[i].plot(np.linspace(0, time*0.001, len(pushdist)), pushdist*0.001, label = 'push distance')
         axs[i].set_xlabel(r"$t_p$ [ns]")
@@ -313,6 +316,7 @@ def load_vs_normal_force():
         axs[i].set_title(f'normal force {force}')
     plt.suptitle(f"temp {temp}, force {force}, vel {vel}")
     plt.legend()
+    fig.tight_layout(pad=0.2)
     plt.savefig(fig_dir + 'production_varying_normalforce_height.png')
 
 
