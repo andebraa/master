@@ -250,10 +250,11 @@ def load_vs_normal_force():
     time = 1800
     reltime = 800
     pushtime = 1000
-    relframe = reltime/timestep
-    frames = time/timestep
+    relframe = int(reltime/timestep)
+    frames = int(time/timestep)
     reldist = np.zeros((relframe))
-    pushdist = np.linspace(0,
+    pushdist = np.linspace(0,time, 1000)
+    pushdist = np.concatenate((reldist, pushdist)) 
 
     # paths
     project_dir = '../../'
@@ -306,6 +307,7 @@ def load_vs_normal_force():
         #print('mean load curves shape: ',load_curves_mean.shape)
         #print('all load curves shape: ',load_curves_all.shape)
         axs[i].plot(load_curves_mean[0,:,0], load_curves_mean[0,:,1], label = 'average')
+        axs[i].plot(np.linspace(0, time, len(pushdist)), pushdist, label = 'push distance')
         axs[i].set_xlabel(r"$t_p$ [ns]")
         axs[i].set_ylabel(r"$f$ [$\mu$N]")
         axs[i].set_title(f'normal force {force}')
