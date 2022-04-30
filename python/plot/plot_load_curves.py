@@ -252,7 +252,7 @@ def load_vs_normal_force():
     pushtime = 1000
     relframe = int(reltime/timestep)
     frames = int(time/timestep)
-    reldist = np.zeros((relframe))
+    reldist = np.zeros((reltime))
     pushdist = np.linspace(0,time, 1000)
     pushdist = np.concatenate((reldist, pushdist)) 
 
