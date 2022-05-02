@@ -30,12 +30,12 @@ def load_load_curves(temp, vel, force, orientation, grid, load_curve_files, temp
         #print('load curves shape: ', np.shape(load_curves))
         load_curves_all.append(load_curves)
     #load_curves_all[1] = load_curves_all[1][:len(load_curves_all[0])]
-    load_curves_all = np.array(load_curves_all)
+    #load_curves_all = np.array(load_curves_all)
     #shortest = np.argmin(load_curves_all) 
-    load_curves = mean(load_curves_all, axis=0)
-    load_curves = load_curves.reshape(-1, np.shape(load_curves)[0], 2)   # assuming that all curves have 1001 points
+    #load_curves = mean(load_curves_all, axis=0)
+    #load_curves = load_curves.reshape(-1, np.shape(load_curves)[0], 2)   # assuming that all curves have 1001 points
     
-    return load_curves_all, load_curves
+    return load_curves_all#, load_curves
 
 
 def load_max_static(temp, vel, force, orientation, grid, template_lc, ms_files, seeds):
@@ -52,8 +52,9 @@ def load_max_static(temp, vel, force, orientation, grid, template_lc, ms_files, 
                 time, ms = loadtxt(file)
                 ms_all.append((time,ms))
 
-    mean_static = mean(ms_all, axis = 0)
-    return ms_all, mean_static
+    #print(ms_all)
+    #mean_static = mean(ms_all, axis = 0)
+    return ms_all#, mean_static
 
 
 #def plot_max_static_for_speeds():
@@ -330,8 +331,8 @@ def plot_production(temp, vel, force, asperities, orientation, grid, erratic):
     load_curve_dir = project_dir + 'txt/load_curves/production/'
     max_static_dir = project_dir + 'txt/max_static/production/'
 
-    template_lc = load_curve_dir + 'load_curves_temp{}_vel{}_force{}_asp{}_initnum{}_errgrid{}_{}.txt'
-    template_ms = max_static_dir + 'max_static_temp{}_vel{}_force{}_asp{}_initnum{}_errgrid{}_{}.txt'
+    template_lc = load_curve_dir + 'load_curves_temp{}_vel{}_force{}_asp{}_initnum{}_seed*_errgrid{}_{}.txt'
+    template_ms = max_static_dir + 'max_static_temp{}_vel{}_force{}_asp{}_initnum{}_seed*_errgrid{}_{}.txt'
 
     fig, axs = plt.subplots(5,2, figsize = (10,10))
     axs = axs.ravel()
@@ -341,7 +342,7 @@ def plot_production(temp, vel, force, asperities, orientation, grid, erratic):
         
         lc_files = template_lc.format(temp, vel, force, asperities, initnum, grid[0], grid[1])
         print(lc_files)
-        load_curves_all, load_curves_mean = load_load_curves(temp, vel, force, asperities,
+        load_curves_all  = load_load_curves(temp, vel, force, asperities,
                                                     grid, lc_files,template_ms, initnum)
         
         ms_files = template_ms.format(temp, vel, force, asperities, initnum, grid[0], grid[1])
@@ -350,9 +351,9 @@ def plot_production(temp, vel, force, asperities, orientation, grid, erratic):
         for curve in load_curves_all:
             axs[i].plot(curve[:,0], curve[:,1])
     
-        print('mean load curves shape: ',load_curves_mean.shape)
-        print('all load curves shape: ',load_curves_all.shape)
-        axs[i].plot(load_curves_mean[0,:,0], load_curves_mean[0,:,1], label = 'average')
+        #print('mean load curves shape: ',load_curves_mean.shape)
+        #print('all load curves shape: ',load_curves_all.shape)
+        #axs[i].plot(load_curves_mean[0,:,0], load_curves_mean[0,:,1], label = 'average')
         axs[i].set_xlabel(r"$t_p$ [ns]")
         axs[i].set_ylabel(r"$f$ [$\mu$N]")
     plt.title(f"temp {temp}, force {force}, vel {vel}")
@@ -395,9 +396,9 @@ if __name__ == '__main__':
     #plot_all_curves_and_mean(temp, vel, force, orientation, grid, template_lc, template_ms, seeds)    
     #plot_mean_of_multiple(temp, vel, force, orientation, grid, template_lc, template_ms, [seeds1, seeds2, seeds3])
     #plot_load_curves_as_funciton_of_top_thiccness()
-    load_vs_normal_force()
+    #load_vs_normal_force()
     #plot_single_loadcurve()
-    #plot_production(temp, vel, force, 8,orientation, grid, erratic)
+    plot_production(temp, vel, force, 8,orientation, grid, erratic)
     """
     stop
 
