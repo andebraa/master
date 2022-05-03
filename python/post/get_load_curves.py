@@ -82,7 +82,7 @@ if __name__ == '__main__':
     #initnum = 0
     force = 0.001
     #for force in [0.0001, 0.001, 0.01, 0]:
-    for initnum in range(0, 15):
+    for initnum in range(0, 4):
         print(initnum)
         logfiles = f'../../simulations/sys_asp{asperities}_uc{uc}/production/sim_temp{temp}_force{force}_asp{asperities}_time{time}_initnum{initnum}_seed*_errgrid4_4/log.lammps'
         for logfile in glob(logfiles):

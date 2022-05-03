@@ -334,11 +334,11 @@ def plot_production(temp, vel, force, asperities, orientation, grid, erratic):
     template_lc = load_curve_dir + 'load_curves_temp{}_vel{}_force{}_asp{}_initnum{}_seed*_errgrid{}_{}.txt'
     template_ms = max_static_dir + 'max_static_temp{}_vel{}_force{}_asp{}_initnum{}_seed*_errgrid{}_{}.txt'
 
-    fig, axs = plt.subplots(7,2, figsize = (10,10))
+    fig, axs = plt.subplots(2,2, figsize = (10,10))
     axs = axs.ravel()
    
     print(template_lc)
-    for i, initnum in enumerate(range(14)):
+    for i, initnum in enumerate(range(4)):
         
         lc_files = template_lc.format(temp, vel, force, asperities, initnum, grid[0], grid[1])
         print(lc_files)
