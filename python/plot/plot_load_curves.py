@@ -417,9 +417,9 @@ if __name__ == '__main__':
     #plot_all_curves_and_mean(temp, vel, force, orientation, grid, template_lc, template_ms, seeds)    
     #plot_mean_of_multiple(temp, vel, force, orientation, grid, template_lc, template_ms, [seeds1, seeds2, seeds3])
     #plot_load_curves_as_funciton_of_top_thiccness()
-    #load_vs_normal_force()
+    load_vs_normal_force()
     #plot_single_loadcurve()
-    plot_production(temp, vel, force, 8,orientation, grid, erratic)
+    #plot_production(temp, vel, force, 8,orientation, grid, erratic)
     """
     stop
 
