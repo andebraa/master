@@ -331,21 +331,21 @@ def plot_production(temp, vel, force, asperities, orientation, grid, erratic):
     load_curve_dir = project_dir + 'txt/load_curves/production/'
     max_static_dir = project_dir + 'txt/max_static/production/'
 
-    template_lc = load_curve_dir + 'load_curves_temp{}_vel{}_force{}_asp{}_initnum{}_seed*_errgrid{}_{}.txt'
-    template_ms = max_static_dir + 'max_static_temp{}_vel{}_force{}_asp{}_initnum{}_seed*_errgrid{}_{}.txt'
+    template_lc = load_curve_dir + 'load_curves_temp{}_vel{}_force{}_asp{}_initnum{}_seed{}_errgrid{}_{}.txt'
+    template_ms = max_static_dir + 'max_static_temp{}_vel{}_force{}_asp{}_initnum{}_seed{}_errgrid{}_{}.txt'
 
     fig, axs = plt.subplots(2,2, figsize = (10,10))
     axs = axs.ravel()
-   
+    initseed = {0: 77800, 1:36173, 2:47530, 3:33479} 
     print(template_lc)
-    for i, initnum in enumerate(range(4)):
+    for i, (initnum, seed) in enumerate(initseed.items()):
         
-        lc_files = template_lc.format(temp, vel, force, asperities, initnum, grid[0], grid[1])
+        lc_files = template_lc.format(temp, vel, force, asperities, initnum, seed, grid[0], grid[1])
         print(lc_files)
         load_curves_all, load_curves_mean= load_load_curves(temp, vel, force, asperities,
                                                     grid, lc_files,template_ms, initnum)
         
-        ms_files = template_ms.format(temp, vel, force, asperities, initnum, grid[0], grid[1])
+        ms_files = template_ms.format(temp, vel, force, asperities, initnum, seed, grid[0], grid[1])
         #ms_all, ms_mean = load_max_static(temp, vel, force, asperities, grid,
         #                     lc_files, ms_files, initnum)
         for curve in load_curves_all:

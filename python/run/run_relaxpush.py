@@ -152,7 +152,7 @@ def run_relaxpush(force = 0.001, init_num = 0, run_num = 0, asperities = 8):
     sim.run(computer=SlurmGPU(lmp_exec="lmp_python", 
             slurm_args={'job-name': f'{init_num}'}, 
             lmp_args={'-pk': 'kokkos newton on neigh full'}))
-    runlogger('relaxpush', uc, temp, vel, force, simtime, init_num, grid = 'production', push_seed = init_num, asperities = asperities)
+    runlogger('relaxpush', uc, temp, vel, force, simtime, init_num, grid = 'production', push_seed = seed, asperities = asperities)
 
 
 if __name__ == '__main__':
