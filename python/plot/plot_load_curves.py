@@ -18,6 +18,24 @@ from matplotlib import style
 plt.style.use('seaborn')
 
 
+def load_displacement(temp, vel, force, orientation, grid, disp_files, initnum):
+    # load load curves
+    disp_all = []
+   
+    files = glob(disp_files)
+    assert files != []
+    for _file in glob(disp_files):
+        disp = loadtxt(_file)
+        disp_all.append(disp)
+    #load_curves_all[1] = load_curves_all[1][:len(load_curves_all[0])]
+    disp_all = np.array(disp_all)
+    #shortest = np.argmin(load_curves_all) 
+    disp_mean = mean(disp_all, axis=0)
+    disp_mean = disp_mean.reshape(-1, np.shape(disp_mean)[0], 2)   # assuming that all curves have 1001 points
+    
+    return disp_all, disp_mean
+
+
 def load_load_curves(temp, vel, force, orientation, grid, load_curve_files, template_ms, initnum):
     # load load curves
     load_curves_all = []
@@ -283,6 +301,8 @@ def load_vs_normal_force():
         print(lc_files)
         load_curves_all, load_curves_mean = load_load_curves(temp, vel, force, asperities,
                                                     grid, lc_files,template_ms, initnum)
+
+        disp, disp_mean = load_displacement(temp, vel, force, orientation, grid, disp_files, initnum)
         
         maxz_file = glob(heights_file)[0]
         print('glob heights file ',len(glob(heights_file)))
@@ -302,6 +322,7 @@ def load_vs_normal_force():
         timeframes = np.array(timeframes)
         
         height = np.array(height)
+        axs[i].plot(disp_mean[0,:,0], disp_mean[0,:,1], label = 'displacement')
         axs2[i].plot(timeframes, height, label = f'highest particle')
         axs2[i].grid(False)
         axs2[i].set_ylabel('Height [Å]')

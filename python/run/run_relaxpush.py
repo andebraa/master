@@ -159,5 +159,5 @@ if __name__ == '__main__':
     #run_relaxpush(init_num = 0, asperities = 2)
     #for force in [0, 0.0001, 0.001, 0.01]:
     #    run_relaxpush(force = force)
-    for i in range(0,4):
+    for i in range(4,12):
         run_relaxpush(init_num = i, asperities = 8)

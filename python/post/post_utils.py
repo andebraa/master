@@ -371,13 +371,10 @@ def extract_diffusion_coefficient(logfile, outfile="diffusion.txt"):
     savetxt(outfile, asarray([time, diff]).T, header=header)
 
 
-def extract_normal_pressure(logfile, outfile="pressure.txt"):
+def extract_displacement(logfile, outfile="pressure.txt"):
     log_obj = File(logfile)
     time = log_obj.get('Time') / 1000     # convert from ps to ns
-    press = log_obj.get('v_pzz_') / 10    # convert from bars to MPa
-
-    time = time[::25]   # 1001 points is more than
-    press = press[::25]   # sufficient
+    press = log_obj.get('v_rx') / 10    # Convert Å to nm 
 
     header = (
           "Crystal Aging Project \n"
@@ -387,40 +384,14 @@ def extract_normal_pressure(logfile, outfile="pressure.txt"):
           "Normal pressure as a function of time for \n"
           "the relaxation simulations. \n"
           "\n"
-          "Time [ns]\t\t Normal pressure [MPa]")
+          "Time [ns]\t\t distance [ns]")
 
     savetxt(outfile, asarray([time, press]).T, header=header)
 
 
-def extract_displacement(logfile, outfile="bending.txt"):
-    """Read a logfile and extract the time and displacement
-    in x-direction at different heights (v_cm0-v_cm10)
-    """
-    log_obj = File(logfile)
-    time = log_obj.get('Time') / 1000   # convert from ps to ns
-    data = [time]
-    for i in range(10):
-        data.append(log_obj.get(f'v_cm{i}'))
-    data = asarray(data).T
-
-    data = data[::250]   # 1001 points is more than sufficient
-
-    header = (
-        "Crystal Aging Project \n"
-        "Author: Even Marius Nordhagen \n"
-        "Github repo: github.com/evenmn/crystal-aging \n"
-        "\n"
-        "Bending of the asperity as a function of time \n"
-        "for the push simulations. \n"
-        "\n"
-        "Time [ns]\t\t Disp. H=50-65 [Å]\t Disp. H=65-80 [Å]\t"
-        "Disp. H=80-95 [Å]\t Disp. H=95-110 [Å]\t Disp. H=110-125 [Å]\t"
-        "Disp. H=125-140 [Å]\t Disp. H=140-155 [Å]\t Disp. H=155-170 [Å]\t"
-        "Disp. H=170-185 [Å]\t Disp. H=185-200 [Å]")
-
-    savetxt(outfile, data, header=header)
-
 
 if __name__ == '__main__':
     dumpfile = '../../simulations/sys_or100_hi110/relax/sim_temp2300_force0.001_time500_seed66342/dump.bin'
-    count_coord(dumpfile)
+    logfile  = '../../simulations/sys_or100_hi110/relax/sim_temp2300_force0.001_time500_seed66342/log.lammps'
+    
+    #count_coord(dumpfile)
