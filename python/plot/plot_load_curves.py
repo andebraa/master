@@ -40,6 +40,7 @@ def load_load_curves(temp, vel, force, orientation, grid, load_curve_files, temp
     # load load curves
     load_curves_all = []
    
+    print(load_curve_files)
     files = glob(load_curve_files)
     assert files != []
     for _file in glob(load_curve_files):
@@ -355,9 +356,9 @@ def plot_production(temp, vel, force, asperities, orientation, grid, erratic):
     template_lc = load_curve_dir + 'load_curves_temp{}_vel{}_force{}_asp{}_initnum{}_seed{}_errgrid{}_{}.txt'
     template_ms = max_static_dir + 'max_static_temp{}_vel{}_force{}_asp{}_initnum{}_seed{}_errgrid{}_{}.txt'
 
-    fig, axs = plt.subplots(2,2, figsize = (10,10))
+    fig, axs = plt.subplots(4,3, figsize = (10,10))
     axs = axs.ravel()
-    initseed = {0: 77800, 1:36173, 2:47530, 3:33479} 
+    initseed = {0: 77800, 1:36173, 2:47530, 3:33479, 4:92732, 5:31470, 6:81050, 7:49079, 8:20661, 9:45424, 10:52221, 11:27048} 
     print(template_lc)
     for i, (initnum, seed) in enumerate(initseed.items()):
         
@@ -417,9 +418,9 @@ if __name__ == '__main__':
     #plot_all_curves_and_mean(temp, vel, force, orientation, grid, template_lc, template_ms, seeds)    
     #plot_mean_of_multiple(temp, vel, force, orientation, grid, template_lc, template_ms, [seeds1, seeds2, seeds3])
     #plot_load_curves_as_funciton_of_top_thiccness()
-    load_vs_normal_force()
+    #load_vs_normal_force()
     #plot_single_loadcurve()
-    #plot_production(temp, vel, force, 8,orientation, grid, erratic)
+    plot_production(temp, vel, force, 8,orientation, grid, erratic)
     """
     stop
 
