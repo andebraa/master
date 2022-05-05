@@ -76,18 +76,18 @@ if __name__ == '__main__':
     uc = 5
     temp = 2300
     vel = 5
-    time = 1200
+    time = 1800
     init_time = 0
-    #initnum = 0
-    force = 0.001
-    #for force in [0.0001, 0.001, 0.01, 0]:
-    for initnum in range(0, 4):
+    initnum = 0
+    #force = 0.001
+    for force in [0.0001, 0.001, 0.01, 0]:
+    #for initnum in range(0, 4):
         print(initnum)
         logfiles = f'../../simulations/sys_asp{asperities}_uc{uc}/production/sim_temp{temp}_force{force}_asp{asperities}_time{time}_initnum{initnum}_seed*_errgrid4_4/log.lammps'
         for logfile in glob(logfiles):
             print('file: ', logfile)
             matches = re.findall('\d+', logfile)
             seed = matches[-3]
-            outfile_disp = f'../../txt/displacement/production/displacement_temp{temp}_vel{vel}_force{force}_asp{asperities}_initnum{initnum}_seed{seed}_errgrid4_4.txt'
+            outfile_disp = f'../../txt/displacement/production/displacement_temp{temp}_vel{vel}_force{force}_asp{asperities}_time{time}_initnum{initnum}_seed{seed}_errgrid4_4.txt'
             print(outfile_disp)
             extract_displacement(logfile, outfile = outfile_disp)

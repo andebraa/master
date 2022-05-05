@@ -21,7 +21,7 @@ plt.style.use('seaborn')
 def load_displacement(temp, vel, force, orientation, grid, disp_files, initnum):
     # load load curves
     disp_all = []
-   
+    print('disp_files ', disp_files)  
     files = glob(disp_files)
     assert files != []
     for _file in glob(disp_files):
@@ -285,8 +285,8 @@ def load_vs_normal_force():
     load_curve_dir = project_dir + 'txt/load_curves/production/'
     max_static_dir = project_dir + 'txt/max_static/production/'
 
-    template_lc = load_curve_dir + 'load_curves_temp{}_vel{}_force{}_asp{}_initnum{}_seed*_errgrid{}_{}.txt'
-    template_ms = max_static_dir + 'max_static_temp{}_vel{}_force{}_asp{}_initnum{}_seed*_errgrid{}_{}.txt'
+    template_lc = load_curve_dir + 'load_curves_temp{}_vel{}_force{}_asp{}_initnum{}_seed{}_errgrid{}_{}.txt'
+    template_ms = max_static_dir + 'max_static_temp{}_vel{}_force{}_asp{}_initnum{}_seed{}_errgrid{}_{}.txt'
 
     fig, axs = plt.subplots(2,2, figsize = (10,10))
     axs = axs.ravel()
@@ -295,16 +295,20 @@ def load_vs_normal_force():
         axs2.append(ax.twinx())
     axs2 = np.array((axs2))
 
-    for i, force in enumerate([0, 0.0001, 0.001, 0.01]):
+    varyforce = {0.0001: 14738, 0.001:29336, 0.01:34053, 0:49495}
+
+    for i, (force, seed) in enumerate(varyforce.items()):
         
-        lc_files = template_lc.format(temp, vel, force, asperities, initnum, grid[0], grid[1])
-        heights_file =  highz_dir + f"maxz_temp{temp}_force{force}_asp{asperities}_time{time}_initnum{initnum}_seed*.txt"
+        lc_files = template_lc.format(temp, vel, force, asperities, initnum, seed, grid[0], grid[1])
+        heights_file =  highz_dir + f"maxz_temp{temp}_force{force}_asp{asperities}_time{time}_initnum{initnum}_seed{seed}.txt"
         print(lc_files)
         load_curves_all, load_curves_mean = load_load_curves(temp, vel, force, asperities,
                                                     grid, lc_files,template_ms, initnum)
 
+        disp_files = f'../../txt/displacement/production/displacement_temp{temp}_vel{vel}_force{force}_asp{asperities}_time{time}_initnum{initnum}_seed{seed}_errgrid4_4.txt'
         disp, disp_mean = load_displacement(temp, vel, force, orientation, grid, disp_files, initnum)
         
+
         maxz_file = glob(heights_file)[0]
         print('glob heights file ',len(glob(heights_file)))
         assert len(glob(heights_file)) == 1
@@ -312,7 +316,6 @@ def load_vs_normal_force():
         for curve in load_curves_all:
             axs[i].plot(curve[:,0], curve[:,1])
         #height plot 
-        seed = re.findall(r'\d+', maxz_file)[-1]
         data = np.loadtxt(maxz_file)
         timeframes = []
         height = []
@@ -418,9 +421,9 @@ if __name__ == '__main__':
     #plot_all_curves_and_mean(temp, vel, force, orientation, grid, template_lc, template_ms, seeds)    
     #plot_mean_of_multiple(temp, vel, force, orientation, grid, template_lc, template_ms, [seeds1, seeds2, seeds3])
     #plot_load_curves_as_funciton_of_top_thiccness()
-    #load_vs_normal_force()
+    load_vs_normal_force()
     #plot_single_loadcurve()
-    plot_production(temp, vel, force, 8,orientation, grid, erratic)
+    #plot_production(temp, vel, force, 8,orientation, grid, erratic)
     """
     stop
 
