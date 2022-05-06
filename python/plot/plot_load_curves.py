@@ -287,8 +287,13 @@ def load_vs_normal_force():
 
     template_lc = load_curve_dir + 'load_curves_temp{}_vel{}_force{}_asp{}_initnum{}_seed{}_errgrid{}_{}.txt'
     template_ms = max_static_dir + 'max_static_temp{}_vel{}_force{}_asp{}_initnum{}_seed{}_errgrid{}_{}.txt'
+    
+    foursquare = False
 
-    fig, axs = plt.subplots(2,2, figsize = (10,10))
+    if foursquare:
+        fig, axs = plt.subplots(2,2, figsize = (10,10))
+    else:
+        fig, axs = plt.subplots(2, figsize = (10,10))
     axs = axs.ravel()
     axs2 = []
     for ax in axs:
@@ -305,6 +310,8 @@ def load_vs_normal_force():
         load_curves_all, load_curves_mean = load_load_curves(temp, vel, force, asperities,
                                                     grid, lc_files,template_ms, initnum)
 
+        print('mean load curves shape: ',load_curves_mean.shape)
+        print('all load curves shape: ',load_curves_all.shape)
         disp_files = f'../../txt/displacement/production/displacement_temp{temp}_vel{vel}_force{force}_asp{asperities}_time{time}_initnum{initnum}_seed{seed}_errgrid4_4.txt'
         disp, disp_mean = load_displacement(temp, vel, force, orientation, grid, disp_files, initnum)
         
@@ -324,23 +331,28 @@ def load_vs_normal_force():
             height.append(row[1])
         
         timeframes = np.array(timeframes)
-        
         height = np.array(height)
-        axs[i].plot(disp_mean[0,:,0], disp_mean[0,:,1], label = 'displacement')
-        axs2[i].plot(timeframes, height, label = f'highest particle')
-        axs2[i].grid(False)
-        axs2[i].set_ylabel('Height [Å]')
 
-        #load plot
-        #print('mean load curves shape: ',load_curves_mean.shape)
-        #print('all load curves shape: ',load_curves_all.shape)
-        print(len(load_curves_mean[0,:,0]))
-        axs[i].plot(load_curves_mean[0,:,0], load_curves_mean[0,:,1], label = 'average')
-        axs[i].set_xlabel(r"$t_p$ [ns]")
-        axs[i].set_ylabel(r"$f$ [$\mu$N]")
-        axs[i].set_title(f'normal force {force}')
+        foursquare = False
+        if foursquare: 
+            axs[i].plot(disp_mean[0,:,0], disp_mean[0,:,1], label = 'displacement')
+            axs2[i].plot(timeframes, height, label = f'highest particle')
+            axs2[i].grid(False)
+            axs2[i].set_ylabel('Height [Å]')
+
+            #load plot
+            print(len(load_curves_mean[0,:,0]))
+            axs[i].plot(load_curves_mean[0,:,0], load_curves_mean[0,:,1], label = 'average')
+            axs[i].set_xlabel(r"$t_p$ [ns]")
+            axs[i].set_ylabel(r"$f$ [$\mu$N]")
+            axs[i].set_title(f'normal force {force}')
         
-
+        else:
+            axs[0].plot(disp_mean[0,:,0], disp_mean[0,:,1], label = f'force {force}')
+            axs[1].plot(disp_mean[0,:,0], disp_mean[0,:,1], label = f'force {force}')
+            axs[0].plot(load_curves_mean[0,:,0], load_curves_mean[0,:,1], label=f'{force}')
+            axs[1].plot(timeframes, height)
+    
     plt.suptitle(f"temp {temp}, force {force}, vel {vel}")
     plt.legend()
     fig.tight_layout(pad=0.2)
