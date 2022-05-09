@@ -392,7 +392,7 @@ def plot_production(temp, vel, force, uc, asperities, time, orientation, grid, e
         with open (template_aux.format(asperities, uc, temp, force, asperities, time, 
                    initnum, seed, asperities, uc, initnum)) as fp:
             aux_dict = json.loads(fp.read())
-
+        aux_dict['erratic'] = np.asarray(aux_dict['erratic'])
         ms_files = template_ms.format(temp, vel, force, asperities, initnum, seed, grid[0], grid[1])
         #ms_all, ms_mean = load_max_static(temp, vel, force, asperities, grid,
         #                     lc_files, ms_files, initnum)
