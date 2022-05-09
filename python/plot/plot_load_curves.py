@@ -372,9 +372,10 @@ def plot_production(temp, vel, force, asperities, orientation, grid, erratic):
     template_lc = load_curve_dir + 'load_curves_temp{}_vel{}_force{}_asp{}_initnum{}_seed{}_errgrid{}_{}.txt'
     template_ms = max_static_dir + 'max_static_temp{}_vel{}_force{}_asp{}_initnum{}_seed{}_errgrid{}_{}.txt'
 
-    fig, axs = plt.subplots(4,3, figsize = (10,10))
+    fig, axs = plt.subplots(4,2, figsize = (10,10))
     axs = axs.ravel()
-    initseed = {0: 77800, 1:36173, 2:47530, 3:33479, 4:92732, 5:31470, 6:81050, 7:49079, 8:20661, 9:45424, 10:52221, 11:27048} 
+    #initseed = {0: 77800, 1:36173, 2:47530, 3:33479, 4:92732, 5:31470, 6:81050, 7:49079, 8:20661, 9:45424, 10:52221, 11:27048} 
+    initseed = {0: 14242, 1:63957, 2:97531, 3:57211, 4:56100, 5:91155, 6:46070, 7:30380}
     print(template_lc)
     for i, (initnum, seed) in enumerate(initseed.items()):
         
@@ -396,7 +397,7 @@ def plot_production(temp, vel, force, asperities, orientation, grid, erratic):
         axs[i].set_ylabel(r"$f$ [$\mu$N]")
     plt.title(f"temp {temp}, force {force}, vel {vel}")
     plt.legend()
-    plt.savefig(fig_dir + 'production_varying_initnum_first10.png')
+    plt.savefig(fig_dir + 'production_varying_initnum_2asp_first10.png')
 
         
 
@@ -406,7 +407,7 @@ if __name__ == '__main__':
     # user input
     temp = 2300
     vel = 5
-    force = 0.001
+    force = 0
     orientation = 100
     grid = (4,4)
     erratic = True
@@ -434,9 +435,9 @@ if __name__ == '__main__':
     #plot_all_curves_and_mean(temp, vel, force, orientation, grid, template_lc, template_ms, seeds)    
     #plot_mean_of_multiple(temp, vel, force, orientation, grid, template_lc, template_ms, [seeds1, seeds2, seeds3])
     #plot_load_curves_as_funciton_of_top_thiccness()
-    load_vs_normal_force()
+    #load_vs_normal_force()
     #plot_single_loadcurve()
-    #plot_production(temp, vel, force, 8,orientation, grid, erratic)
+    plot_production(temp, vel, force, 2,orientation, grid, erratic)
     """
     stop
 

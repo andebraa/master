@@ -73,16 +73,16 @@ def get_load_curves(asperities = 8, uc = 5):
 if __name__ == '__main__':
     #get_load_curves()
 
-    asperities = 8
+    asperities = 2
     uc = 5
     temp = 2300
     vel = 5
-    time = 1800
+    time = 1400
     init_time = 0
-    initnum = 0
-    #force = 0.001
-    for force in [0.0001, 0.001, 0.01, 0]:
-    #for initnum in range(0, 12):
+    #initnum = 0
+    force = 0
+    #for force in [0.0001, 0.001, 0.01, 0]:
+    for initnum in range(0, 8):
         logfiles = f'../../simulations/sys_asp{asperities}_uc{uc}/production/sim_temp{temp}_force{force}_asp{asperities}_time{time}_initnum{initnum}_seed*_errgrid4_4/log.lammps'
         print(logfiles)
         for logfile in glob(logfiles):
