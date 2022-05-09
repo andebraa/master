@@ -8,6 +8,7 @@ For more information, see the LICENSE file in the top-level dictionary.
 """
 
 import re
+import json
 from glob import glob
 from numpy import loadtxt, asarray, mean
 import numpy as np
@@ -359,7 +360,7 @@ def load_vs_normal_force():
     plt.savefig(fig_dir + 'production_varying_normalforce_height.png')
 
 
-def plot_production(temp, vel, force, asperities, orientation, grid, erratic):
+def plot_production(temp, vel, force, uc, asperities, time, orientation, grid, erratic):
     
     # paths
     project_dir = '../../'
@@ -372,10 +373,13 @@ def plot_production(temp, vel, force, asperities, orientation, grid, erratic):
     template_lc = load_curve_dir + 'load_curves_temp{}_vel{}_force{}_asp{}_initnum{}_seed{}_errgrid{}_{}.txt'
     template_ms = max_static_dir + 'max_static_temp{}_vel{}_force{}_asp{}_initnum{}_seed{}_errgrid{}_{}.txt'
 
-    fig, axs = plt.subplots(4,2, figsize = (10,10))
+    template_aux = project_dir + 'simulations/sys_asp{}_uc{}/production/sim_temp{}_force{}_asp{}_time{}_initnum{}_seed{}_errgrid4_4/system_asp{}_uc{}_initnum0_errgrid4_4_auxiliary.json'
+
+    fig, axs = plt.subplots(4,2, figsize = (15,15))
     axs = axs.ravel()
     #initseed = {0: 77800, 1:36173, 2:47530, 3:33479, 4:92732, 5:31470, 6:81050, 7:49079, 8:20661, 9:45424, 10:52221, 11:27048} 
     initseed = {0: 14242, 1:63957, 2:97531, 3:57211, 4:56100, 5:91155, 6:46070, 7:30380}
+
     print(template_lc)
     for i, (initnum, seed) in enumerate(initseed.items()):
         
@@ -384,6 +388,11 @@ def plot_production(temp, vel, force, asperities, orientation, grid, erratic):
         load_curves_all, load_curves_mean= load_load_curves(temp, vel, force, asperities,
                                                     grid, lc_files,template_ms, initnum)
         
+        #extract system setup from auxiliary folder
+        with open (template_aux.format(asperities, uc, temp, force, asperities, time, 
+                   initnum, seed, asperities, uc, initnum)) as fp:
+            aux_dict = json.loads(fp.read())
+
         ms_files = template_ms.format(temp, vel, force, asperities, initnum, seed, grid[0], grid[1])
         #ms_all, ms_mean = load_max_static(temp, vel, force, asperities, grid,
         #                     lc_files, ms_files, initnum)
@@ -395,6 +404,7 @@ def plot_production(temp, vel, force, asperities, orientation, grid, erratic):
         axs[i].plot(load_curves_mean[0,:,0], load_curves_mean[0,:,1], label = 'average')
         axs[i].set_xlabel(r"$t_p$ [ns]")
         axs[i].set_ylabel(r"$f$ [$\mu$N]")
+        axs[i].set_title(aux_dict['erratic'])
     plt.title(f"temp {temp}, force {force}, vel {vel}")
     plt.legend()
     plt.savefig(fig_dir + 'production_varying_initnum_2asp_first10.png')
@@ -406,9 +416,11 @@ if __name__ == '__main__':
 
     # user input
     temp = 2300
+    time = 1400
     vel = 5
     force = 0
     orientation = 100
+    uc = 5
     grid = (4,4)
     erratic = True
 
@@ -437,7 +449,7 @@ if __name__ == '__main__':
     #plot_load_curves_as_funciton_of_top_thiccness()
     #load_vs_normal_force()
     #plot_single_loadcurve()
-    plot_production(temp, vel, force, 2,orientation, grid, erratic)
+    plot_production(temp, vel, force, uc, 2, time,orientation, grid, erratic)
     """
     stop
 

@@ -26,7 +26,7 @@ from runlogger import runlogger
 
 today = date.today()
 
-def dump_aux(asperities, uc, grid, erratic, output_dir, seed, init_seed = 0):
+def dump_aux(asperities, uc, grid, erratic, output_dir, seed, init_num ):
     """
     Function that reads in auxiliary directory, adds relax_seed and copies file to sim directory,
     note; should not alter init auxiliary
@@ -35,7 +35,7 @@ def dump_aux(asperities, uc, grid, erratic, output_dir, seed, init_seed = 0):
     init_auxiliary = project_dir + 'initial_system/production/erratic/aux/system_asp{}_uc{}_initnum{}_errgrid{}_{}_auxiliary.json'
 
     #opening auxiliary file, and copying this to the directory
-    with open(init_auxiliary.format(asperities, uc, init_seed, grid[0], grid[1], 'r+')) as auxfile:
+    with open(init_auxiliary.format(asperities, uc, init_num, grid[0], grid[1], 'r+')) as auxfile:
         data = json.load(auxfile)
         data.update({'seed': seed})
         auxfile.seek(0) #resets file pointer to beggining of file
@@ -145,7 +145,7 @@ def run_relaxpush(force = 0.001, init_num = 0, run_num = 0, asperities = 8):
     sim.set_input_script(lammps_dir + "in.relaxpush", **var)
 
     #read aux from init and copy to sim folder whilst appending relax_seed
-    dump_aux(asperities, uc, grid, erratic, sim_dir, run_num) 
+    dump_aux(asperities, uc, grid, erratic, sim_dir, seed, init_num) 
         
 
     # calling lammps simulator dependent on erratic or grid
