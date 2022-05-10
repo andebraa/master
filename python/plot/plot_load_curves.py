@@ -380,6 +380,11 @@ def plot_production(temp, vel, force, uc, asperities, time, orientation, grid, e
     #initseed = {0: 77800, 1:36173, 2:47530, 3:33479, 4:92732, 5:31470, 6:81050, 7:49079, 8:20661, 9:45424, 10:52221, 11:27048} 
     initseed = {0: 14242, 1:63957, 2:97531, 3:57211, 4:56100, 5:91155, 6:46070, 7:30380}
 
+    man_init = {0:'[[0,0,0,0][0,0,0,0][1,0,0,1][0,0,0,0]]', 1:'[[0,0,0,1][0,0,0,0][1,0,0,0][0,0,0,0]]',
+                2:'[[0,0,0,0][0,0,0,1][0,0,1,0][0,0,0,0]]', 3:'[[0,0,1,0][0,0,0,0][0,0,0,0][0,0,1,0]]',
+                4:'[[0,0,1,0][0,0,0,0][0,0,0,0][1,0,0,0]]', 5:'[[0,1,0,0][0,0,1,0][0,0,0,0][0,0,0,0]]',
+                6:'[[0,0,1,0][0,0,0,0][1,0,0,0][0,0,0,0]]', 7:'[[0,0,0,0][1,0,0,0][0,0,0,0][1,0,0,0]]'}
+
     print(template_lc)
     for i, (initnum, seed) in enumerate(initseed.items()):
         
@@ -396,7 +401,7 @@ def plot_production(temp, vel, force, uc, asperities, time, orientation, grid, e
         ms_files = template_ms.format(temp, vel, force, asperities, initnum, seed, grid[0], grid[1])
         #ms_all, ms_mean = load_max_static(temp, vel, force, asperities, grid,
         #                     lc_files, ms_files, initnum)
-        for curve in load_curves_all:
+        for curve in load_curves_all: #NOTE aux dict had issues, can be used for later
             axs[i].plot(curve[:,0], curve[:,1])
     
         print('mean load curves shape: ',load_curves_mean.shape)
@@ -404,7 +409,7 @@ def plot_production(temp, vel, force, uc, asperities, time, orientation, grid, e
         axs[i].plot(load_curves_mean[0,:,0], load_curves_mean[0,:,1], label = 'average')
         axs[i].set_xlabel(r"$t_p$ [ns]")
         axs[i].set_ylabel(r"$f$ [$\mu$N]")
-        axs[i].set_title(aux_dict['erratic'])
+        axs[i].set_title(man_init[i])
     plt.subplots_adjust(hspace=0.8)
     plt.suptitle(f"temp {temp}, force {force}, vel {vel}")
     plt.legend()
