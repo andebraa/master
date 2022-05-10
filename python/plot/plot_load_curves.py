@@ -410,7 +410,7 @@ def plot_production(temp, vel, force, uc, asperities, time, orientation, grid, e
         axs[i].set_xlabel(r"$t_p$ [ns]")
         axs[i].set_ylabel(r"$f$ [$\mu$N]")
         axs[i].set_title(man_init[i])
-    plt.subplots_adjust(hspace=0.8)
+    plt.subplots_adjust(hspace=0.2)
     plt.suptitle(f"temp {temp}, force {force}, vel {vel}")
     plt.legend()
     plt.savefig(fig_dir + 'production_varying_initnum_2asp_first10.png')
