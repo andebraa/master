@@ -394,8 +394,8 @@ def plot_production(temp, vel, force, uc, asperities, time, orientation, grid, e
         #    aux_dict = json.loads(fp.read())
         #aux_dict['erratic'] = np.asarray(aux_dict['erratic'])
 
-        for curve in load_curves_all: #NOTE aux dict had issues, can be used for later
-            axs[i].plot(curve[:,0], curve[:,1])
+        #for curve in load_curves_all: #NOTE aux dict had issues, can be used for later
+        #    axs[i].plot(curve[:,0], curve[:,1])
         
         for load_curve in load_curves_all:
             axs[i].plot(load_curve[:,0], load_curve[:,1])
