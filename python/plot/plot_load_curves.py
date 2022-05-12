@@ -68,7 +68,7 @@ def load_max_static(temp, vel, force, asperities, orientation, grid, template_lc
             time, ms = loadtxt(file)
             ms_all.append((time,ms))
 
-    mean_static = mean(ms_all, axis = 1)
+    mean_static = mean(ms_all, axis = 0)
     return ms_all , mean_static
 
 
@@ -396,10 +396,10 @@ def plot_production(temp, vel, force, uc, asperities, time, orientation, grid, e
 
         #for curve in load_curves_all: #NOTE aux dict had issues, can be used for later
         #    axs[i].plot(curve[:,0], curve[:,1])
-        
+        print('ms all, ms mean ', ms_all, ms_mean) 
         for load_curve in load_curves_all:
             axs[i].plot(load_curve[:,0], load_curve[:,1])
-            #axs[i].plot(ms_all[0], ms_all[1], 'o') #this is just proprietary
+            axs[i].plot(ms_all[0], ms_all[1], 'o') #this is just proprietary
 
         print('mean load curves shape: ',load_curves_mean.shape)
         print('all load curves shape: ',load_curves_all.shape)
