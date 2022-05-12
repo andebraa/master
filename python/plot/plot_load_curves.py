@@ -68,7 +68,7 @@ def load_max_static(temp, vel, force, asperities, orientation, grid, template_lc
             time, ms = loadtxt(file)
             ms_all.append((time,ms))
 
-        mean_static = mean(ms_all, axis = 0)
+    mean_static = mean(ms_all, axis = 0)
     return ms_all , mean_static
 
 
