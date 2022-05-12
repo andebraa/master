@@ -19,14 +19,17 @@ from matplotlib import style
 plt.style.use('seaborn')
 
 
-def load_displacement(temp, vel, force, orientation, grid, disp_files, initnum):
+def load_displacement(temp, vel, force, orientation, grid, disp_template, initnum, seeds):
     disp_all = []
-    print('disp_files ', disp_files)  
-    files = glob(disp_files)
-    assert files != []
-    for _file in glob(disp_files):
-        disp = loadtxt(_file)
-        disp_all.append(disp)
+    for seed in seeds:
+        lc_files = template_lc.format(temp, vel, force, asperities, initnum, seed, grid[0], grid[1])
+        print('disp_files ', disp_files)  
+        files = glob(disp_files)
+        print(files)
+        assert files != []
+        for _file in glob(disp_files):
+            disp = loadtxt(_file)
+            disp_all.append(disp)
     disp_all = np.array(disp_all)
     disp_mean = mean(disp_all, axis=0)
     disp_mean = disp_mean.reshape(-1, np.shape(disp_mean)[0], 2)   # assuming that all curves have 1001 points
@@ -34,15 +37,17 @@ def load_displacement(temp, vel, force, orientation, grid, disp_files, initnum):
     return disp_all, disp_mean
 
 
-def load_load_curves(temp, vel, force, orientation, grid, load_curve_files, template_ms, initnum):
+def load_load_curves(temp, vel, force, asperities, orientation, grid, template_lc, template_ms, initnum, seeds):
     # load load curves
     load_curves_all = []
-   
-    files = glob(load_curve_files)
-    assert files != []
-    for _file in glob(load_curve_files):
-        load_curves = loadtxt(_file)
-        load_curves_all.append(load_curves)
+    for seed in seeds: 
+        load_curve_files = template_lc.format(temp, vel, force, asperities, initnum, seed, grid[0], grid[1])
+        print('load curve files: ', load_curve_files) 
+        files = glob(load_curve_files)
+        assert files != []
+        for _file in glob(load_curve_files):
+            load_curves = loadtxt(_file)
+            load_curves_all.append(load_curves)
     load_curves_all = np.array(load_curves_all)
     load_curves = mean(load_curves_all, axis=0)
     load_curves = load_curves.reshape(-1, np.shape(load_curves)[0], 2)   # assuming that all curves have 1001 points
@@ -50,28 +55,21 @@ def load_load_curves(temp, vel, force, orientation, grid, load_curve_files, temp
     return load_curves_all, load_curves
 
 
-def load_max_static(temp, vel, force, orientation, grid, template_lc, ms_files, seeds):
+def load_max_static(temp, vel, force, asperities, orientation, grid, template_lc, template_ms, initnum, seeds):
     ms_all = []
-    files = glob(ms_files)
-    # ms files: time [nS] max friction [mN] 
-    assert files != []
-    for file in glob(ms_files):
-        if isinstance(seeds, int): #if seed is single int
-            if str(seeds) in str(file):
-                time, ms = loadtxt(file)
-                ms_all.append((time,ms))
-
-        else: #seed is list
-            for seed in seeds:
-                if str(seed) in str(file):
-                    time, ms = loadtxt(file)
-                    ms_all.append((time,ms))
-    if isinstance(seeds, int):
-        return ms_all
-    else:
+    
+    for seed in seeds:
+        ms_files = template_ms.format(temp, vel, force, asperities, initnum, seed, 4, 4)
+        files = glob(ms_files)
+        # ms files: time [nS] max friction [mN] 
+        assert files != []
+        
+        for file in glob(ms_files):
+            time, ms = loadtxt(file)
+            ms_all.append((time,ms))
 
         mean_static = mean(ms_all, axis = 0)
-        return ms_all , mean_static
+    return ms_all , mean_static
 
 
 #def plot_max_static_for_speeds():
@@ -374,8 +372,9 @@ def plot_production(temp, vel, force, uc, asperities, time, orientation, grid, e
 
     fig, axs = plt.subplots(4,2, figsize = (15,15))
     axs = axs.ravel()
-    #initseed = {0: 77800, 1:36173, 2:47530, 3:33479, 4:92732, 5:31470, 6:81050, 7:49079, 8:20661, 9:45424, 10:52221, 11:27048} 
-    initseed = {0: 14242, 1:63957, 2:97531, 3:57211, 4:56100, 5:91155, 6:46070, 7:30380}
+    initseed = {0: (14242, 34053, 83209), 1: (63957, 39961, 44381), 2: (97531, 42921, 73117), 
+                3: (57211, 15726, 22462), 4: (56100, 42618, 84851), 5: (91155, 23293, 52590), 
+                6: (46070, 10490, 48691), 7: (30380, 48331, 49978)}
 
     man_init = {0:'[[0,0,0,0][0,0,0,0][1,0,0,1][0,0,0,0]]', 1:'[[0,0,0,1][0,0,0,0][1,0,0,0][0,0,0,0]]',
                 2:'[[0,0,0,0][0,0,0,1][0,0,1,0][0,0,0,0]]', 3:'[[0,0,1,0][0,0,0,0][0,0,0,0][0,0,1,0]]',
@@ -383,31 +382,30 @@ def plot_production(temp, vel, force, uc, asperities, time, orientation, grid, e
                 6:'[[0,0,1,0][0,0,0,0][1,0,0,0][0,0,0,0]]', 7:'[[0,0,0,0][1,0,0,0][0,0,0,0][1,0,0,0]]'}
 
     print(template_lc)
-    for i, (initnum, seed) in enumerate(initseed.items()):
-        
-        lc_files = template_lc.format(temp, vel, force, asperities, initnum, seed, grid[0], grid[1])
-        load_curves_all, load_curves_mean= load_load_curves(temp, vel, force, asperities,
-                                                    grid, lc_files,template_ms, initnum)
-         
-        ms_all = load_max_static(temp, vel, force, orientation, grid,
-                                 template_lc, template_ms.format(temp, vel, force, asperities, 
-                                                                 initnum, seed, 4, 4), 
-                                 seed)
-
+    for i, (initnum, seeds) in enumerate(initseed.items()):
+        load_curves_all, load_curves_mean= load_load_curves(temp, vel, force, asperities, orientation,
+                                                    grid, template_lc,template_ms, initnum, seeds)
+        ms_all, ms_mean = load_max_static(temp, vel, force, asperities, orientation, grid,
+                                 template_lc, template_ms, initnum, seeds)
 
         #extract system setup from auxiliary folder
-        with open (template_aux.format(asperities, uc, temp, force, asperities, time, 
-                   initnum, seed, asperities, uc, initnum)) as fp:
-            aux_dict = json.loads(fp.read())
-        aux_dict['erratic'] = np.asarray(aux_dict['erratic'])
+        #with open (template_aux.format(asperities, uc, temp, force, asperities, time, 
+        #           initnum, seed, asperities, uc, initnum)) as fp:
+        #    aux_dict = json.loads(fp.read())
+        #aux_dict['erratic'] = np.asarray(aux_dict['erratic'])
 
         for curve in load_curves_all: #NOTE aux dict had issues, can be used for later
             axs[i].plot(curve[:,0], curve[:,1])
-    
+        
+        for load_curve in load_curves_all:
+            axs[i].plot(load_curve[:,0], load_curve[:,1])
+            axs[i].plot(ms_all[0], ms_all[1]) #this is just proprietary
+
         print('mean load curves shape: ',load_curves_mean.shape)
         print('all load curves shape: ',load_curves_all.shape)
+        print(' mean max static shape: ', ms_mean.shape)
         axs[i].plot(load_curves_mean[0,:,0], load_curves_mean[0,:,1], label = 'average')
-        axs[i].plot(ms_all[0][0], ms_all[0][1], 'o')
+        axs[i].plot(ms_mean[0], ms_mean[1], 'o')
         axs[i].set_xlabel(r"$t_p$ [ns]")
         axs[i].set_ylabel(r"$f$ [$\mu$N]")
         axs[i].set_title(man_init[i])
