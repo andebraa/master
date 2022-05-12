@@ -321,6 +321,7 @@ def gen_erratic_system(lx=99.9, ly=100, ax=50, ay=50, hl=50, hu=60, hup=2,
     if lower_orient == "100":
         lower = create_bulk_crystal("silicon_carbide_3c", (lx, ly, hl))
     elif lower_orient == "110":
+        print('lower: 110')
         lower = orient_110("silicon_carbide_3c", (lx, ly, hl))
     else:
         raise NotImplementedError

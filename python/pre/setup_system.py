@@ -39,7 +39,7 @@ def setup_system(production = False, init_num = 0, asperities = 2):
     dode_d = 1 * 37.3
     grid = (4,4) 
 
-    lower_orient = "100"
+    lower_orient = "110"
     remove_atoms = True
     erratic = True
 
@@ -52,8 +52,9 @@ def setup_system(production = False, init_num = 0, asperities = 2):
             'lower_orient': lower_orient, 'erratic': erratic}
 
     if production is not None:
-        system_file = path + f"production/erratic/system_asp{asperities}_uc{num_unit_cells}_initnum{init_num}_errgrid{grid[0]}_{grid[1]}"
-        aux_path = path + f"production/erratic/aux/system_asp{asperities}_uc{num_unit_cells}_initnum{init_num}_errgrid{grid[0]}_{grid[1]}_auxiliary.json"
+        print('------------------------production run--------------------')
+        system_file = path + f"production/erratic/system_asp{asperities}_or{lower_orient}_uc{num_unit_cells}_initnum{init_num}_errgrid{grid[0]}_{grid[1]}"
+        aux_path = path + f"production/erratic/aux/system_asp{asperities}_or{lower_orient}_uc{num_unit_cells}_initnum{init_num}_errgrid{grid[0]}_{grid[1]}_auxiliary.json"
 
         system = gen_erratic_system(lx, ly, ax, ay, hl, hu, hup, octa_d, dode_d, lower_orient,
                                     remove_atoms, aux_path=aux_path, grid=grid, 
