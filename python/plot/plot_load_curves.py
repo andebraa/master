@@ -399,13 +399,13 @@ def plot_production(temp, vel, force, uc, asperities, time, orientation, grid, e
         
         for load_curve in load_curves_all:
             axs[i].plot(load_curve[:,0], load_curve[:,1])
-            axs[i].plot(ms_all[0], ms_all[1], 'o') #this is just proprietary
+            #axs[i].plot(ms_all[0], ms_all[1], 'o') #this is just proprietary
 
         print('mean load curves shape: ',load_curves_mean.shape)
         print('all load curves shape: ',load_curves_all.shape)
         print(' mean max static shape: ', ms_mean.shape)
         axs[i].plot(load_curves_mean[0,:,0], load_curves_mean[0,:,1], label = 'average')
-        #axs[i].plot(ms_mean[0], ms_mean[1], 'o')
+        axs[i].plot(ms_mean[0], ms_mean[1], 'o')
         axs[i].set_xlabel(r"$t_p$ [ns]")
         axs[i].set_ylabel(r"$f$ [$\mu$N]")
         axs[i].set_title(man_init[i])
