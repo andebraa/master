@@ -399,7 +399,8 @@ def plot_production(temp, vel, force, uc, asperities, time, orientation, grid, e
         print('ms all, ms mean ', ms_all, ms_mean) 
         for load_curve in load_curves_all:
             axs[i].plot(load_curve[:,0], load_curve[:,1])
-            axs[i].plot(ms_all[0], ms_all[1], 'o') #this is just proprietary
+        for ms in ms_all:
+            axs[i].plot(ms[0], ms[1], 'o') #this is just proprietary
 
         print('mean load curves shape: ',load_curves_mean.shape)
         print('all load curves shape: ',load_curves_all.shape)
