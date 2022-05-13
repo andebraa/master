@@ -93,10 +93,10 @@ def orient_110(name, size):
     atoms.set_cell(size)
 
     # shift particles such that initial boundaries are at the boundaries
-    if rot_ind == 0:
-        atoms.positions += (0, size[1]/2, size[2]/2)
-    else:
-        atoms.positions += (size[0]/2, 0, size[2]/2)
+    #if rot_ind == 0:
+    #    atoms.positions += (0, size[1]/2, size[2]/2)
+    #else:
+    #    atoms.positions += (size[0]/2, 0, size[2]/2)
 
     # shift in z-direction
     positions = atoms.get_positions()
@@ -368,9 +368,12 @@ def gen_erratic_system(lx=99.9, ly=100, ax=50, ay=50, hl=50, hu=60, hup=2,
     sys_lx, sys_ly, sys_lz = shape #the size of the whole system
     lx_actual, ly_actual = sys_lx/grid[0], sys_ly/grid[1] #the size of one partition
 
+    if lower_orient == '110':
+        lower.positions -= (0, ly_actual/2, 0)
 
     #divide the system into squares nXn. linspace(start, stop, num)
     partition = (np.linspace(0,lx_actual, grid[0]), np.linspace(0,ly_actual, grid[1]))
+
 
 
     #asperity removal

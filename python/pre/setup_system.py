@@ -40,7 +40,7 @@ def setup_system(production = False, init_num = 0, asperities = 2):
     grid = (4,4) 
 
     lower_orient = "110"
-    remove_atoms = True
+    remove_atoms = False
     erratic = True
 
     seed = np.random.randint(10000, 100000)
