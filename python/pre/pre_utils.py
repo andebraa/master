@@ -386,10 +386,14 @@ def gen_erratic_system(lx=99.9, ly=100, ax=50, ay=50, hl=50, hu=60, hup=2,
         #bool_grid = gen_grid(grid, asperities, np.array([[0,1,0,1],[1,0,1,0],[0,1,0,1],[1,0,1,0]]))
 
 
+    spacer = 0.001
     print(bool_grid)
     for i in range(len(partition[0])):
         for j in range(len(partition[1])):
             print(bool_grid[i,j])
+            #to ensure lower doesn't get too close, i'll add a spacer in x and y direction to each slice
+            #lower_slice = BoxGeometry(center=((lx_actual/2 + lx_actual*i), (ly_actual/2 + ly_actual*j), lz/2), length = (lx_actual/2, ly_actual, lz)) 
+            #lower_slice.positions += (spacer*i, spacer*j, 0)
             if not bool_grid[i,j]: #if bool_grid == false , remove asperity
                 #lx_actual is midpoint of partition, then it jumps the length of a partition to find next midpoint
                 
