@@ -160,4 +160,4 @@ if __name__ == '__main__':
     #for force in [0, 0.0001, 0.001, 0.01]:
     #    run_relaxpush(force = force)
     for i in range(0, 8):
-        run_relaxpush(init_num = i, asperities = 2, force = 0, orientation = 110)
+        run_relaxpush(init_num = i, asperities = 8, force = 0, orientation = 100)

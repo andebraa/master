@@ -7,7 +7,7 @@ class NumpyEncoder(json.JSONEncoder):
             return obj.tolist()
         return json.JSONEncoder.default(self, obj)
 
-asperities = 2
+asperities = 8
 
 if asperities == 2:
     config_matrix = np.load('2asp_config_list.npy')
