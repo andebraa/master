@@ -1,0 +1,5 @@
+#script logging some useful commands for atomsk
+atomsk --create diamond 4.3596 Si C orient [110] [1-10] [001] -duplicate 10 10 10 output_test.xsf
+#or 
+atomsk output_test.xsf -orient [100] [010] [001] [110] [101] [011] output_test_110.xsf
+ 
