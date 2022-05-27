@@ -142,3 +142,6 @@ simulations/*
 python/post/*.txt
 
 test_block*
+
+*/*.xsf
+*.xsf
