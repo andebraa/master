@@ -22,7 +22,7 @@ import re
 import numpy as np
 from molecular_builder import create_bulk_crystal, carve_geometry
 from molecular_builder.geometry import PlaneGeometry, BoxGeometry, OctahedronGeometry, DodecahedronGeometry, ProceduralSurfaceGeometry
-from ase import Atoms 
+from ase import Atoms, io 
 import json
 from json import JSONEncoder
 
@@ -322,7 +322,8 @@ def gen_erratic_system(lx=99.9, ly=100, ax=50, ay=50, hl=50, hu=60, hup=2,
         lower = create_bulk_crystal("silicon_carbide_3c", (lx, ly, hl))
     elif lower_orient == "110":
         print('lower: 110')
-        lower = orient_110("silicon_carbide_3c", (lx, ly, hl))
+        lower = io.read('/home/users/andebraa/master/initial_system/atomsk/testrun_shifted.xsf', format='xsf')
+        #lower = orient_110("silicon_carbide_3c", (lx, ly, hl))
     else:
         raise NotImplementedError
 
@@ -357,7 +358,8 @@ def gen_erratic_system(lx=99.9, ly=100, ax=50, ay=50, hl=50, hu=60, hup=2,
 
     # replicate system
     asperity = asperity.repeat((grid[0], grid[1], 1)) 
-    lower = lower.repeat((grid[0], grid[1], 1)) 
+    if lower_orient == '100':
+        lower = lower.repeat((grid[0], grid[1], 1)) 
     upper = upper.repeat((grid[0], grid[1], 1))
     
 
@@ -368,8 +370,8 @@ def gen_erratic_system(lx=99.9, ly=100, ax=50, ay=50, hl=50, hu=60, hup=2,
     sys_lx, sys_ly, sys_lz = shape #the size of the whole system
     lx_actual, ly_actual = sys_lx/grid[0], sys_ly/grid[1] #the size of one partition
 
-    if lower_orient == '110':
-        lower.positions -= (0, ly_actual/2, 0)
+    #if lower_orient == '110':
+    #    lower.positions -= (0, ly_actual/2, 0)
 
     #divide the system into squares nXn. linspace(start, stop, num)
     partition = (np.linspace(0,lx_actual, grid[0]), np.linspace(0,ly_actual, grid[1]))

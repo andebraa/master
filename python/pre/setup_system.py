@@ -39,7 +39,7 @@ def setup_system(production = False, init_num = 0, asperities = 2):
     dode_d = 1 * 37.3
     grid = (4,4) 
 
-    lower_orient = "100"
+    lower_orient = "110"
     remove_atoms = False
     erratic = True
 
