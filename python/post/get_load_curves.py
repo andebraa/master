@@ -79,17 +79,20 @@ if __name__ == '__main__':
     vel = 5
     time = 1400
     init_time = 0
+    orientation = 110
     #initnum = 0
     force = 0
+    initseed = {0:77222, 1:29672, 2:64364, 3:33829, 4:29082, 5:16388, 6:69759, 7:65472}
     #for force in [0.0001, 0.001, 0.01, 0]:
-    for initnum in range(0, 8):
-        logfiles = f'../../simulations/sys_asp{asperities}_uc{uc}/production/sim_temp{temp}_force{force}_asp{asperities}_time{time}_initnum{initnum}_seed*_errgrid4_4/log.lammps'
+    for initnum, seed in initseed.items():
+        logfiles = f'../../simulations/sys_asp{asperities}_uc{uc}/production/sim_temp{temp}_force{force}_asp{asperities}_or{orientation}_time{time}_initnum{initnum}_seed{seed}_errgrid4_4/log.lammps'
         print(logfiles)
+        print('twat')
         for logfile in glob(logfiles):
+            print('--------------------------------------------------------------------------')
             print('file: ', logfile)
             matches = re.findall('\d+', logfile)
-            seed = matches[-3]
-            outfile_lc = f'../../txt/load_curves/production/load_curves_temp{temp}_vel{vel}_force{force}_asp{asperities}_initnum{initnum}_seed{seed}_errgrid4_4.txt'
-            outfile_ms = f'../../txt/max_static/production/max_static_temp{temp}_vel{vel}_force{force}_asp{asperities}_initnum{initnum}_seed{seed}_errgrid4_4.txt'
+            outfile_lc = f'../../txt/load_curves/production/load_curves_temp{temp}_vel{vel}_force{force}_asp{asperities}_or{orientation}_initnum{initnum}_seed{seed}_errgrid4_4.txt'
+            outfile_ms = f'../../txt/max_static/production/max_static_temp{temp}_vel{vel}_force{force}_asp{asperities}_or{orientation}_initnum{initnum}_seed{seed}_errgrid4_4.txt'
             print(outfile_lc)
             extract_load_curves(logfile, None, 0, window = 1000, outfile_load_curves = outfile_lc, outfile_max_static = outfile_ms)
