@@ -40,26 +40,50 @@ def load_displacement(temp, vel, force, orientation, grid, disp_template, initnu
 def load_load_curves(temp, vel, force, asperities, orientation, grid, template_lc, template_ms, initnum, seeds):
     # load load curves
     load_curves_all = []
-    for seed in seeds: 
-        load_curve_files = template_lc.format(temp, vel, force, asperities, initnum, seed, grid[0], grid[1])
+    if isinstance(seeds, list) and len(seeds) > 1: 
+        for seed in seeds: 
+            load_curve_files = template_lc.format(temp, vel, force, asperities, initnum, seed, grid[0], grid[1])
+            print('load curve files: ', load_curve_files) 
+            files = glob(load_curve_files)
+            assert files != []
+            for _file in glob(load_curve_files):
+                load_curves = loadtxt(_file)
+                load_curves_all.append(load_curves)
+    else:
+        load_curve_files = template_lc.format(temp, vel, force, asperities, initnum, seeds, grid[0], grid[1])
         print('load curve files: ', load_curve_files) 
         files = glob(load_curve_files)
         assert files != []
         for _file in glob(load_curve_files):
             load_curves = loadtxt(_file)
             load_curves_all.append(load_curves)
+        
     load_curves_all = np.array(load_curves_all)
-    load_curves = mean(load_curves_all, axis=0)
-    load_curves = load_curves.reshape(-1, np.shape(load_curves)[0], 2)   # assuming that all curves have 1001 points
+    if isinstance(seeds, list):
+        load_curves = mean(load_curves_all, axis=0)
+        load_curves = load_curves.reshape(-1, np.shape(load_curves)[0], 2)   # assuming that all curves have 1001 points
+    else:
+        load_curves = None
     
     return load_curves_all, load_curves
 
 
 def load_max_static(temp, vel, force, asperities, orientation, grid, template_lc, template_ms, initnum, seeds):
     ms_all = []
-    
-    for seed in seeds:
-        ms_files = template_ms.format(temp, vel, force, asperities, initnum, seed, 4, 4)
+   
+    if isinstance(seeds, list):
+        for seed in seeds:
+            ms_files = template_ms.format(temp, vel, force, asperities, initnum, seed, grid[0], grid[1])
+            files = glob(ms_files)
+            # ms files: time [nS] max friction [mN] 
+            assert files != []
+            
+            for file in glob(ms_files):
+                time, ms = loadtxt(file)
+                ms_all.append((time,ms))
+        mean_static = mean(ms_all, axis = 0)
+    else:
+        ms_files = template_ms.format(temp, vel, force, asperities, initnum, seeds, grid[0], grid[1])
         files = glob(ms_files)
         # ms files: time [nS] max friction [mN] 
         assert files != []
@@ -67,8 +91,8 @@ def load_max_static(temp, vel, force, asperities, orientation, grid, template_lc
         for file in glob(ms_files):
             time, ms = loadtxt(file)
             ms_all.append((time,ms))
+        mean_static = None
 
-    mean_static = mean(ms_all, axis = 0)
     return ms_all , mean_static
 
 
@@ -372,9 +396,9 @@ def plot_production(temp, vel, force, uc, asperities, time, orientation, grid, e
 
     fig, axs = plt.subplots(4,2, figsize = (15,15))
     axs = axs.ravel()
-    initseed = {0: (77222, 77222), 1: (29672, 79672), 2: (64364, 64364), 
-                3: (33829, 33829), 4: (29082, 29082), 5: (16388, 16388), 
-                6: (69759, 69759), 7: (65472, 65472)}
+    initseed = {0: (77222), 1: (29672), 2: (64364), 
+                3: (33829), 4: (29082), 5: (16388), 
+                6: (69759), 7: (65472)}
 
     man_init = {0:'[[0,0,0,0][0,0,0,0][1,0,0,1][0,0,0,0]]', 1:'[[0,0,0,1][0,0,0,0][1,0,0,0][0,0,0,0]]',
                 2:'[[0,0,0,0][0,0,0,1][0,0,1,0][0,0,0,0]]', 3:'[[0,0,1,0][0,0,0,0][0,0,0,0][0,0,1,0]]',
@@ -388,6 +412,8 @@ def plot_production(temp, vel, force, uc, asperities, time, orientation, grid, e
         ms_all, ms_mean = load_max_static(temp, vel, force, asperities, orientation, grid,
                                  template_lc, template_ms, initnum, seeds)
 
+        print(load_curves_all, load_curves_mean)
+        print(ms_all, ms_mean)
         #extract system setup from auxiliary folder
         #with open (template_aux.format(asperities, uc, temp, force, asperities, time, 
         #           initnum, seed, asperities, uc, initnum)) as fp:
@@ -403,11 +429,11 @@ def plot_production(temp, vel, force, uc, asperities, time, orientation, grid, e
             print(ms)
             axs[i].plot(ms[0], ms[1], 'o') #this is just proprietary
 
-        print('mean load curves shape: ',load_curves_mean.shape)
+        #print('mean load curves shape: ',load_curves_mean.shape)
         print('all load curves shape: ',load_curves_all.shape)
-        print(' mean max static shape: ', ms_mean.shape)
-        axs[i].plot(load_curves_mean[0,:,0], load_curves_mean[0,:,1],'-', label = 'average')
-        axs[i].legend()
+        #print(' mean max static shape: ', ms_mean.shape)
+        #axs[i].plot(load_curves_mean[0,:,0], load_curves_mean[0,:,1],'-', label = 'average')
+        #axs[i].legend()
         #axs[i].plot(ms_mean[0], ms_mean[1], 'o')
         axs[i].set_xlabel(r"$t_p$ [ns]")
         axs[i].set_ylabel(r"$f$ [$\mu$N]")
