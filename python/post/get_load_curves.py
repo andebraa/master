@@ -99,7 +99,7 @@ if __name__ == '__main__':
                     outfile_lc = f'../../txt/load_curves/production/load_curves_temp{temp}_vel{vel}_force{force}_asp{asperities}_or{orientation}_initnum{initnum}_seed{see}_errgrid4_4.txt'
                     outfile_ms = f'../../txt/max_static/production/max_static_temp{temp}_vel{vel}_force{force}_asp{asperities}_or{orientation}_initnum{initnum}_seed{see}_errgrid4_4.txt'
                     print(outfile_lc)
-                    extract_load_curves(logfile, None, 0, window = 1000, outfile_load_curves = outfile_lc, outfile_max_static = outfile_ms)
+                    extract_load_curves(logfile, None, 0, window = 5000, outfile_load_curves = outfile_lc, outfile_max_static = outfile_ms)
         else:
             logfiles = f'../../simulations/sys_asp{asperities}_uc{uc}/production/sim_temp{temp}_force{force}_asp{asperities}_or{orientation}_time{time}_initnum{initnum}_seed{seed}_errgrid4_4/log.lammps'
             print(logfiles)
