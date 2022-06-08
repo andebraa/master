@@ -22,7 +22,7 @@ plt.style.use('seaborn')
 def load_displacement(temp, vel, force, orientation, grid, disp_template, initnum, seeds):
     disp_all = []
     for seed in seeds:
-        lc_files = template_lc.format(temp, vel, force, asperities, initnum, seed, grid[0], grid[1])
+        lc_files = disp_template.format(temp, vel, force, asperities, initnum, seed, grid[0], grid[1])
         print('disp_files ', disp_files)  
         files = glob(disp_files)
         print(files)
@@ -44,7 +44,7 @@ def load_load_curves(temp, vel, force, asperities, orientation, grid, template_l
         for seed in seeds: 
             print('seed: ',seed)
 
-            load_curve_files = template_lc.format(temp, vel, force, asperities, initnum, seed, grid[0], grid[1])
+            load_curve_files = template_lc.format(temp, vel, force, asperities, orientation, initnum, seed, grid[0], grid[1])
             print('load curve files: ', load_curve_files) 
             files = glob(load_curve_files)
             print('files : ', files)
@@ -53,7 +53,7 @@ def load_load_curves(temp, vel, force, asperities, orientation, grid, template_l
                 load_curves = loadtxt(_file)
                 load_curves_all.append(load_curves)
     else:
-        load_curve_files = template_lc.format(temp, vel, force, asperities, initnum, seeds, grid[0], grid[1])
+        load_curve_files = template_lc.format(temp, vel, force, asperities, orientation, initnum, seeds, grid[0], grid[1])
         files = glob(load_curve_files)
         assert files != []
         for _file in glob(load_curve_files):
@@ -75,7 +75,7 @@ def load_max_static(temp, vel, force, asperities, orientation, grid, template_lc
    
     if isinstance(seeds, tuple):
         for seed in seeds:
-            ms_files = template_ms.format(temp, vel, force, asperities, initnum, seed, grid[0], grid[1])
+            ms_files = template_ms.format(temp, vel, force, asperities, orientation, initnum, seed, grid[0], grid[1])
             files = glob(ms_files)
             # ms files: time [nS] max friction [mN] 
             assert files != []
@@ -85,7 +85,7 @@ def load_max_static(temp, vel, force, asperities, orientation, grid, template_lc
                 ms_all.append((time,ms))
         mean_static = mean(ms_all, axis = 0)
     else:
-        ms_files = template_ms.format(temp, vel, force, asperities, initnum, seeds, grid[0], grid[1])
+        ms_files = template_ms.format(temp, vel, force, asperities, orientation, initnum, seeds, grid[0], grid[1])
         files = glob(ms_files)
         # ms files: time [nS] max friction [mN] 
         assert files != []
@@ -391,21 +391,22 @@ def plot_production(temp, vel, force, uc, asperities, time, orientation, grid, e
     load_curve_dir = project_dir + 'txt/load_curves/production/'
     max_static_dir = project_dir + 'txt/max_static/production/'
 
-    template_lc = load_curve_dir + 'load_curves_temp{}_vel{}_force{}_asp{}_initnum{}_seed{}_errgrid{}_{}.txt'
-    template_ms = max_static_dir + 'max_static_temp{}_vel{}_force{}_asp{}_initnum{}_seed{}_errgrid{}_{}.txt'
+    template_lc = load_curve_dir + 'load_curves_temp{}_vel{}_force{}_asp{}_or{}_initnum{}_seed{}_errgrid{}_{}.txt'
+    template_ms = max_static_dir + 'max_static_temp{}_vel{}_force{}_asp{}_or{}_initnum{}_seed{}_errgrid{}_{}.txt'
 
     template_aux = project_dir + 'simulations/sys_asp{}_uc{}/production/sim_temp{}_force{}_asp{}_time{}_initnum{}_seed{}_errgrid4_4/system_asp{}_uc{}_initnum0_errgrid4_4_auxiliary.json'
 
     fig, axs = plt.subplots(4,2, figsize = (15,15))
     axs = axs.ravel()
     initseed = {0:(77222, 66232, 79443), 1:(29672, 40129), 2:(64364, 32077), 3:(33829, 84296),
-                4:(29082, 59000), 5:(16388, 65451), 6:(69759, 69759), 7:(65472, 30359, 62780)}
+                4:(29082, 59000), 5:(16388, 65451), 6:(69759, 69759), 7:(65472, 62780)}
 
     man_init = {0:'[[0,0,0,0][0,0,0,0][1,0,0,1][0,0,0,0]]', 1:'[[0,0,0,1][0,0,0,0][1,0,0,0][0,0,0,0]]',
                 2:'[[0,0,0,0][0,0,0,1][0,0,1,0][0,0,0,0]]', 3:'[[0,0,1,0][0,0,0,0][0,0,0,0][0,0,1,0]]',
                 4:'[[0,0,1,0][0,0,0,0][0,0,0,0][1,0,0,0]]', 5:'[[0,1,0,0][0,0,1,0][0,0,0,0][0,0,0,0]]',
                 6:'[[0,0,1,0][0,0,0,0][1,0,0,0][0,0,0,0]]', 7:'[[0,0,0,0][1,0,0,0][0,0,0,0][1,0,0,0]]'}
 
+    template_lc_allseed = load_curve_dir + 'load_curves_temp{}_vel{}_force{}_asp{}_or*_initnum{}_seed{}_errgrid{}_{}.txt'
     print(template_lc)
     for i, (initnum, seeds) in enumerate(initseed.items()):
         load_curves_all, load_curves_mean= load_load_curves(temp, vel, force, asperities, orientation,
