@@ -394,19 +394,19 @@ def plot_production(temp, vel, force, uc, asperities, time, orientation, grid, e
     template_lc = load_curve_dir + 'load_curves_temp{}_vel{}_force{}_asp{}_or{}_initnum{}_seed{}_errgrid{}_{}.txt'
     template_ms = max_static_dir + 'max_static_temp{}_vel{}_force{}_asp{}_or{}_initnum{}_seed{}_errgrid{}_{}.txt'
 
-    template_aux = project_dir + 'simulations/sys_asp{}_uc{}/production/sim_temp{}_force{}_asp{}_time{}_initnum{}_seed{}_errgrid4_4/system_asp{}_uc{}_initnum0_errgrid4_4_auxiliary.json'
+    template_aux = project_dir + 'simulations/sys_asp{}_uc{}/production/sim_temp{}_force{}_asp{}_or{}_time{}_initnum{}_seed{}_errgrid4_4/system_asp{}_or{}_uc{}_initnum{}_errgrid4_4_auxiliary.json'
 
     fig, axs = plt.subplots(4,2, figsize = (15,15))
     axs = axs.ravel()
-    initseed = {0:(77222, 66232, 79443), 1:(29672, 40129), 2:(64364, 32077), 3:(33829, 84296),
-                4:(29082, 59000), 5:(16388, 65451), 6:(69759, 69759), 7:(65472, 62780)}
+    #initseed = {0:(77222, 66232, 79443), 1:(29672, 40129), 2:(64364, 32077), 3:(33829, 84296),
+    #            4:(29082, 59000), 5:(16388, 65451), 6:(69759, 69759), 7:(65472, 62780)}
+    initseed = {0: (47011, 82042), 1: (22453, 94902)} 
 
     man_init = {0:'[[0,0,0,0][0,0,0,0][1,0,0,1][0,0,0,0]]', 1:'[[0,0,0,1][0,0,0,0][1,0,0,0][0,0,0,0]]',
                 2:'[[0,0,0,0][0,0,0,1][0,0,1,0][0,0,0,0]]', 3:'[[0,0,1,0][0,0,0,0][0,0,0,0][0,0,1,0]]',
                 4:'[[0,0,1,0][0,0,0,0][0,0,0,0][1,0,0,0]]', 5:'[[0,1,0,0][0,0,1,0][0,0,0,0][0,0,0,0]]',
                 6:'[[0,0,1,0][0,0,0,0][1,0,0,0][0,0,0,0]]', 7:'[[0,0,0,0][1,0,0,0][0,0,0,0][1,0,0,0]]'}
 
-    template_lc_allseed = load_curve_dir + 'load_curves_temp{}_vel{}_force{}_asp{}_or*_initnum{}_seed{}_errgrid{}_{}.txt'
     print(template_lc)
     for i, (initnum, seeds) in enumerate(initseed.items()):
         load_curves_all, load_curves_mean= load_load_curves(temp, vel, force, asperities, orientation,
@@ -415,10 +415,12 @@ def plot_production(temp, vel, force, uc, asperities, time, orientation, grid, e
                                  template_lc, template_ms, initnum, seeds)
 
         #extract system setup from auxiliary folder
-        #with open (template_aux.format(asperities, uc, temp, force, asperities, time, 
-        #           initnum, seed, asperities, uc, initnum)) as fp:
-        #    aux_dict = json.loads(fp.read())
-        #aux_dict['erratic'] = np.asarray(aux_dict['erratic'])
+        if asperities == 8:
+            with open (template_aux.format(asperities, uc, temp, force, asperities, orientation, 
+                                 time, initnum, seeds[0], asperities, orientation, uc, seeds[0])) as fp:
+                #note that seeds contain runs of the same system, so all are similar to seeds[0]
+                aux_dict = json.loads(fp.read())
+            aux_dict['erratic'] = np.asarray(aux_dict['erratic'])
 
         #for curve in load_curves_all: #NOTE aux dict had issues, can be used for later
         #    axs[i].plot(curve[:,0], curve[:,1])
@@ -436,12 +438,16 @@ def plot_production(temp, vel, force, uc, asperities, time, orientation, grid, e
         #axs[i].plot(ms_mean[0], ms_mean[1], 'o')
         axs[i].set_xlabel(r"$t_p$ [ns]")
         axs[i].set_ylabel(r"$f$ [$\mu$N]")
-        axs[i].set_title(man_init[i])
+        if asperities == 2:
+            axs[i].set_title(man_init[i])
+        elif asperities ==8:
+            axs[i].set_title(aux_dict['erratic'])
+
         axs[i].set_ylim(bottom = -0.02, top = 0.05)
     plt.subplots_adjust(hspace=0.3)
     plt.suptitle(f"temp {temp}, force {force}, vel {vel}")
     plt.legend()
-    plt.savefig(fig_dir + 'production_varying_initnum_2asp_first10.png')
+    plt.savefig(fig_dir + f'production_varying_initnum_asp{asperities}_first10.png')
 
         
 
@@ -483,7 +489,7 @@ if __name__ == '__main__':
     #plot_load_curves_as_funciton_of_top_thiccness()
     #load_vs_normal_force()
     #plot_single_loadcurve()
-    plot_production(temp, vel, force, uc, 2, time,orientation, grid, erratic)
+    plot_production(temp, vel, force, uc, 8, time,orientation, grid, erratic)
     """
     stop
 

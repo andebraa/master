@@ -73,7 +73,7 @@ def get_load_curves(asperities = 8, uc = 5):
 if __name__ == '__main__':
     #get_load_curves()
 
-    asperities = 2
+    asperities = 8
     uc = 5
     temp = 2300
     vel = 5
@@ -82,8 +82,9 @@ if __name__ == '__main__':
     orientation = 110
     #initnum = 0
     force = 0
-    initseed = {0:(77222, 66232, 79443), 1:(29672, 40129), 2:(64364, 32077), 3:(33829, 84296), 
-                4:(29082, 59000), 5:(16388, 65451), 6:(69759, 69759), 7:(65472, 62780)}
+    #initseed = {0:(77222, 66232, 79443), 1:(29672, 40129), 2:(64364, 32077), 3:(33829, 84296), 
+    #            4:(29082, 59000), 5:(16388, 65451), 6:(69759, 69759), 7:(65472, 62780)}
+    initseed = {0: (47011, 82042), 1: (22453, 94902)}
     #for force in [0.0001, 0.001, 0.01, 0]:
     for initnum, seed in initseed.items():
 
@@ -98,7 +99,6 @@ if __name__ == '__main__':
                     matches = re.findall('\d+', logfile)
                     outfile_lc = f'../../txt/load_curves/production/load_curves_temp{temp}_vel{vel}_force{force}_asp{asperities}_or{orientation}_initnum{initnum}_seed{see}_errgrid4_4.txt'
                     outfile_ms = f'../../txt/max_static/production/max_static_temp{temp}_vel{vel}_force{force}_asp{asperities}_or{orientation}_initnum{initnum}_seed{see}_errgrid4_4.txt'
-                    print(outfile_lc)
                     extract_load_curves(logfile, None, 0, window = 5000, outfile_load_curves = outfile_lc, outfile_max_static = outfile_ms)
         else:
             logfiles = f'../../simulations/sys_asp{asperities}_uc{uc}/production/sim_temp{temp}_force{force}_asp{asperities}_or{orientation}_time{time}_initnum{initnum}_seed{seed}_errgrid4_4/log.lammps'
@@ -109,5 +109,4 @@ if __name__ == '__main__':
                 matches = re.findall('\d+', logfile)
                 outfile_lc = f'../../txt/load_curves/production/load_curves_temp{temp}_vel{vel}_force{force}_asp{asperities}_or{orientation}_initnum{initnum}_seed{seed}_errgrid4_4.txt'
                 outfile_ms = f'../../txt/max_static/production/max_static_temp{temp}_vel{vel}_force{force}_asp{asperities}_or{orientation}_initnum{initnum}_seed{seed}_errgrid4_4.txt'
-                print(outfile_lc)
                 extract_load_curves(logfile, None, 0, window = 1000, outfile_load_curves = outfile_lc, outfile_max_static = outfile_ms)
