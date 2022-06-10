@@ -396,7 +396,7 @@ def plot_production(temp, vel, force, uc, asperities, time, orientation, grid, e
 
     template_aux = project_dir + 'simulations/sys_asp{}_uc{}/production/sim_temp{}_force{}_asp{}_or{}_time{}_initnum{}_seed{}_errgrid4_4/system_asp{}_or{}_uc{}_initnum{}_errgrid4_4_auxiliary.json'
 
-    fig, axs = plt.subplots(4,2, figsize = (15,15))
+    fig, axs = plt.subplots(1,2, figsize = (15,15))
     axs = axs.ravel()
     #initseed = {0:(77222, 66232, 79443), 1:(29672, 40129), 2:(64364, 32077), 3:(33829, 84296),
     #            4:(29082, 59000), 5:(16388, 65451), 6:(69759, 69759), 7:(65472, 62780)}

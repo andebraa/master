@@ -80,6 +80,7 @@ if __name__ == '__main__':
     time = 1400
     init_time = 0
     orientation = 110
+    window = 5500
     #initnum = 0
     force = 0
     #initseed = {0:(77222, 66232, 79443), 1:(29672, 40129), 2:(64364, 32077), 3:(33829, 84296), 
@@ -99,7 +100,7 @@ if __name__ == '__main__':
                     matches = re.findall('\d+', logfile)
                     outfile_lc = f'../../txt/load_curves/production/load_curves_temp{temp}_vel{vel}_force{force}_asp{asperities}_or{orientation}_initnum{initnum}_seed{see}_errgrid4_4.txt'
                     outfile_ms = f'../../txt/max_static/production/max_static_temp{temp}_vel{vel}_force{force}_asp{asperities}_or{orientation}_initnum{initnum}_seed{see}_errgrid4_4.txt'
-                    extract_load_curves(logfile, None, 0, window = 5000, outfile_load_curves = outfile_lc, outfile_max_static = outfile_ms)
+                    extract_load_curves(logfile, None, 0, window = window, outfile_load_curves = outfile_lc, outfile_max_static = outfile_ms)
         else:
             logfiles = f'../../simulations/sys_asp{asperities}_uc{uc}/production/sim_temp{temp}_force{force}_asp{asperities}_or{orientation}_time{time}_initnum{initnum}_seed{seed}_errgrid4_4/log.lammps'
             print(logfiles)
@@ -109,4 +110,4 @@ if __name__ == '__main__':
                 matches = re.findall('\d+', logfile)
                 outfile_lc = f'../../txt/load_curves/production/load_curves_temp{temp}_vel{vel}_force{force}_asp{asperities}_or{orientation}_initnum{initnum}_seed{seed}_errgrid4_4.txt'
                 outfile_ms = f'../../txt/max_static/production/max_static_temp{temp}_vel{vel}_force{force}_asp{asperities}_or{orientation}_initnum{initnum}_seed{seed}_errgrid4_4.txt'
-                extract_load_curves(logfile, None, 0, window = 1000, outfile_load_curves = outfile_lc, outfile_max_static = outfile_ms)
+                extract_load_curves(logfile, None, 0, window = window, outfile_load_curves = outfile_lc, outfile_max_static = outfile_ms)
