@@ -201,7 +201,7 @@ def count_coord(dumpfile, outfile="coord.txt"):
 def extract_load_curves(logfile, delta=None, init_time=0, window=1,
                         outfile_load_curves="load_curves.txt",
                         outfile_max_static="max_static.txt",
-                        prominence=0.05, asperity = False, rerun = False):
+                        prominence=0.005, asperity = False, rerun = False):
     """Extract load curves (-v_fx) from log file and
     save the load curves as text files. Also, find the maximum
     static friction across the log files and save them in one 
