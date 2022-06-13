@@ -201,6 +201,7 @@ def count_coord(dumpfile, outfile="coord.txt"):
 def extract_load_curves(logfile, delta=None, init_time=0, window=1,
                         outfile_load_curves="load_curves.txt",
                         outfile_max_static="max_static.txt",
+                        outfile_rise = 'rise.txt',
                         prominence=0.0001, asperity = False, rerun = False):
     """Extract load curves (-v_fx) from log file and
     save the load curves as text files. Also, find the maximum
@@ -268,6 +269,7 @@ def extract_load_curves(logfile, delta=None, init_time=0, window=1,
    
     f_lc = open(outfile_load_curves, 'w')
     f_ms = open(outfile_max_static, 'w+')
+    f_r = open(outfile_rise, 'w')
     f_lc.write(header_load_curves)
     f_ms.write(header_max_static)
 
@@ -287,11 +289,13 @@ def extract_load_curves(logfile, delta=None, init_time=0, window=1,
     else:
         time = log_obj.get("Time") / 1000    # convert from ps to ns
         fx = -log_obj.get("v_fx")            # change sign of friction force
-    
     print("Length of log file: ", len(time))
 
     # smooth friction force
     fx = running_mean(fx, window)
+
+    resistance_band = (time[95:105], fx[95:105]) #area of lc that rises steadily!
+    rise = np.gradient(resistance_band)
 
     # convert friction force from eV/Å to μN (micro Newton)
     eV = value(u'elementary charge')  # J
@@ -326,6 +330,11 @@ def extract_load_curves(logfile, delta=None, init_time=0, window=1,
     f_ms.write(f"{push_time + time[first_peak]:.10e} {fx[first_peak]:.10e} \n")
     f_ms.flush()
 
+    resistance_band = (time_short[95:105], fx_short[95:105]) #area of lc that rises steadily!
+    rise = np.gradient(resistance_band)
+    print(rise)
+    stop
+    savetxt(f_r, asarray([rise]))
     # close files
     f_lc.close()
     f_ms.close()
