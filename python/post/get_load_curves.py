@@ -85,7 +85,8 @@ if __name__ == '__main__':
     force = 0
     #initseed = {0:(77222, 66232, 79443), 1:(29672, 40129), 2:(64364, 32077), 3:(33829, 84296), 
     #            4:(29082, 59000), 5:(16388, 65451), 6:(69759, 69759), 7:(65472, 62780)}
-    initseed = {0: (47011, 82042), 1: (22453, 94902)}
+    initseed = {0: (47011, 82042, 22453), 1: (22453, 94902, 87980), 2: (21337, 87980), 3:(11962, 13930),
+                4: (21979, 89876), 5: (43427, 48032)}
     #for force in [0.0001, 0.001, 0.01, 0]:
     for initnum, seed in initseed.items():
 
@@ -94,6 +95,8 @@ if __name__ == '__main__':
             for see in seed:
                 logfiles = f'../../simulations/sys_asp{asperities}_uc{uc}/production/sim_temp{temp}_force{force}_asp{asperities}_or{orientation}_time{time}_initnum{initnum}_seed{see}_errgrid4_4/log.lammps'
                 print(logfiles)
+                if logfiles == []:
+                    print(f'Warning, logfile not found; \n seed: {see}')
                 for logfile in glob(logfiles):
                     print('--------------------------------------------------------------------------')
                     print('file: ', logfile)
@@ -103,6 +106,8 @@ if __name__ == '__main__':
                     extract_load_curves(logfile, None, 0, window = window, outfile_load_curves = outfile_lc, outfile_max_static = outfile_ms)
         else:
             logfiles = f'../../simulations/sys_asp{asperities}_uc{uc}/production/sim_temp{temp}_force{force}_asp{asperities}_or{orientation}_time{time}_initnum{initnum}_seed{seed}_errgrid4_4/log.lammps'
+            if logfiles == []:
+                print(f'Warning, logfile not found; \n seed: {see}')
             print(logfiles)
             for logfile in glob(logfiles):
                 print('--------------------------------------------------------------------------')

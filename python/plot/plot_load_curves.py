@@ -47,7 +47,6 @@ def load_load_curves(temp, vel, force, asperities, orientation, grid, template_l
             load_curve_files = template_lc.format(temp, vel, force, asperities, orientation, initnum, seed, grid[0], grid[1])
             print('load curve files: ', load_curve_files) 
             files = glob(load_curve_files)
-            print('files : ', files)
             assert files != []
             for _file in glob(load_curve_files):
                 load_curves = loadtxt(_file)
@@ -137,7 +136,6 @@ def plot_load_curves_as_funciton_of_top_thiccness():
 #                 3: [30642,74822,90272], 4: [20939,86781,87609],
 #                 5: [25642,46012,71581], 6: [86406,91501]}
 
-
     load_curve_dir = project_dir + 'txt/load_curves/erratic/'
     max_static_dir = project_dir + 'txt/max_static/erratic/'
 
@@ -171,7 +169,6 @@ def plot_load_curves_as_funciton_of_top_thiccness():
             print('l :',l)
             # ms_all contains tuples (time, ms)
             print(ms_all[l][0], ms_all[l][1])
-            #axs2.plot(ms_all[l][0]*vel, ms_all[l][1], 'o')
             axs[j].plot(ms_all[l][0], ms_all[l][1], 'o',c=c)
             axs[j].plot(load_curves_all[l,:,0], load_curves_all[l,:,1], '--', alpha = 0.5, c=c)
         axs[j].legend()
@@ -182,8 +179,6 @@ def plot_load_curves_as_funciton_of_top_thiccness():
         ax.set(xlabel=r"$t_p$ [ns]", ylabel = r"$f$ [$\mu$N]")
         ax.label_outer()
         
-    #plt.xlabel(r"$t_p$ [ns]")
-    #plt.ylabel(r"$f$ [$\mu$N]")
     axs2.set_xlabel('displacement [nm]')
     axs2.set_ylabel(r"$f$ [$\mu$N]")
     fig2.suptitle(f'max static vs displacement for various thicnessess of upper plate')
@@ -271,7 +266,6 @@ def plot_single_loadcurve():
     
     print(load_curve.shape)
     plt.plot(load_curve[0,:,0], load_curve[0,:,1])
-    #plt.plot(load_curves_mean[:,:,0],load_curves_mean[:,:,1])
     plt.xlabel(r"$t_p$ [ns]")
     plt.ylabel(r"$f$ [$\mu$N]")
 
@@ -313,7 +307,7 @@ def load_vs_normal_force():
     foursquare = False
 
     if foursquare:
-        fig, axs = plt.subplots(2,2, figsize = (10,10))
+        fig, axs = plt.subplots(2,3, figsize = (10,10))
     else:
         fig, axs = plt.subplots(2, figsize = (10,10))
     axs = axs.ravel()
@@ -396,11 +390,12 @@ def plot_production(temp, vel, force, uc, asperities, time, orientation, grid, e
 
     template_aux = project_dir + 'simulations/sys_asp{}_uc{}/production/sim_temp{}_force{}_asp{}_or{}_time{}_initnum{}_seed{}_errgrid4_4/system_asp{}_or{}_uc{}_initnum{}_errgrid4_4_auxiliary.json'
 
-    fig, axs = plt.subplots(1,2, figsize = (15,15))
+    fig, axs = plt.subplots(3,2, figsize = (15,15))
     axs = axs.ravel()
     #initseed = {0:(77222, 66232, 79443), 1:(29672, 40129), 2:(64364, 32077), 3:(33829, 84296),
     #            4:(29082, 59000), 5:(16388, 65451), 6:(69759, 69759), 7:(65472, 62780)}
-    initseed = {0: (47011, 82042), 1: (22453, 94902)} 
+    initseed = {0: (47011, 82042), 1: (22453, 94902), 2: (21337, 87980), 3:(11962, 13930),
+                4: (21979, 89876), 5: (43427, 48032)}
 
     man_init = {0:'[[0,0,0,0][0,0,0,0][1,0,0,1][0,0,0,0]]', 1:'[[0,0,0,1][0,0,0,0][1,0,0,0][0,0,0,0]]',
                 2:'[[0,0,0,0][0,0,0,1][0,0,1,0][0,0,0,0]]', 3:'[[0,0,1,0][0,0,0,0][0,0,0,0][0,0,1,0]]',
@@ -425,6 +420,7 @@ def plot_production(temp, vel, force, uc, asperities, time, orientation, grid, e
         #for curve in load_curves_all: #NOTE aux dict had issues, can be used for later
         #    axs[i].plot(curve[:,0], curve[:,1])
         print('ms all, ms mean ', ms_all, ms_mean) 
+        print('load curves', np.shape(load_curves_all), np.shape(load_curves_mean))
         for load_curve in load_curves_all:
             axs[i].plot(load_curve[:,0], load_curve[:,1])
         for ms in ms_all:
@@ -441,7 +437,8 @@ def plot_production(temp, vel, force, uc, asperities, time, orientation, grid, e
         if asperities == 2:
             axs[i].set_title(man_init[i])
         elif asperities ==8:
-            axs[i].set_title(aux_dict['erratic'])
+            pass
+            #axs[i].set_title(aux_dict['erratic'])
 
         axs[i].set_ylim(bottom = -0.02, top = 0.05)
     plt.subplots_adjust(hspace=0.3)
