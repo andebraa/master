@@ -440,7 +440,7 @@ def plot_production(temp, vel, force, uc, asperities, time, orientation, grid, e
             pass
             #axs[i].set_title(aux_dict['erratic'])
 
-        axs[i].set_ylim(bottom = -0.02, top = 0.05)
+        axs[i].set_ylim(bottom = -0.02, top = 0.06)
     plt.subplots_adjust(hspace=0.3)
     plt.suptitle(f"temp {temp}, force {force}, vel {vel}")
     plt.legend()
