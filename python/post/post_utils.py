@@ -300,7 +300,9 @@ def extract_load_curves(logfile, delta=None, init_time=0, window=1,
     fx *= 1e6  # mN
 
     # identify first prominent peak
-    peaks, _ = find_peaks(fx[:-100], prominence=prominence)
+    #peaks, _ = find_peaks(fx[:-100], prominence=prominence)
+
+    peaks = (np.nanargmax(fx), np.nanmax(fx))
     try:
         first_peak = peaks[0]
     except IndexError:
