@@ -77,16 +77,18 @@ if __name__ == '__main__':
     uc = 5
     temp = 2300
     vel = 5
-    time = 1400
+    time = 2500
     init_time = 0
     orientation = 110
-    window = 5000
+    window = 4000
     #initnum = 0
     force = 0
     #initseed = {0:(77222, 66232, 79443), 1:(29672, 40129), 2:(64364, 32077), 3:(33829, 84296), 
-    #            4:(29082, 59000), 5:(16388, 65451), 6:(69759, 69759), 7:(65472, 62780)}
-    initseed = {0: (47011, 82042, 22453), 1: (22453, 94902, 87980), 2: (21337, 87980), 3:(11962, 13930),
-                4: (21979, 89876), 5: (43427, 48032)}
+    #            4:(29082, 59000), 5:(16388, 65451), 6:(69759, 69759), 7:(65472, 62780)} #2 asp
+    #initseed = {0: (47011, 82042, 22453), 1: (22453, 94902, 87980), 2: (21337, 87980), 3:(11962, 13930),
+    #            4: (21979, 89876), 5: (43427, 48032)} # 8 asp
+    initseed = {0: 88094, 1: 98414, 2: 86494, 3: 94091}
+    
     #for force in [0.0001, 0.001, 0.01, 0]:
     for initnum, seed in initseed.items():
 
@@ -108,7 +110,7 @@ if __name__ == '__main__':
         else:
             logfiles = f'../../simulations/sys_asp{asperities}_uc{uc}/production/sim_temp{temp}_force{force}_asp{asperities}_or{orientation}_time{time}_initnum{initnum}_seed{seed}_errgrid4_4/log.lammps'
             if logfiles == []:
-                print(f'Warning, logfile not found; \n seed: {see}')
+                print(f'Warning, logfile not found; \n seed: {seed}')
             print(logfiles)
             for logfile in glob(logfiles):
                 print('--------------------------------------------------------------------------')
@@ -116,5 +118,5 @@ if __name__ == '__main__':
                 matches = re.findall('\d+', logfile)
                 outfile_lc = f'../../txt/load_curves/production/load_curves_temp{temp}_vel{vel}_force{force}_asp{asperities}_or{orientation}_initnum{initnum}_seed{seed}_errgrid4_4.txt'
                 outfile_ms = f'../../txt/max_static/production/max_static_temp{temp}_vel{vel}_force{force}_asp{asperities}_or{orientation}_initnum{initnum}_seed{seed}_errgrid4_4.txt'
-                outfile_rise = f'../../txt/rise/production/rise_temp{temp}_vel{vel}_force{force}_asp{asperities}_or{orientation}_initnum{initnum}_seed{see}_errgrid4_4.txt'
+                outfile_rise = f'../../txt/rise/production/rise_temp{temp}_vel{vel}_force{force}_asp{asperities}_or{orientation}_initnum{initnum}_seed{seed}_errgrid4_4.txt'
                 extract_load_curves(logfile, None, 0, window = window, outfile_load_curves = outfile_lc, outfile_max_static = outfile_ms, outfile_rise = outfile_rise)

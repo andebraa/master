@@ -331,13 +331,14 @@ def extract_load_curves(logfile, delta=None, init_time=0, window=1,
     f_ms.flush()
 
     resistance_band = (time_short[95:105], fx_short[95:105]) #area of lc that rises steadily!
-    rise = np.gradient(resistance_band)
+    res_band_fit = np.polyfit(resistance_band[0], resistance_band[1], 1)
+    rise = res_band_fit[0]
     print(rise)
-    stop
     savetxt(f_r, asarray([rise]))
     # close files
     f_lc.close()
     f_ms.close()
+    f_r.close()
 
 
 def extract_potential_energy(logfile, outfile="poteng.txt"):

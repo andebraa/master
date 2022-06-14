@@ -390,12 +390,13 @@ def plot_production(temp, vel, force, uc, asperities, time, orientation, grid, e
 
     template_aux = project_dir + 'simulations/sys_asp{}_uc{}/production/sim_temp{}_force{}_asp{}_or{}_time{}_initnum{}_seed{}_errgrid4_4/system_asp{}_or{}_uc{}_initnum{}_errgrid4_4_auxiliary.json'
 
-    fig, axs = plt.subplots(3,2, figsize = (15,15))
+    fig, axs = plt.subplots(2,2, figsize = (15,15))
     axs = axs.ravel()
     #initseed = {0:(77222, 66232, 79443), 1:(29672, 40129), 2:(64364, 32077), 3:(33829, 84296),
     #            4:(29082, 59000), 5:(16388, 65451), 6:(69759, 69759), 7:(65472, 62780)}
-    initseed = {0: (47011, 82042), 1: (22453, 94902), 2: (21337, 87980), 3:(11962, 13930),
-                4: (21979, 89876), 5: (43427, 48032)}
+    #initseed = {0: (47011, 82042), 1: (22453, 94902), 2: (21337, 87980), 3:(11962, 13930),
+    #            4: (21979, 89876), 5: (43427, 48032)}
+    initseed = {0: 88094, 1: 98414, 2: 86494, 3: 94091}
 
     man_init = {0:'[[0,0,0,0][0,0,0,0][1,0,0,1][0,0,0,0]]', 1:'[[0,0,0,1][0,0,0,0][1,0,0,0][0,0,0,0]]',
                 2:'[[0,0,0,0][0,0,0,1][0,0,1,0][0,0,0,0]]', 3:'[[0,0,1,0][0,0,0,0][0,0,0,0][0,0,1,0]]',
@@ -411,8 +412,12 @@ def plot_production(temp, vel, force, uc, asperities, time, orientation, grid, e
 
         #extract system setup from auxiliary folder
         if asperities == 8:
+            if isinstance(seeds, tuple) and len(seeds) > 1:
+                seed = seeds[0]
+            else:
+                seed = seeds
             with open (template_aux.format(asperities, uc, temp, force, asperities, orientation, 
-                                 time, initnum, seeds[0], asperities, orientation, uc, seeds[0])) as fp:
+                                 time, initnum, seed, asperities, orientation, uc, seed)) as fp:
                 #note that seeds contain runs of the same system, so all are similar to seeds[0]
                 aux_dict = json.loads(fp.read())
             aux_dict['erratic'] = np.asarray(aux_dict['erratic'])
@@ -445,7 +450,7 @@ def plot_production(temp, vel, force, uc, asperities, time, orientation, grid, e
     plt.subplots_adjust(hspace=0.3)
     plt.suptitle(f"temp {temp}, force {force}, vel {vel}")
     plt.legend()
-    plt.savefig(fig_dir + f'production_varying_initnum_asp{asperities}_first10.png')
+    plt.savefig(fig_dir + f'production_varying_initnum_temp{temp}_vel{vel}_force{force}_asp{asperities}_or{orientation}_time{time}_first10.png')
 
         
 
@@ -454,7 +459,7 @@ if __name__ == '__main__':
 
     # user input
     temp = 2300
-    time = 1400
+    time = 2500
     vel = 5
     force = 0
     orientation = 110
