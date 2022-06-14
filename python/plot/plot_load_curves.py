@@ -36,6 +36,35 @@ def load_displacement(temp, vel, force, orientation, grid, disp_template, initnu
     
     return disp_all, disp_mean
 
+def load_rise(temp, vel, force, asperities, orientation, grid, template_r, initnum, seeds):
+    rise_all = []
+    if isinstance(seeds, tuple) and len(seeds) > 1:
+        for seed in seeds:
+            print('seed: ',seed)
+
+            rise_files = template_r.format(temp, vel, force, asperities, orientation, initnum, seed, grid[0], grid[1])
+            print('rise files: ', rise_files)
+            files = glob(rise_files)
+            assert files != []
+            for _file in glob(rise_files):
+                rise = loadtxt(_file)
+                rise_all.append(rise)
+    else:
+        rise_files = template_r.format(temp, vel, force, asperities, orientation, initnum, seeds, grid[0], grid[1])
+        files = glob(rise_files)
+        assert files != []
+        for _file in glob(rise_files):
+            rise = loadtxt(_file)
+            rise_all.append(rise)
+
+    rise_all = np.array(rise_all)
+    if isinstance(seeds, list):
+        rise = mean(rise_all, axis=0)
+        rise = rise.reshape(-1, np.shape(rise)[0], 2)   # assuming that all curves have 1001 points
+    else:
+        rise = None
+
+    return rise_all, rise
 
 def load_load_curves(temp, vel, force, asperities, orientation, grid, template_lc, template_ms, initnum, seeds):
     # load load curves
@@ -384,10 +413,11 @@ def plot_production(temp, vel, force, uc, asperities, time, orientation, grid, e
 
     load_curve_dir = project_dir + 'txt/load_curves/production/'
     max_static_dir = project_dir + 'txt/max_static/production/'
+    rise_dir = project_dir + 'txt/rise/production/'
 
     template_lc = load_curve_dir + 'load_curves_temp{}_vel{}_force{}_asp{}_or{}_initnum{}_seed{}_errgrid{}_{}.txt'
     template_ms = max_static_dir + 'max_static_temp{}_vel{}_force{}_asp{}_or{}_initnum{}_seed{}_errgrid{}_{}.txt'
-
+    template_r = rise_dir + 'rise_temp{}_vel{}_force{}_asp{}_or{}_initnum{}_seed{}_errgrid4_4.txt'
     template_aux = project_dir + 'simulations/sys_asp{}_uc{}/production/sim_temp{}_force{}_asp{}_or{}_time{}_initnum{}_seed{}_errgrid4_4/system_asp{}_or{}_uc{}_initnum{}_errgrid4_4_auxiliary.json'
 
     fig, axs = plt.subplots(2,2, figsize = (15,15))
@@ -410,6 +440,11 @@ def plot_production(temp, vel, force, uc, asperities, time, orientation, grid, e
         ms_all, ms_mean = load_max_static(temp, vel, force, asperities, orientation, grid,
                                  template_lc, template_ms, initnum, seeds)
 
+        rise_all, rise_mean= load_rise(temp, vel, force, asperities, orientation,
+                                                grid, template_r, initnum, seeds)
+        
+        print(rise_all, rise_mean)
+        stop
         #extract system setup from auxiliary folder
         if asperities == 8:
             if isinstance(seeds, tuple) and len(seeds) > 1:
