@@ -25,7 +25,6 @@ def load_displacement(temp, vel, force, orientation, grid, disp_template, initnu
         lc_files = disp_template.format(temp, vel, force, asperities, initnum, seed, grid[0], grid[1])
         print('disp_files ', disp_files)  
         files = glob(disp_files)
-        print(files)
         assert files != []
         for _file in glob(disp_files):
             disp = loadtxt(_file)
@@ -58,9 +57,9 @@ def load_rise(temp, vel, force, asperities, orientation, grid, template_r, initn
             rise_all.append(rise)
 
     rise_all = np.array(rise_all)
-    if isinstance(seeds, list):
+    if isinstance(seeds, tuple) and len(seeds) > 1:
         rise = mean(rise_all, axis=0)
-        rise = rise.reshape(-1, np.shape(rise)[0], 2)   # assuming that all curves have 1001 points
+        #rise = rise.reshape(-1, np.shape(rise)[0], 2)   # assuming that all curves have 1001 points
     else:
         rise = None
 
@@ -71,8 +70,6 @@ def load_load_curves(temp, vel, force, asperities, orientation, grid, template_l
     load_curves_all = []
     if isinstance(seeds, tuple) and len(seeds) > 1: 
         for seed in seeds: 
-            print('seed: ',seed)
-
             load_curve_files = template_lc.format(temp, vel, force, asperities, orientation, initnum, seed, grid[0], grid[1])
             print('load curve files: ', load_curve_files) 
             files = glob(load_curve_files)
@@ -426,8 +423,8 @@ def plot_production(temp, vel, force, uc, asperities, time, orientation, grid, e
     #            4:(29082, 59000), 5:(16388, 65451), 6:(69759, 69759), 7:(65472, 62780)}
     #initseed = {0: (47011, 82042), 1: (22453, 94902), 2: (21337, 87980), 3:(11962, 13930),
     #            4: (21979, 89876), 5: (43427, 48032)}
-    initseed = {0: 88094, 1: 98414, 2: 86494, 3: 94091}
-
+    initseed = {0: (88094, 43563), 1: (98414, 72415), 2: (86494, 67638), 3: (94091, 77768)}
+    
     man_init = {0:'[[0,0,0,0][0,0,0,0][1,0,0,1][0,0,0,0]]', 1:'[[0,0,0,1][0,0,0,0][1,0,0,0][0,0,0,0]]',
                 2:'[[0,0,0,0][0,0,0,1][0,0,1,0][0,0,0,0]]', 3:'[[0,0,1,0][0,0,0,0][0,0,0,0][0,0,1,0]]',
                 4:'[[0,0,1,0][0,0,0,0][0,0,0,0][1,0,0,0]]', 5:'[[0,1,0,0][0,0,1,0][0,0,0,0][0,0,0,0]]',
@@ -444,7 +441,6 @@ def plot_production(temp, vel, force, uc, asperities, time, orientation, grid, e
                                                 grid, template_r, initnum, seeds)
         
         print(rise_all, rise_mean)
-        stop
         #extract system setup from auxiliary folder
         if asperities == 8:
             if isinstance(seeds, tuple) and len(seeds) > 1:
