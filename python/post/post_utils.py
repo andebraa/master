@@ -293,10 +293,20 @@ def extract_load_curves(logfile, delta=None, init_time=0, window=1,
 
     # smooth friction force
     fx = running_mean(fx, window)
+    #running mean before finding rise?
+    
+    #finding where push starts, and about where it breaks
+    push_start_indx = (np.abs(time - 1.0)).argmin()
+    push_stop_indx = (np.abs(time-1.05)).argmin()
 
-    resistance_band = (time[95:105], fx[95:105]) #area of lc that rises steadily!
-    rise = np.gradient(resistance_band)
+    #print(f'push start indx, time: {time[push_start_indx]}, {push_start_indx}')
+    #print(f'push stop indx, time: {time[push_stop_indx]}, {push_stop_indx}')
+    
+    resistance_band = (time[push_start_indx:push_stop_indx], 
+                       fx[push_start_indx:push_stop_indx]) #area of lc that rises steadily!
 
+
+    stop
     # convert friction force from eV/Å to μN (micro Newton)
     eV = value(u'elementary charge')  # J
     Å = 1e-10  # m
