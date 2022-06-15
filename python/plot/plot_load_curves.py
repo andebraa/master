@@ -473,11 +473,13 @@ def plot_production(temp, vel, force, uc, asperities, time, orientation, grid, e
         if asperities == 2:
             axs[i].set_title(man_init[i])
         elif asperities ==8:
-            pass
+            axs[i].set_title(f'rise: {rise_all}, mean: {rise_mean}')
             #axs[i].set_title(aux_dict['erratic'])
 
         axs[i].set_ylim(bottom = -0.02, top = 0.1)
-        axs[i].axvline(1.1, alpha = 0.7)
+        axs[i].set_xlim(left = 0.5, right = 1.7)
+        axs[i].axvline(0.95, alpha = 0.7)
+        axs[i].axvline(1.05, alpha = 0.7)
     plt.subplots_adjust(hspace=0.3)
     plt.suptitle(f"temp {temp}, force {force}, vel {vel}, asperities {asperities}, orientation {orientation}")
     plt.legend()
