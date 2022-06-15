@@ -432,6 +432,8 @@ def plot_production(temp, vel, force, uc, asperities, time, orientation, grid, e
 
     print(template_lc)
     for i, (initnum, seeds) in enumerate(initseed.items()):
+        #push_start_indx = []
+        #push_stop_indx = []
         load_curves_all, load_curves_mean= load_load_curves(temp, vel, force, asperities, orientation,
                                                     grid, template_lc,template_ms, initnum, seeds)
         ms_all, ms_mean = load_max_static(temp, vel, force, asperities, orientation, grid,
@@ -459,15 +461,11 @@ def plot_production(temp, vel, force, uc, asperities, time, orientation, grid, e
         print('load curves', np.shape(load_curves_all), np.shape(load_curves_mean))
         for load_curve in load_curves_all:
             axs[i].plot(load_curve[:,0], load_curve[:,1])
+            #push_start_indx.append((np.abs(load_curves_all[:,0] - 1.0)
         for ms in ms_all:
             axs[i].plot(ms[0], ms[1], 'o') #this is just proprietary
 
-        #print('mean load curves shape: ',load_curves_mean.shape)
         print('all load curves shape: ',load_curves_all.shape)
-        #print(' mean max static shape: ', ms_mean.shape)
-        #axs[i].plot(load_curves_mean[0,:,0], load_curves_mean[0,:,1],'-', label = 'average')
-        #axs[i].legend()
-        #axs[i].plot(ms_mean[0], ms_mean[1], 'o')
         axs[i].set_xlabel(r"$t_p$ [ns]")
         axs[i].set_ylabel(r"$f$ [$\mu$N]")
         if asperities == 2:
@@ -475,11 +473,15 @@ def plot_production(temp, vel, force, uc, asperities, time, orientation, grid, e
         elif asperities ==8:
             axs[i].set_title(f'rise: {rise_all}, mean: {rise_mean}')
             #axs[i].set_title(aux_dict['erratic'])
+        
+        push_start_indx = (np.abs(load_curves_all[0][:,0] - 1.0)).argmin()
+        push_stop_indx = (np.abs(load_curves_all[0][:,0] - 1.05)).argmin()
 
         axs[i].set_ylim(bottom = -0.02, top = 0.1)
         axs[i].set_xlim(left = 0.5, right = 1.7)
-        axs[i].axvline(0.95, alpha = 0.7)
-        axs[i].axvline(1.05, alpha = 0.7)
+        
+        axs[i].axvline(load_curves_all[0][push_start_indx,0], alpha = 0.7)
+        axs[i].axvline(load_curves_all[0][push_stop_indx,0], alpha = 0.7)
     plt.subplots_adjust(hspace=0.3)
     plt.suptitle(f"temp {temp}, force {force}, vel {vel}, asperities {asperities}, orientation {orientation}")
     plt.legend()

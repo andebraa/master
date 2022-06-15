@@ -293,20 +293,8 @@ def extract_load_curves(logfile, delta=None, init_time=0, window=1,
 
     # smooth friction force
     fx = running_mean(fx, window)
-    #running mean before finding rise?
-    
-    #finding where push starts, and about where it breaks
-    push_start_indx = (np.abs(time - 1.0)).argmin()
-    push_stop_indx = (np.abs(time-1.05)).argmin()
-
-    #print(f'push start indx, time: {time[push_start_indx]}, {push_start_indx}')
-    #print(f'push stop indx, time: {time[push_stop_indx]}, {push_stop_indx}')
-    
-    resistance_band = (time[push_start_indx:push_stop_indx], 
-                       fx[push_start_indx:push_stop_indx]) #area of lc that rises steadily!
 
 
-    stop
     # convert friction force from eV/Å to μN (micro Newton)
     eV = value(u'elementary charge')  # J
     Å = 1e-10  # m
@@ -323,6 +311,22 @@ def extract_load_curves(logfile, delta=None, init_time=0, window=1,
         first_peak = 0
         warnings.warn("No prominent peaks found, try a lower prominence")
 
+    #running mean before finding rise?
+    
+    #finding where push starts, and about where it breaks
+    push_start_indx = (np.abs(time - 1.0)).argmin()
+    push_stop_indx = (np.abs(time-1.05)).argmin()
+
+    print(f'push start indx, time: {time[push_start_indx]}, {push_start_indx}')
+    print(f'push stop indx, time: {time[push_stop_indx]}, {push_stop_indx}')
+    
+    resistance_band = (time[push_start_indx:push_stop_indx], 
+                       fx[push_start_indx:push_stop_indx]) #area of lc that rises steadily!
+
+    res_band_fit = np.polyfit(resistance_band[0], resistance_band[1], 1)
+    rise = res_band_fit[0]
+    print(rise)
+    savetxt(f_r, asarray([rise]))
 
     # save data to files
     # we do not really need 250000 points, it just takes up
@@ -340,12 +344,7 @@ def extract_load_curves(logfile, delta=None, init_time=0, window=1,
     f_ms.write(f"{push_time + time[first_peak]:.10e} {fx[first_peak]:.10e} \n")
     f_ms.flush()
 
-    resistance_band = (time_short[95:105], fx_short[95:105]) #area of lc that rises steadily!
-    res_band_fit = np.polyfit(resistance_band[0], resistance_band[1], 1)
-    rise = res_band_fit[0]
-    print(rise)
-    savetxt(f_r, asarray([rise]))
-    # close files
+
     f_lc.close()
     f_ms.close()
     f_r.close()
