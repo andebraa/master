@@ -81,11 +81,12 @@ def fetch_initial_system(initnum = 0, random_choice = False, uc = 5,asperities =
 def run_relaxpush(force = 0.001, init_num = 0, run_num = 0, asperities = 8, orientation = 110):
     temp = 2300
     reltime = 1000 #picosekunder
-    pushtime = 1500
+    pushtime = 500
     simtime = reltime + pushtime
     vel = 5 #m/s
 
     num_restart_points = 3
+    production = True
 
 
     unit_cell = 4.3596
@@ -142,7 +143,10 @@ def run_relaxpush(force = 0.001, init_num = 0, run_num = 0, asperities = 8, orie
     print(sim_dir)
 
     sim.copy_to_wd(datafile, lammps_dir + "SiC.vashishta")
-    sim.set_input_script(lammps_dir + "in.relaxpush", **var)
+    if production:
+        sim.set_input_script(lammps_dir + "in.production", **var)
+    else:
+        sim.set_input_script(lammps_dir + "in.relaxpush", **var)
 
     #read aux from init and copy to sim folder whilst appending relax_seed
     dump_aux(asperities, orientation, uc, grid, erratic, sim_dir, seed, init_num) 
@@ -159,5 +163,5 @@ if __name__ == '__main__':
     #run_relaxpush(init_num = 0, asperities = 2)
     #for force in [0, 0.0001, 0.001, 0.01]:
     #    run_relaxpush(force = force)
-    for i in range(0, 4):
+    for i in range(10, 14):
         run_relaxpush(init_num = i, asperities = 8, force = 0, orientation = 110)

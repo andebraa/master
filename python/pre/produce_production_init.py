@@ -20,7 +20,9 @@ elif asperities == 8:
 
 init_dict = {}
 
-for i,matrix in enumerate(config_matrix):
+
+#done the first 20
+for i,matrix in enumerate(config_matrix[20:,:,:]):
     init_dict[i] = matrix
     setup_system(matrix, i, asperities = asperities)
 
