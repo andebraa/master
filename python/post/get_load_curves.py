@@ -10,69 +10,7 @@ import re
 from glob import glob
 from post_utils import extract_load_curves
 
-def get_load_curves(asperities = 8, uc = 5):
-    # user input
-    temp = 2300
-    orientation = "100"
-    vel = 5
-    force = 0.001
-    
-    grid = (4,4)
-    erratic = True
-
-
-    # paths
-    project_dir = '../../'
-    push_dir = project_dir + f'simulations/sys_asp{asperities}_uc{uc}/production/'
-    if erratic:
-        lc_dir = project_dir + 'txt/load_curves/production/'
-        ms_dir = project_dir + 'txt/max_static/production/'
-    elif grid:
-        lc_dir = project_dir + 'txt/load_curves/production/'
-        ms_dir = project_dir + 'txt/max_static/production/'
-    else:
-        lc_dir = project_dir + 'txt/load_curves/'
-        ms_dir = project_dir + 'txt/max_static/'
-
-    
-   
-    if erratic:
-        template_logfiles = push_dir + 'sim_temp{}_force{}_asp{}_time{}_initnum{}_errgrid{}_{}/log.lammps'
-        template_lc = lc_dir + 'load_curves_temp{}_vel{}_force{}_asp{}_initnum{}_errgrid{}_{}.txt'
-        template_ms = ms_dir + 'max_static_temp{}_vel{}_force{}_asp{}_initnum{}_errgrid{}_{}.txt'
-    elif grid:
-        template_logfiles = push_dir + 'sim_temp{}_vel{}_force{}_time{}_initnum{}_grid{}_{}/log.lammps'
-        template_lc = lc_dir + 'load_curves_temp{}_vel{}_force{}_asp{}_initnum{}_grid{}_{}.txt'
-        template_ms = ms_dir + 'max_static_temp{}_vel{}_force{}_asp{}_initnum{}_grid{}_{}.txt'
-    else: #note single aqsperity system might not be supported as of desember 2021
-        template_logfiles = push_dir + 'sim_temp{}_vel{}_force{}_time{}_initnum{}/log.lammps'
-        template_lc = lc_dir + 'load_curves_temp{}_vel{}_force{}_asp{}_initnum{}.txt'
-        template_ms = ms_dir + 'max_static_temp{}_vel{}_force{}_asp{}_initnum{}.txt'
-    
-
-    time = 1000
-    for initnum in range(20):
-        print(f"initnum: {initnum} time: {time}")
-        logfile = template_logfiles.format(temp, force, asperities,time, initnum, grid[0], grid[1])
-        print(logfile)
-
-
-        # extract load curves
-        extract_load_curves(logfile, None, 0, 5000, 
-                            outfile_load_curves = template_lc.format(temp, vel, force, 
-                                                                     asperities, initnum,
-                                                                     grid[0], grid[1]),
-
-                            outfile_max_static = template_ms.format(temp, vel, force, 
-                                                                    asperities, initnum,
-                                                                    grid[0], grid[1]))
-        print('load curves written to: \n', template_lc.format(temp, vel, force,
-                                                                     asperities, initnum,
-                                                                     grid[0], grid[1]))
-
-if __name__ == '__main__':
-    #get_load_curves()
-
+def get_load_curves():
     asperities = 8
     uc = 5
     temp = 2300
@@ -106,6 +44,7 @@ if __name__ == '__main__':
                     outfile_lc = f'../../txt/load_curves/production/load_curves_temp{temp}_vel{vel}_force{force}_asp{asperities}_or{orientation}_initnum{initnum}_seed{see}_errgrid4_4.txt'
                     outfile_ms = f'../../txt/max_static/production/max_static_temp{temp}_vel{vel}_force{force}_asp{asperities}_or{orientation}_initnum{initnum}_seed{see}_errgrid4_4.txt'
                     outfile_rise = f'../../txt/rise/production/rise_temp{temp}_vel{vel}_force{force}_asp{asperities}_or{orientation}_initnum{initnum}_seed{see}_errgrid4_4.txt'
+
                     extract_load_curves(logfile, None, 0, window = window, outfile_load_curves = outfile_lc, outfile_max_static = outfile_ms, outfile_rise = outfile_rise)
         else:
             logfiles = f'../../simulations/sys_asp{asperities}_uc{uc}/production/sim_temp{temp}_force{force}_asp{asperities}_or{orientation}_time{time}_initnum{initnum}_seed{seed}_errgrid4_4/log.lammps'
@@ -119,4 +58,34 @@ if __name__ == '__main__':
                 outfile_lc = f'../../txt/load_curves/production/load_curves_temp{temp}_vel{vel}_force{force}_asp{asperities}_or{orientation}_initnum{initnum}_seed{seed}_errgrid4_4.txt'
                 outfile_ms = f'../../txt/max_static/production/max_static_temp{temp}_vel{vel}_force{force}_asp{asperities}_or{orientation}_initnum{initnum}_seed{seed}_errgrid4_4.txt'
                 outfile_rise = f'../../txt/rise/production/rise_temp{temp}_vel{vel}_force{force}_asp{asperities}_or{orientation}_initnum{initnum}_seed{seed}_errgrid4_4.txt'
+
                 extract_load_curves(logfile, None, 0, window = window, outfile_load_curves = outfile_lc, outfile_max_static = outfile_ms, outfile_rise = outfile_rise)
+
+
+def all_curves():
+    asperities = 8
+    uc = 5
+    temp = 2300
+    vel = 5
+    time = 1500
+    init_time = 0
+    orientation = 110
+    window = 1000
+    #initnum = 0
+    force = 0
+
+    if production:
+        filetemplate = f'../../simulations/sys_asp{asperities}_uc{uc}/erratic/sim_temp{temp}_force{force}_asp{asperities}_or{orientation}_time{time}_initnum*_seed*_errgrid4_4/log.lammps'
+    else:
+        filetemplate = f'../../simulations/sys_asp{asperities}_uc{uc}/erratic/sim_temp{temp}_force{force}_asp{asperities}_or{orientation}_time{time}_seed*_errgrid4_4/log.lammps'
+
+    print(filetemplate)
+    files = glob(filetemplate)
+    for _file in files:
+        print(_file)
+
+
+
+if __name__ == '__main__':
+    #get_load_curves()
+    all_curves()

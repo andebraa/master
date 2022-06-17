@@ -78,13 +78,13 @@ def fetch_initial_system(initnum = 0, random_choice = False, uc = 5,asperities =
         if production:
             initfile = f'system_asp{asperities}_or{orientation}_uc{uc}_initnum{initnum}_errgrid{grid[0]}_{grid[1]}.data' 
         else:
-            initfile = f'system_asp{asperities}_or{orientation}_uc{uc}_seed{seed}_errgrid{grid[0]}_{grid[1]}.data' 
+            initfile = f'system_asp{asperities}_or{orientation}_uc{uc}_seed{seed}_errgrid{grid[0]}_{grid[1]}_column.data' 
     
     return initfile
 
 
 
-def run_relaxpush(force = 0.001, init_num = 0, run_num = 0, asperities = 8, orientation = 110, production = False):
+def run_relaxpush(force = 0, init_num = 0, run_num = 0, asperities = 8, orientation = 110, production = False):
     temp = 2300
     reltime = 1000 #picosekunder
     pushtime = 1000
@@ -105,7 +105,7 @@ def run_relaxpush(force = 0.001, init_num = 0, run_num = 0, asperities = 8, orie
     gpu = True
     erratic = True
 
-    seed = 22580
+    seed = 60352 
     
     # paths
     #project_dir = "/run/user/1004/andebraa_masterdata/"
