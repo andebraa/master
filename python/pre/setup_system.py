@@ -51,7 +51,7 @@ def setup_system(production = False, init_num = 0, asperities = 2):
     args = {'lx': lx, 'ly':ly, 'ax':ax, 'ay':ay, 'hl':hl, 'hu': hu, 'hup': hup, 'grid': grid, 'asperities':asperities,
             'lower_orient': lower_orient, 'erratic': erratic}
 
-    if production is not None:
+    if production:
         print('------------------------production run--------------------')
         system_file = path + f"production/erratic/system_asp{asperities}_or{lower_orient}_uc{num_unit_cells}_initnum{init_num}_errgrid{grid[0]}_{grid[1]}"
         aux_path = path + f"production/erratic/aux/system_asp{asperities}_or{lower_orient}_uc{num_unit_cells}_initnum{init_num}_errgrid{grid[0]}_{grid[1]}_auxiliary.json"
@@ -69,8 +69,8 @@ def setup_system(production = False, init_num = 0, asperities = 2):
     else:
         if erratic and grid:
             
-            system_file = path + f"erratic/system_asp{asperities}_uc{num_unit_cells}_seed{seed}_errgrid{grid[0]}_{grid[1]}_chess"
-            aux_path = path + f"erratic/aux/system_asp{asperities}_uc{num_unit_cells}_seed{seed}_errgrid{grid[0]}_{grid[1]}_chess_auxiliary.json"
+            system_file = path + f"erratic/system_asp{asperities}_or{lower_orient}_uc{num_unit_cells}_seed{seed}_errgrid{grid[0]}_{grid[1]}"
+            aux_path = path + f"erratic/aux/system_asp{asperities}_or{lower_orient}_uc{num_unit_cells}_seed{seed}_errgrid{grid[0]}_{grid[1]}_auxiliary.json"
 
             system = gen_erratic_system(lx, ly, ax, ay, hl, hu, hup, octa_d, dode_d, lower_orient,
                                         remove_atoms, aux_path=aux_path, grid=grid, 
@@ -108,4 +108,4 @@ def setup_system(production = False, init_num = 0, asperities = 2):
 
             runlogger('init', num_unit_cells, 0, 0, 0, seed, 'single', 0, asperities)
 if __name__ == '__main__':
-    setup_system()
+    setup_system(asperities=8)

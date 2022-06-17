@@ -64,29 +64,34 @@ def dump_aux(asperities, orientation, uc, grid, erratic, output_dir, seed, init_
     print(f'auxiliary file written to {output_aux}')
     return 1
 
-def fetch_initial_system(initnum = 0, random_choice = False, uc = 5,asperities = 8, orientation = 110,  grid = (4,4)):
+def fetch_initial_system(initnum = 0, random_choice = False, uc = 5,asperities = 8, orientation = 110,  grid = (4,4), production = False, seed = 0):
     '''
     all initial systems without symmetries etc are assumed to be located at 
     ~/master/initial_system/production
     '''
     if random_choice:
-        initfile = random.choice(os.listdir('~/master/initial_system/production'))
+        if production:
+            initfile = random.choice(os.listdir('~/master/initial_system/production'))
+        else:
+            initfile = random.choice(os.listdir('~/master/initial_system/erratic'))
     else:
-        initfile = f'system_asp{asperities}_or{orientation}_uc{uc}_initnum{initnum}_errgrid{grid[0]}_{grid[1]}.data' 
+        if production:
+            initfile = f'system_asp{asperities}_or{orientation}_uc{uc}_initnum{initnum}_errgrid{grid[0]}_{grid[1]}.data' 
+        else:
+            initfile = f'system_asp{asperities}_or{orientation}_uc{uc}_seed{seed}_errgrid{grid[0]}_{grid[1]}.data' 
     
     return initfile
 
 
 
-def run_relaxpush(force = 0.001, init_num = 0, run_num = 0, asperities = 8, orientation = 110):
+def run_relaxpush(force = 0.001, init_num = 0, run_num = 0, asperities = 8, orientation = 110, production = False):
     temp = 2300
     reltime = 1000 #picosekunder
-    pushtime = 500
+    pushtime = 1000
     simtime = reltime + pushtime
     vel = 5 #m/s
 
     num_restart_points = 3
-    production = True
 
 
     unit_cell = 4.3596
@@ -100,14 +105,18 @@ def run_relaxpush(force = 0.001, init_num = 0, run_num = 0, asperities = 8, orie
     gpu = True
     erratic = True
 
+    seed = 22580
     
     # paths
     #project_dir = "/run/user/1004/andebraa_masterdata/"
     project_dir = '../../'
     lammps_dir = project_dir + "lammps/"
-    relax_dir = project_dir + f"simulations/sys_asp{asperities}_uc{uc}/production/"
-    init_dir = project_dir + f"initial_system/production/erratic/"
-
+    if production:
+        init_dir = project_dir + f"initial_system/production/erratic/"
+        relax_dir = project_dir + f"simulations/sys_asp{asperities}_uc{uc}/production/"
+    else:
+        init_dir = project_dir + f'initial_system/erratic/'
+        relax_dir = project_dir + f"simulations/sys_asp{asperities}_uc{uc}/erratic/"
 
     # Finding the init datafile
     #finding all files in directory, printing the seeds and having user write in desired seed
@@ -117,7 +126,7 @@ def run_relaxpush(force = 0.001, init_num = 0, run_num = 0, asperities = 8, orie
         raise IndexError('no files found')
     
     
-    datafile = init_dir +  fetch_initial_system(run_num, random_choice=False, asperities = asperities, orientation = orientation)
+    datafile = init_dir +  fetch_initial_system(run_num, random_choice=False, asperities = asperities, orientation = orientation, production = production, seed = seed)
 
     seed = np.random.randint(10000, 100000)
     var = {'datafile': datafile.split("/")[-1],
@@ -136,9 +145,13 @@ def run_relaxpush(force = 0.001, init_num = 0, run_num = 0, asperities = 8, orie
 
 
     # Initializing the run with correct output script
-    sim_dir = relax_dir + \
-    f"sim_temp{temp}_force{force}_asp{asperities}_or{orientation}_time{simtime}_initnum{init_num}_seed{seed}_errgrid{grid[0]}_{grid[1]}"
-    
+    if production:
+        sim_dir = relax_dir + \
+        f"sim_temp{temp}_force{force}_asp{asperities}_or{orientation}_time{simtime}_initnum{init_num}_seed{seed}_errgrid{grid[0]}_{grid[1]}"
+    else:
+        sim_dir = relax_dir + \
+        f"sim_temp{temp}_force{force}_asp{asperities}_or{orientation}_time{simtime}_seed{seed}_errgrid{grid[0]}_{grid[1]}"
+
     sim = Simulator(directory = sim_dir, overwrite=True)
     print(sim_dir)
 
@@ -160,8 +173,9 @@ def run_relaxpush(force = 0.001, init_num = 0, run_num = 0, asperities = 8, orie
 
 
 if __name__ == '__main__':
-    #run_relaxpush(init_num = 0, asperities = 2)
+    run_relaxpush(init_num = 0, asperities = 8, production = False)
     #for force in [0, 0.0001, 0.001, 0.01]:
     #    run_relaxpush(force = force)
-    for i in range(14, 18):
-        run_relaxpush(init_num = i, asperities = 8, force = 0, orientation = 110)
+    
+    #for i in range(0, 4):
+    #    run_relaxpush(init_num = i, asperities = 8, force = 0, orientation = 110, production = True)

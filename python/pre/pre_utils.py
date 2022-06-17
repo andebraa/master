@@ -380,12 +380,16 @@ def gen_erratic_system(lx=99.9, ly=100, ax=50, ay=50, hl=50, hu=60, hup=2,
 
     #asperity removal
     
-    if production is not None:
+    print(production)
+    if production:
         bool_grid = production
+        print('twat')
     else:
-        bool_grid = gen_grid(grid, asperities)
+        print('cunt')
+        #bool_grid = gen_grid(grid, asperities)
         #for custom setup:
-        #bool_grid = gen_grid(grid, asperities, np.array([[0,1,0,1],[1,0,1,0],[0,1,0,1],[1,0,1,0]]))
+        bool_grid = gen_grid(grid, asperities, np.array([[0,1,0,1],[1,0,1,0],[0,1,0,1],[1,0,1,0]]))
+
 
 
     spacer = 0.001
