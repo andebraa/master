@@ -519,10 +519,10 @@ def plot_production(temp, vel, force, uc, asperities, time, orientation, grid, e
             print(p0)
             try:
                 popt, pcov = curve_fit(sigmoid, time_nnan, load_curve_nnan,p0, method='dogbox')
+                axs[i].plot(time_nnan, sigmoid(time_nnan, *popt), label = 'sigmoid fit')
             except:
                 print('skipped \n \n')
                 continue #skip this loop iteration
-            axs[i].plot(time_nnan, sigmoid(time_nnan, *popt))
 
         for ms in ms_all:
             axs[i].plot(ms[0], ms[1], 'o') #this is just proprietary
