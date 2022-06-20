@@ -10,6 +10,11 @@ import re
 from glob import glob
 from post_utils import extract_load_curves
 
+
+def sigmoid(x, L ,x0, k, b):
+    y = L / (1 + np.exp(-k*(x-x0))) + b
+    return (y)
+
 def get_load_curves():
     asperities = 8
     uc = 5

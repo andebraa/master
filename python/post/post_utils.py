@@ -336,8 +336,8 @@ def extract_load_curves(logfile, delta=None, init_time=0, window=1,
     # we do not really need 250000 points, it just takes up
     # a lot of space and makes the curves hard to plot.
     # 1000 points should be more than sufficient
-    time_short = time[::250]
-    fx_short = fx[::250]
+    time_short = time#time[::250]
+    fx_short = fx#fx[::250]
     header_lc_intermediate = (
       " \n"
       f"push time: {push_time} ns \n"

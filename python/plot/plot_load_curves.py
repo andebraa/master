@@ -16,8 +16,14 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 from multiline import multiline
 from matplotlib import style
+from scipy.optimize import curve_fit
 plt.style.use('seaborn')
 
+
+
+def sigmoid(x, L ,x0, k, b):
+    y = L / (1 + np.exp(-k*(x-x0))) + b
+    return (y)
 
 def load_displacement(temp, vel, force, orientation, grid, disp_template, initnum, seeds):
     disp_all = []
@@ -102,7 +108,6 @@ def load_load_curves(temp, vel, force, asperities, orientation, grid, template_l
         load_curves = load_curves.reshape(-1, np.shape(load_curves)[0], 2)   # assuming that all curves have 1001 points
     else:
         load_curves = None
-    
     return load_curves_all, load_curves
 
 
@@ -510,6 +515,20 @@ def plot_production(temp, vel, force, uc, asperities, time, orientation, grid, e
         for j, load_curve in enumerate(load_curves_all):
             axs[i].plot(load_curve[:,0], load_curve[:,1], label = rise_all[j])
             axs[i].legend()
+
+            #curve fit doesn't like nan. removing theese for now
+            non_nan_mask = ~np.isnan(load_curve[:,1])
+            time_nnan = load_curve[non_nan_mask,1]
+            load_curve_nnan = load_curve[non_nan_mask,0]
+            p0 = [max(time_nnan), np.median(time_nnan),1,min(load_curve_nnan)] # this is an mandatory initial guess
+            print(p0)
+            try:
+                popt, pcov = curve_fit(sigmoid, time_nnan, load_curve_nnan,p0, method='dogbox')
+            except:
+                print('skipped \n \n')
+                continue #skip this loop iteration
+            axs[i].plot(time_nnan, sigmoid(time_nnan, *popt))
+
         for ms in ms_all:
             axs[i].plot(ms[0], ms[1], 'o') #this is just proprietary
 
@@ -532,8 +551,8 @@ def plot_production(temp, vel, force, uc, asperities, time, orientation, grid, e
         axs[i].set_xlim(left = 0.5, right = 1.7)
         #axs[i].legend(f'mean rise: {rise_mean}') 
         
-        axs[i].axvline(load_curves_all[0][push_start_indx,0], alpha = 0.5)
-        axs[i].axvline(load_curves_all[0][push_stop_indx,0], alpha = 0.5)
+        #axs[i].axvline(load_curves_all[0][push_start_indx,0], alpha = 0.5)
+        #axs[i].axvline(load_curves_all[0][push_stop_indx,0], alpha = 0.5)
     plt.subplots_adjust(hspace=0.3)
     plt.suptitle(f"temp {temp}, force {force}, vel {vel}, asperities {asperities}, orientation {orientation}")
     plt.legend()
