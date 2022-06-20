@@ -507,8 +507,8 @@ def plot_production(temp, vel, force, uc, asperities, time, orientation, grid, e
 
         print('ms all, ms mean ', ms_all, ms_mean) 
         print('load curves', np.shape(load_curves_all), np.shape(load_curves_mean))
-        for load_curve in load_curves_all:
-            axs[i].plot(load_curve[:,0], load_curve[:,1])
+        for j, load_curve in enumerate(load_curves_all):
+            axs[i].plot(load_curve[:,0], load_curve[:,1], label = rise_all[j])
             #push_start_indx.append((np.abs(load_curves_all[:,0] - 1.0)
         for ms in ms_all:
             axs[i].plot(ms[0], ms[1], 'o') #this is just proprietary
@@ -518,8 +518,9 @@ def plot_production(temp, vel, force, uc, asperities, time, orientation, grid, e
         axs[i].set_ylabel(r"$f$ [$\mu$N]")
         if asperities == 2:
             axs[i].set_title(man_init_2asp[i])
-        elif asperities ==8:
+        elif asperities ==8 and not strange:
             axs[i].set_title(f'rise: {rise_all}, mean: {rise_mean}')
+            
             #axs[i].set_title(aux_dict['erratic'])
         elif strange:
             axs[i].set_title(man_init_strange[i])
