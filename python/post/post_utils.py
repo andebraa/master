@@ -229,6 +229,9 @@ def extract_load_curves(logfile, delta=None, init_time=0, window=1,
         is the logfile part of an asperity? if so gives
         the output a numbered name
     """
+    print(outfile_load_curves)
+    print(outfile_max_static)
+    print('------------------------------------')
     if delta is None:
         warnings.warn("Time different between log files is not given, setting Dt=1")
         delta = 1
@@ -320,7 +323,7 @@ def extract_load_curves(logfile, delta=None, init_time=0, window=1,
 
     print(f'push start indx, time: {time[push_start_indx]}, {push_start_indx}')
     print(f'push stop indx, time: {time[push_stop_indx]}, {push_stop_indx}')
-    
+
     resistance_band = (time[push_start_indx:push_stop_indx], 
                        fx[push_start_indx:push_stop_indx]) #area of lc that rises steadily!
 

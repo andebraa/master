@@ -76,29 +76,28 @@ def all_curves(production = True):
 
     if production:
         filetemplate = f'../../simulations/sys_asp{asperities}_uc{uc}/erratic/sim_temp{temp}_force{force}_asp{asperities}_or{orientation}_time{time}_initnum*_seed*_errgrid4_4/log.lammps'
-        outfile_lc= '../../txt/load_curves/production/load_curves_temp{}_vel{}_force{}_asp{}_or{}_seed{}_errgrid4_4.txt'
-        outfile_ms = '../../txt/max_static/production/max_static_temp{}_vel{}_force{}_asp{}_or{}_seed{}_errgrid4_4.txt'
-        outfile_rise = '../../txt/rise/production/rise_temp{}_vel{}_force{}_asp{}_or{}_seed{}_errgrid4_4.txt'
     else:
         filetemplate = f'../../simulations/sys_asp{asperities}_uc{uc}/erratic/sim_temp{temp}_force{force}_asp{asperities}_or{orientation}_time{time}_seed*_errgrid4_4/log.lammps'
-        outfile_lc= '../../txt/load_curves/erratic/load_curves_temp{}_vel{}_force{}_asp{}_or{}_seed{}_errgrid4_4.txt'
-        outfile_ms = '../../txt/max_static/erratic/max_static_temp{}_vel{}_force{}_asp{}_or{}_seed{}_errgrid4_4.txt'
-        outfile_rise = '../../txt/rise/erratic/rise_temp{}_vel{}_force{}_asp{}_or{}_seed{}_errgrid4_4.txt'
 
     print(filetemplate)
     files = glob(filetemplate)
     for _file in files:
-        print(_file)
+        if production: 
+            outfile_lc= '../../txt/load_curves/production/load_curves_temp{}_vel{}_force{}_asp{}_or{}_seed{}_errgrid4_4.txt'
+            outfile_ms = '../../txt/max_static/production/max_static_temp{}_vel{}_force{}_asp{}_or{}_seed{}_errgrid4_4.txt'
+            outfile_rise = '../../txt/rise/production/rise_temp{}_vel{}_force{}_asp{}_or{}_seed{}_errgrid4_4.txt'
+        else:
+            outfile_lc= '../../txt/load_curves/erratic/load_curves_temp{}_vel{}_force{}_asp{}_or{}_seed{}_errgrid4_4.txt'
+            outfile_ms = '../../txt/max_static/erratic/max_static_temp{}_vel{}_force{}_asp{}_or{}_seed{}_errgrid4_4.txt'
+            outfile_rise = '../../txt/rise/erratic/rise_temp{}_vel{}_force{}_asp{}_or{}_seed{}_errgrid4_4.txt'
+
+
 
         matches = re.findall('\d+', _file)
         seed = matches[-3]
         outfile_lc = outfile_lc.format(temp, vel, force, asperities, orientation, seed) 
         outfile_ms = outfile_ms.format(temp, vel, force, asperities, orientation, seed) 
         outfile_rise = outfile_rise.format(temp, vel, force, asperities, orientation, seed) 
-        print(seed)
-        print(outfile_lc)
-        print(outfile_ms)
-        print(outfile_rise)
 
         extract_load_curves(_file, None, 0, window = window, outfile_load_curves = outfile_lc, outfile_max_static = outfile_ms, outfile_rise = outfile_rise)
 
