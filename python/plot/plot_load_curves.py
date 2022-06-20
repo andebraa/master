@@ -484,6 +484,7 @@ def plot_production(temp, vel, force, uc, asperities, time, orientation, grid, e
                                                     grid, template_r,0, seeds, production)
 
         
+        
         print(rise_all, rise_mean)
         #extract system setup from auxiliary folder
         if asperities == 8:
@@ -524,13 +525,14 @@ def plot_production(temp, vel, force, uc, asperities, time, orientation, grid, e
             axs[i].set_title(man_init_strange[i])
         
         push_start_indx = (np.abs(load_curves_all[0][:,0] - 1.0)).argmin()
-        push_stop_indx = (np.abs(load_curves_all[0][:,0] - 1.05)).argmin()
+        push_stop_indx = (np.abs(load_curves_all[0][:,0] - 1.04)).argmin()
 
         axs[i].set_ylim(bottom = -0.02, top = 0.1)
         axs[i].set_xlim(left = 0.5, right = 1.7)
+        axs[i].legend(f'mean rise: {rise_mean}') 
         
-        axs[i].axvline(load_curves_all[0][push_start_indx,0], alpha = 0.7)
-        axs[i].axvline(load_curves_all[0][push_stop_indx,0], alpha = 0.7)
+        axs[i].axvline(load_curves_all[0][push_start_indx,0], alpha = 0.5)
+        axs[i].axvline(load_curves_all[0][push_stop_indx,0], alpha = 0.5)
     plt.subplots_adjust(hspace=0.3)
     plt.suptitle(f"temp {temp}, force {force}, vel {vel}, asperities {asperities}, orientation {orientation}")
     plt.legend()
