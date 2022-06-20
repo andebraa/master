@@ -39,7 +39,7 @@ def load_rise(temp, vel, force, asperities, orientation, grid, template_r, initn
     rise_all = []
     if isinstance(seeds, tuple) and len(seeds) > 1:
         for seed in seeds:
-            if prodcution:
+            if production:
                 rise_files = template_r.format(temp, vel, force, asperities, orientation, initnum, seed, grid[0], grid[1])
             else:
                 rise_files = template_r.format(temp, vel, force, asperities, orientation, seed, grid[0], grid[1])
@@ -443,7 +443,7 @@ def plot_production(temp, vel, force, uc, asperities, time, orientation, grid, e
         template_lc = load_curve_dir + 'load_curves_temp{}_vel{}_force{}_asp{}_or{}_seed{}_errgrid{}_{}.txt'
         template_ms = max_static_dir + 'max_static_temp{}_vel{}_force{}_asp{}_or{}_seed{}_errgrid{}_{}.txt'
         template_r = rise_dir + 'rise_temp{}_vel{}_force{}_asp{}_or{}_seed{}_errgrid4_4.txt'
-        template_aux = project_dir + 'simulations/sys_asp{}_uc{}/erratic/sim_temp{}_force{}_asp{}_or{}_time{}_seed{}_errgrid4_4/system_asp{}_or{}_uc{}_errgrid4_4_auxiliary.json'
+        template_aux = project_dir + 'simulations/sys_asp{}_uc{}/erratic/sim_temp{}_force{}_asp{}_or{}_time{}_seed{}_errgrid4_4/system_asp{}_or{}_uc{}_initnum{}_errgrid4_4_auxiliary.json'
 
 
     fig, axs = plt.subplots(2,2, figsize = (15,15))
@@ -463,24 +463,25 @@ def plot_production(temp, vel, force, uc, asperities, time, orientation, grid, e
     man_init_strange = {0: '[[0,1,1,0][0,1,1,0][0,1,1,0][0,1,1,0]]', 1: '[[0,0,0,0][1,1,1,1][1,1,1,1][0,0,0,0]]',
                         2: '[[0,1,0,0][1,1,1,0][1,1,1,0][0,1,0,0]]', 3: '[[1,0,1,0][0,1,0,1][1,0,1,0][0,1,0,1]]'}
     strange = True
+    temp_initseed = {0: 60352, 1: 90667, 2: 84066, 3: 22580}
     print(template_lc)
     for i, (initnum, seeds) in enumerate(initseed.items()):
         if production:
             load_curves_all, load_curves_mean= load_load_curves(temp, vel, force, asperities, orientation,
-                                                        grid, template_lc,template_ms, initnum, seeds)
+                                                        grid, template_lc,template_ms, initnum, seeds, production)
             ms_all, ms_mean = load_max_static(temp, vel, force, asperities, orientation, grid,
-                                     template_lc, template_ms, initnum, seeds)
+                                     template_lc, template_ms, initnum, seeds, production)
 
             rise_all, rise_mean= load_rise(temp, vel, force, asperities, orientation,
-                                                    grid, template_r, initnum, seeds)
+                                                    grid, template_r, initnum, seeds, production)
         else:
             load_curves_all, load_curves_mean= load_load_curves(temp, vel, force, asperities, orientation,
-                                                        grid, template_lc,template_ms, seeds)
+                                                        grid, template_lc,template_ms,0, seeds, production)
             ms_all, ms_mean = load_max_static(temp, vel, force, asperities, orientation, grid,
-                                     template_lc, template_ms, seeds)
+                                     template_lc, template_ms,0, seeds, production)
 
             rise_all, rise_mean= load_rise(temp, vel, force, asperities, orientation,
-                                                    grid, template_r, seeds)
+                                                    grid, template_r,0, seeds, production)
 
         
         print(rise_all, rise_mean)
@@ -490,10 +491,17 @@ def plot_production(temp, vel, force, uc, asperities, time, orientation, grid, e
                 seed = seeds[0]
             else:
                 seed = seeds
-            with open (template_aux.format(asperities, uc, temp, force, asperities, orientation, 
-                                 time, initnum, seed, asperities, orientation, uc, seed)) as fp:
-                #note that seeds contain runs of the same system, so all are similar to seeds[0]
-                aux_dict = json.loads(fp.read())
+            if production:
+                with open (template_aux.format(asperities, uc, temp, force, asperities, orientation, 
+                                     time, initnum, seed, asperities, orientation, uc, seed)) as fp:
+                    #note that seeds contain runs of the same system, so all are similar to seeds[0]
+                    aux_dict = json.loads(fp.read())
+            else:
+                with open (template_aux.format(asperities, uc, temp, force, asperities, orientation, 
+                                     time, seed, asperities, orientation, uc, seed)) as fp:
+                    #note that seeds contain runs of the same system, so all are similar to seeds[0]
+                    aux_dict = json.loads(fp.read())
+
             aux_dict['erratic'] = np.asarray(aux_dict['erratic'])
 
         print('ms all, ms mean ', ms_all, ms_mean) 

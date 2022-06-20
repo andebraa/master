@@ -105,7 +105,7 @@ def run_relaxpush(force = 0, init_num = 0, run_num = 0, asperities = 8, orientat
     gpu = True
     erratic = True
 
-    seed = 60352 
+    _seed = 60352 
     
     # paths
     #project_dir = "/run/user/1004/andebraa_masterdata/"
@@ -126,7 +126,7 @@ def run_relaxpush(force = 0, init_num = 0, run_num = 0, asperities = 8, orientat
         raise IndexError('no files found')
     
     
-    datafile = init_dir +  fetch_initial_system(run_num, random_choice=False, asperities = asperities, orientation = orientation, production = production, seed = seed)
+    datafile = init_dir +  fetch_initial_system(run_num, random_choice=False, asperities = asperities, orientation = orientation, production = production, seed = _seed)
 
     seed = np.random.randint(10000, 100000)
     var = {'datafile': datafile.split("/")[-1],
