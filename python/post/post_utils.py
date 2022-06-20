@@ -319,7 +319,7 @@ def extract_load_curves(logfile, delta=None, init_time=0, window=1,
     #finding where push starts, and about where it breaks
     print(len(time))
     push_start_indx = (np.abs(time - 1.0)).argmin()
-    push_stop_indx = (np.abs(time-1.04)).argmin()
+    push_stop_indx = (np.abs(time-1.03)).argmin()
 
     print(f'push start indx, time: {time[push_start_indx]}, {push_start_indx}')
     print(f'push stop indx, time: {time[push_stop_indx]}, {push_stop_indx}')
