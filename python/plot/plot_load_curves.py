@@ -29,7 +29,6 @@ def load_displacement(temp, vel, force, orientation, grid, disp_template, initnu
     disp_all = []
     for seed in seeds:
         lc_files = disp_template.format(temp, vel, force, asperities, initnum, seed, grid[0], grid[1])
-        print('disp_files ', disp_files)  
         files = glob(disp_files)
         assert files != []
         for _file in glob(disp_files):
@@ -49,7 +48,6 @@ def load_rise(temp, vel, force, asperities, orientation, grid, template_r, initn
                 rise_files = template_r.format(temp, vel, force, asperities, orientation, initnum, seed, grid[0], grid[1])
             else:
                 rise_files = template_r.format(temp, vel, force, asperities, orientation, seed, grid[0], grid[1])
-            print('rise files: ', rise_files)
             files = glob(rise_files)
             assert files != []
             for _file in glob(rise_files):
@@ -85,7 +83,6 @@ def load_load_curves(temp, vel, force, asperities, orientation, grid, template_l
             else:
                 load_curve_files = template_lc.format(temp, vel, force, asperities, orientation, seed, grid[0], grid[1])
 
-            print('load curve files: ', load_curve_files) 
             files = glob(load_curve_files)
             assert files != []
             for _file in glob(load_curve_files):
@@ -469,7 +466,6 @@ def plot_production(temp, vel, force, uc, asperities, time, orientation, grid, e
                         2: '[[0,1,0,0][1,1,1,0][1,1,1,0][0,1,0,0]]', 3: '[[1,0,1,0][0,1,0,1][1,0,1,0][0,1,0,1]]'}
     strange = True
     temp_initseed = {0: 60352, 1: 90667, 2: 84066, 3: 22580}
-    print(template_lc)
     for i, (initnum, seeds) in enumerate(initseed.items()):
         if production:
             load_curves_all, load_curves_mean= load_load_curves(temp, vel, force, asperities, orientation,
@@ -490,7 +486,6 @@ def plot_production(temp, vel, force, uc, asperities, time, orientation, grid, e
 
         
         
-        print(rise_all, rise_mean)
         #extract system setup from auxiliary folder
         if asperities == 8:
             if isinstance(seeds, tuple) and len(seeds) > 1:
@@ -510,8 +505,8 @@ def plot_production(temp, vel, force, uc, asperities, time, orientation, grid, e
 
             aux_dict['erratic'] = np.asarray(aux_dict['erratic'])
 
-        print('ms all, ms mean ', ms_all, ms_mean) 
-        print('load curves', np.shape(load_curves_all), np.shape(load_curves_mean))
+        #print('ms all, ms mean ', ms_all, ms_mean) 
+        #print('load curves', np.shape(load_curves_all), np.shape(load_curves_mean))
         for j, load_curve in enumerate(load_curves_all):
             axs[i].plot(load_curve[:,0], load_curve[:,1], label = rise_all[j])
             axs[i].legend()
@@ -532,7 +527,6 @@ def plot_production(temp, vel, force, uc, asperities, time, orientation, grid, e
         for ms in ms_all:
             axs[i].plot(ms[0], ms[1], 'o') #this is just proprietary
 
-        print('all load curves shape: ',load_curves_all.shape)
         axs[i].set_xlabel(r"$t_p$ [ns]")
         axs[i].set_ylabel(r"$f$ [$\mu$N]")
         if asperities == 2:
