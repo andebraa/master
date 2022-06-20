@@ -509,7 +509,6 @@ def plot_production(temp, vel, force, uc, asperities, time, orientation, grid, e
         print('load curves', np.shape(load_curves_all), np.shape(load_curves_mean))
         for j, load_curve in enumerate(load_curves_all):
             axs[i].plot(load_curve[:,0], load_curve[:,1], label = rise_all[j])
-            #push_start_indx.append((np.abs(load_curves_all[:,0] - 1.0)
         for ms in ms_all:
             axs[i].plot(ms[0], ms[1], 'o') #this is just proprietary
 
@@ -530,7 +529,7 @@ def plot_production(temp, vel, force, uc, asperities, time, orientation, grid, e
 
         axs[i].set_ylim(bottom = -0.02, top = 0.1)
         axs[i].set_xlim(left = 0.5, right = 1.7)
-        axs[i].legend(f'mean rise: {rise_mean}') 
+        #axs[i].legend(f'mean rise: {rise_mean}') 
         
         axs[i].axvline(load_curves_all[0][push_start_indx,0], alpha = 0.5)
         axs[i].axvline(load_curves_all[0][push_stop_indx,0], alpha = 0.5)
