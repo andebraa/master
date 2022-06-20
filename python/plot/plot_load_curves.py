@@ -509,6 +509,7 @@ def plot_production(temp, vel, force, uc, asperities, time, orientation, grid, e
         print('load curves', np.shape(load_curves_all), np.shape(load_curves_mean))
         for j, load_curve in enumerate(load_curves_all):
             axs[i].plot(load_curve[:,0], load_curve[:,1], label = rise_all[j])
+            axs[i].legend()
         for ms in ms_all:
             axs[i].plot(ms[0], ms[1], 'o') #this is just proprietary
 
