@@ -513,8 +513,8 @@ def plot_production(temp, vel, force, uc, asperities, time, orientation, grid, e
 
             #curve fit doesn't like nan. removing theese for now
             non_nan_mask = ~np.isnan(load_curve[:,1])
-            time_nnan = load_curve[non_nan_mask,1]
-            load_curve_nnan = load_curve[non_nan_mask,0]
+            time_nnan = load_curve[non_nan_mask,0]
+            load_curve_nnan = load_curve[non_nan_mask,1]
             p0 = [max(time_nnan), np.median(time_nnan),1,min(load_curve_nnan)] # this is an mandatory initial guess
             print(p0)
             try:
