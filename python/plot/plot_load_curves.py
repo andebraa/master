@@ -511,11 +511,22 @@ def plot_production(temp, vel, force, uc, asperities, time, orientation, grid, e
             axs[i].plot(load_curve[:,0], load_curve[:,1], label = rise_all[j])
             axs[i].legend()
 
+            #fitting sigmoid to selected interval.
+            polfit_start_indx = (np.abs(load_curve[:,0] - 0.7)).argmin()
+            polfit_stop_indx = (np.abs(load_curve[:,0] - 1.3)).argmin()
+            #translation so it has same shape as load_curve
+            polfit_data = np.array((load_curve[polfit_start_indx:polfit_stop_indx,0],
+                                   load_curve[polfit_start_indx:polfit_stop_indx,1])).T
+
+
             #curve fit doesn't like nan. removing theese for now
-            non_nan_mask = ~np.isnan(load_curve[:,1])
-            time_nnan = load_curve[non_nan_mask,0]
-            load_curve_nnan = load_curve[non_nan_mask,1]
-            p0 = [max(time_nnan), np.median(time_nnan),1,min(load_curve_nnan)] # this is an mandatory initial guess
+            non_nan_mask = ~np.isnan(polfit_data[:,1])
+
+            #https://stackoverflow.com/questions/55725139/fit-sigmoid-function-s-shape-curve-to-data-using-python
+            time_nnan = polfit_data[non_nan_mask,0]
+            load_curve_nnan = polfit_data[non_nan_mask,1]
+            #this was [max(time_nnan), etc and worked.. website says ydata first
+            p0 = [max(load_curve_nnan), np.median(time_nnan),1,min(load_curve_nnan)] # this is an mandatory initial guess
             print(p0)
             try:
                 popt, pcov = curve_fit(sigmoid, time_nnan, load_curve_nnan,p0, method='dogbox')
