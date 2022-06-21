@@ -533,7 +533,7 @@ def plot_production(temp, vel, force, uc, asperities, time, orientation, grid, e
                 popt, pcov = curve_fit(sigmoid, time_nnan, load_curve_nnan,p0, method='dogbox')
                 print(popt)
                 axs[i].plot(time_nnan, sigmoid(time_nnan, *popt), label = 'sigmoid fit')
-                axs[i].plot(np.linspace(0.9, 1.2, 1000), np.linspace(0.9,1.2,1000)*popt[1], label='linear')
+                axs[i].plot(np.linspace(0.9, 1.2, 1000), np.linspace(0.9,1.2,1000)*popt[1] - popt[-1], label='linear')
             except:
                 print('skipped \n \n')
                 continue #skip this loop iteration
