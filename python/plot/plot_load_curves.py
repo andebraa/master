@@ -526,7 +526,7 @@ def plot_production(temp, vel, force, uc, asperities, time, orientation, grid, e
             time_nnan = polfit_data[non_nan_mask,0]
             load_curve_nnan = polfit_data[non_nan_mask,1]
             #this was [max(time_nnan), etc and worked.. website says ydata first
-            p0 = [max(load_curve_nnan), np.median(time_nnan),1,min(load_curve_nnan)] # this is an mandatory initial guess
+            p0 = [max(time_nnan), np.median(time_nnan),1,min(load_curve_nnan)] # this is an mandatory initial guess
             
 
             try:
