@@ -381,7 +381,7 @@ def gen_erratic_system(lx=99.9, ly=100, ax=50, ay=50, hl=50, hu=60, hup=2,
     #asperity removal
     
     print(production)
-    if production:
+    if production.any():
         bool_grid = production
         print('twat')
     else:
