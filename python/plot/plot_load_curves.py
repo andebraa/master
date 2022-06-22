@@ -534,7 +534,7 @@ def plot_production(temp, vel, force, uc, asperities, time, orientation, grid, e
                 print(popt)
                 max_rise = np.max(np.gradient(sigmoid(time_nnan, *popt)))
                 print(f'max rise {max_rise}')
-                axs[i].plot(time_nnan, sigmoid(time_nnan, *popt), label = f'maximum rise {max_rise:.2f}')
+                axs[i].plot(time_nnan, sigmoid(time_nnan, *popt), label = f'maximum rise {max_rise:.2e}')
             except:
                 print('skipped \n \n')
                 continue #skip this loop iteration
