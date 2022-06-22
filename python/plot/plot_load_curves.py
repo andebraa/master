@@ -544,13 +544,14 @@ def plot_production(temp, vel, force, uc, asperities, time, orientation, grid, e
             midriff_start_indx = (np.abs(time_nnan - midriff[0])).argmin()
             midriff_stop_indx = (np.abs(time_nnan - midriff[1])).argmin()
 
-            polfit_data = np.array((time_nnan[midriff_start_indx:midriff_stop_indx], 
+            polfit_data2 = np.array((time_nnan[midriff_start_indx:midriff_stop_indx], 
                                     load_curve_nnan[midriff_start_indx:midriff_stop_indx])).T
 
-            rise, intersect = np.polyfit(polfit_data[0], polfit_data[1], 1)
+            rise, intersect = np.polyfit(polfit_data2[0], polfit_data2[1], 1)
 
             print(rise, intersect)
-            axs[i].plot(polfit_data[0], polfit_data[0]*rise - intersect)
+            print(polfit_data2)
+            axs[i].plot(polfit_data2[0], polfit_data2[0]*rise - intersect)
             axs[i].plot(time_nnan, sigmoid(time_nnan, *popt), label = f'maximum rise {rise:.2e}')
             axs[i].legend()
 
