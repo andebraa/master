@@ -552,7 +552,7 @@ def plot_production(temp, vel, force, uc, asperities, time, orientation, grid, e
 
             print(rise, intersect)
             print(polfit_data2)
-            axs[i].plot(polfit_data2[:,0], polfit_data2[:,0]*rise - intersect)
+            axs[i].plot(polfit_data2[:,0], polfit_data2[:,0]*rise + intersect)
             axs[i].plot(time_nnan, sigmoid(time_nnan, *popt), label = f'maximum rise {rise:.4e}')
             axs[i].legend()
 
