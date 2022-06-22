@@ -25,6 +25,9 @@ def sigmoid(x, L ,x0, k, b):
     y = L / (1 + np.exp(-k*(x-x0))) + b
     return (y)
 
+def deriv_sigmoid(x, L, x0, k, b):
+    y = ( L*np.exp(k*(x-x0))*(x-x0) )/( (np.exp(k*(x-x0))+1)**2 )
+    return y
 def load_displacement(temp, vel, force, orientation, grid, disp_template, initnum, seeds):
     disp_all = []
     for seed in seeds:
@@ -449,6 +452,9 @@ def plot_production(temp, vel, force, uc, asperities, time, orientation, grid, e
 
 
     fig, axs = plt.subplots(2,2, figsize = (15,15))
+    fig2, axs2 = plt.subplots(2,2)
+    axs2 = axs2.ravel()
+    
     axs = axs.ravel()
     #initseed = {0:(77222, 66232, 79443), 1:(29672, 40129), 2:(64364, 32077), 3:(33829, 84296),
     #            4:(29082, 59000), 5:(16388, 65451), 6:(69759, 69759), 7:(65472, 62780)}
@@ -529,17 +535,28 @@ def plot_production(temp, vel, force, uc, asperities, time, orientation, grid, e
             p0 = [max(time_nnan), np.median(time_nnan),1,min(load_curve_nnan)] # this is an mandatory initial guess
             
 
-            try:
-                popt, pcov = curve_fit(sigmoid, time_nnan, load_curve_nnan,p0, method='dogbox')
-                print(popt)
-                max_rise = np.max(np.gradient(sigmoid(time_nnan, *popt)))
-                print(f'max rise {max_rise}')
-                axs[i].plot(time_nnan, sigmoid(time_nnan, *popt), label = f'maximum rise {max_rise:.2e}')
-                axs[i].axvline(popt[1])
-                axs[i].legend()
-            except:
-                print('skipped \n \n')
-                continue #skip this loop iteration
+            popt, pcov = curve_fit(sigmoid, time_nnan, load_curve_nnan,p0, method='dogbox')
+            print(popt)
+            
+            #max_rise = np.max(np.gradient(sigmoid(time_nnan, *popt))) this gives wrong values. idk
+            
+            #repeating selection and polyfit but this time fitting linear func to sigmoid midriff
+            midriff = np.array((popt[1] - 0.05, popt[1] + 0.05))
+
+            print(midriff)
+            print(np.shape(load_curve))
+            midriff_start_indx = (np.abs(time_nnan - midriff[0])).argmin()
+            midriff_stop_indx = (np.abs(time_nnan - midriff[1])).argmin()
+
+            polfit_data = np.array((time_nnan[midriff_start_indx:midriff_stop_indx], 
+                                    load_curve_nnan[midriff_start_indx:midriff_stop_indx])).T
+
+            print(polfit_data)
+            rise, intersect = np.polyfit(polfit_data[0], polfit_data[1], 1)
+            axs2[i].plot(polfit_data[0], polfit_data[1])    
+
+            axs[i].plot(time_nnan, sigmoid(time_nnan, *popt), label = f'maximum rise {rise:.2e}')
+            axs[i].legend()
 
         for ms in ms_all:
             axs[i].plot(ms[0], ms[1], 'o') #this is just proprietary
@@ -564,6 +581,8 @@ def plot_production(temp, vel, force, uc, asperities, time, orientation, grid, e
         
         #axs[i].axvline(load_curves_all[0][push_start_indx,0], alpha = 0.5)
         #axs[i].axvline(load_curves_all[0][push_stop_indx,0], alpha = 0.5)
+    
+    fig2.savefig(fig_dir + f'test_plot.png')
     plt.subplots_adjust(hspace=0.3)
     plt.suptitle(f"temp {temp}, force {force}, vel {vel}, asperities {asperities}, orientation {orientation}")
     plt.legend()
