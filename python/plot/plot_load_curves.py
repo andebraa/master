@@ -550,7 +550,7 @@ def plot_production(temp, vel, force, uc, asperities, time, orientation, grid, e
             rise, intersect = np.polyfit(polfit_data[0], polfit_data[1], 1)
 
             print(rise, intersect)
-            axs[i].plot(polfit_data[0], polfit_data[0]*rise + intersect)
+            axs[i].plot(polfit_data[0], polfit_data[0]*rise - intersect)
             axs[i].plot(time_nnan, sigmoid(time_nnan, *popt), label = f'maximum rise {rise:.2e}')
             axs[i].legend()
 
