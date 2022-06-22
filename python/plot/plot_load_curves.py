@@ -535,6 +535,7 @@ def plot_production(temp, vel, force, uc, asperities, time, orientation, grid, e
                 max_rise = np.max(np.gradient(sigmoid(time_nnan, *popt)))
                 print(f'max rise {max_rise}')
                 axs[i].plot(time_nnan, sigmoid(time_nnan, *popt), label = f'maximum rise {max_rise:.2e}')
+                axs[i].axvline(popt[1])
                 axs[i].legend()
             except:
                 print('skipped \n \n')
