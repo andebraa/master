@@ -452,9 +452,6 @@ def plot_production(temp, vel, force, uc, asperities, time, orientation, grid, e
 
 
     fig, axs = plt.subplots(2,2, figsize = (15,15))
-    fig2, axs2 = plt.subplots(2,2)
-    axs2 = axs2.ravel()
-    
     axs = axs.ravel()
     #initseed = {0:(77222, 66232, 79443), 1:(29672, 40129), 2:(64364, 32077), 3:(33829, 84296),
     #            4:(29082, 59000), 5:(16388, 65451), 6:(69759, 69759), 7:(65472, 62780)}
@@ -544,17 +541,16 @@ def plot_production(temp, vel, force, uc, asperities, time, orientation, grid, e
             midriff = np.array((popt[1] - 0.05, popt[1] + 0.05))
 
             print(midriff)
-            print(np.shape(load_curve))
             midriff_start_indx = (np.abs(time_nnan - midriff[0])).argmin()
             midriff_stop_indx = (np.abs(time_nnan - midriff[1])).argmin()
 
             polfit_data = np.array((time_nnan[midriff_start_indx:midriff_stop_indx], 
                                     load_curve_nnan[midriff_start_indx:midriff_stop_indx])).T
 
-            print(polfit_data)
             rise, intersect = np.polyfit(polfit_data[0], polfit_data[1], 1)
-            axs2[i].plot(polfit_data[0], polfit_data[1])    
 
+            print(rise, intersect)
+            axs[i].plot(polfit_data[0], polfit_data[0]*rise + intersect)
             axs[i].plot(time_nnan, sigmoid(time_nnan, *popt), label = f'maximum rise {rise:.2e}')
             axs[i].legend()
 
@@ -575,14 +571,13 @@ def plot_production(temp, vel, force, uc, asperities, time, orientation, grid, e
         push_start_indx = (np.abs(load_curves_all[0][:,0] - 1.0)).argmin()
         push_stop_indx = (np.abs(load_curves_all[0][:,0] - 1.03)).argmin()
 
-        axs[i].set_ylim(bottom = -0.02, top = 0.07)
-        axs[i].set_xlim(left = 0.5, right = 1.7)
+        #axs[i].set_ylim(bottom = -0.02, top = 0.07)
+        #axs[i].set_xlim(left = 0.5, right = 1.7)
         #axs[i].legend(f'mean rise: {rise_mean}') 
         
         #axs[i].axvline(load_curves_all[0][push_start_indx,0], alpha = 0.5)
         #axs[i].axvline(load_curves_all[0][push_stop_indx,0], alpha = 0.5)
     
-    fig2.savefig(fig_dir + f'test_plot.png')
     plt.subplots_adjust(hspace=0.3)
     plt.suptitle(f"temp {temp}, force {force}, vel {vel}, asperities {asperities}, orientation {orientation}")
     plt.legend()
