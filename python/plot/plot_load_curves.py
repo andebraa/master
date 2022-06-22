@@ -508,7 +508,7 @@ def plot_production(temp, vel, force, uc, asperities, time, orientation, grid, e
         #print('ms all, ms mean ', ms_all, ms_mean) 
         #print('load curves', np.shape(load_curves_all), np.shape(load_curves_mean))
         for j, load_curve in enumerate(load_curves_all):
-            axs[i].plot(load_curve[:,0], load_curve[:,1], label = rise_all[j])
+            axs[i].plot(load_curve[:,0], load_curve[:,1])
             axs[i].legend()
 
             #fitting sigmoid to selected interval.
@@ -535,6 +535,7 @@ def plot_production(temp, vel, force, uc, asperities, time, orientation, grid, e
                 max_rise = np.max(np.gradient(sigmoid(time_nnan, *popt)))
                 print(f'max rise {max_rise}')
                 axs[i].plot(time_nnan, sigmoid(time_nnan, *popt), label = f'maximum rise {max_rise:.2e}')
+                axs[i].legend()
             except:
                 print('skipped \n \n')
                 continue #skip this loop iteration
@@ -556,7 +557,7 @@ def plot_production(temp, vel, force, uc, asperities, time, orientation, grid, e
         push_start_indx = (np.abs(load_curves_all[0][:,0] - 1.0)).argmin()
         push_stop_indx = (np.abs(load_curves_all[0][:,0] - 1.03)).argmin()
 
-        axs[i].set_ylim(bottom = -0.02, top = 0.1)
+        axs[i].set_ylim(bottom = -0.02, top = 0.07)
         axs[i].set_xlim(left = 0.5, right = 1.7)
         #axs[i].legend(f'mean rise: {rise_mean}') 
         
