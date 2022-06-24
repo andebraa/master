@@ -119,7 +119,7 @@ def gen_config_library(store_json = False):
         for key, value in res_dict.items():
             print('key, value ',key, value)
             matrix_list[key,:,:] = nums2matrix(value)
-        np.save('2asp_config_list.npy', matrix_list)
+        np.save('2asp_config_list_test.npy', matrix_list)
         #outdict = {key = res[key] for key in keys} 
 
     return all_comb.difference(removed_comb)

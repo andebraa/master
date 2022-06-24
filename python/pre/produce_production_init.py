@@ -7,10 +7,10 @@ class NumpyEncoder(json.JSONEncoder):
             return obj.tolist()
         return json.JSONEncoder.default(self, obj)
 
-asperities = 8
+asperities = 2
 
 if asperities == 2:
-    config_matrix = np.load('2asp_config_list.npy')
+    config_matrix = np.load('2asp_config_list_test.npy')
 elif asperities == 8:
     config_matrix = np.load('config_list.npy')
 
@@ -24,7 +24,7 @@ init_dict = {}
 #done the first 370
 for i,matrix in enumerate(config_matrix[:,:,:]):
     init_dict[i] = matrix
-    setup_system(matrix, i, asperities = asperities)
+#    setup_system(matrix, i, asperities = asperities)
 
 if asperities == 8:
 
