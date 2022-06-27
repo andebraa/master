@@ -502,7 +502,7 @@ def plot_production(temp, vel, force, uc, asperities, time, orientation, grid, e
         #print('ms all, ms mean ', ms_all, ms_mean) 
         #print('load curves', np.shape(load_curves_all), np.shape(load_curves_mean))
         for j, load_curve in enumerate(load_curves_all):
-            axs[i].plot(load_curve[:,0], load_curve[:,1], label = 'rise: {rise_all[j]:.4e}')
+            axs[i].plot(load_curve[:,0], load_curve[:,1], label = f'rise: {rise_all[j]:.4e}')
             axs[i].legend()
 
 
