@@ -26,5 +26,5 @@ for i, elem in enumerate(aux_dict.items()):
     trix = np.array(trix)
 
     indices = np.asarray(np.where(trix==1)).T
-    norms[i] = np.linalg.norm((indices[0], indices[1]))
+    norms[i] = np.linalg.norm((indices[0]- indices[1]))
 print(norms)
