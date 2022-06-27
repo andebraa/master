@@ -15,8 +15,13 @@ from tqdm import trange
 from scipy.signal import find_peaks
 from scipy.constants import value
 from lammps_logfile import File, running_mean
+from scipy.optimize import curve_fit
 import warnings
 import numpy as np
+
+def sigmoid(x, L ,x0, k, b):
+    y = L / (1 + np.exp(-k*(x-x0))) + b
+    return (y)
 
 def get_erratic_contact_area(pipeline, outfile="area.txt", delta=None,
                              init_time=0, asperity = 1, grid = (1,1)):
@@ -323,12 +328,46 @@ def extract_load_curves(logfile, delta=None, init_time=0, window=1,
 
     print(f'push start indx, time: {time[push_start_indx]}, {push_start_indx}')
     print(f'push stop indx, time: {time[push_stop_indx]}, {push_stop_indx}')
+    
+    #fitting sigmoid to selected interval.
+    polfit_start_indx = (np.abs(time - 0.7)).argmin()
+    polfit_stop_indx = (np.abs(time - 1.3)).argmin()
+    #translation so it has same shape as load_curve
+    polfit_data = np.array((time[polfit_start_indx:polfit_stop_indx],
+                           fx[polfit_start_indx:polfit_stop_indx])).T
 
-    resistance_band = (time[push_start_indx:push_stop_indx], 
-                       fx[push_start_indx:push_stop_indx]) #area of lc that rises steadily!
 
-    res_band_fit = np.polyfit(resistance_band[0], resistance_band[1], 1)
-    rise = res_band_fit[0]
+    #curve fit doesn't like nan. removing theese for now
+    non_nan_mask = ~np.isnan(polfit_data[:,1])
+
+    #https://stackoverflow.com/questions/55725139/fit-sigmoid-function-s-shape-curve-to-data-using-python
+    time_nnan = polfit_data[non_nan_mask,0]
+    load_curve_nnan = polfit_data[non_nan_mask,1]
+    #this was [max(time_nnan), etc and worked.. website says ydata first
+    p0 = [max(time_nnan), np.median(time_nnan),1,min(load_curve_nnan)] # this is an mandatory initial guess
+
+
+    popt, pcov = curve_fit(sigmoid, time_nnan, load_curve_nnan,p0, method='dogbox')
+    print(popt)
+
+    #max_rise = np.max(np.gradient(sigmoid(time_nnan, *popt))) this gives wrong values. idk
+
+    #repeating selection and polyfit but this time fitting linear func to sigmoid midriff
+    midriff = np.array((popt[1] - 0.05, popt[1] + 0.05))
+
+    print(f'midriff ',midriff)
+    midriff_start_indx = (np.abs(time_nnan - midriff[0])).argmin()
+    midriff_stop_indx = (np.abs(time_nnan - midriff[1])).argmin()
+
+    print('midriff indices ', midriff_start_indx, midriff_stop_indx)
+    polfit_data2 = np.array((time_nnan[midriff_start_indx:midriff_stop_indx],
+                            load_curve_nnan[midriff_start_indx:midriff_stop_indx])).T
+
+    rise, intersect = np.polyfit(polfit_data2[:,0], polfit_data2[:,1], 1)
+
+
+
+
     print(rise)
     savetxt(f_r, asarray([rise]))
 

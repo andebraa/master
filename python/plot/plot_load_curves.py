@@ -16,18 +16,9 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 from multiline import multiline
 from matplotlib import style
-from scipy.optimize import curve_fit
 plt.style.use('seaborn')
 
 
-
-def sigmoid(x, L ,x0, k, b):
-    y = L / (1 + np.exp(-k*(x-x0))) + b
-    return (y)
-
-def deriv_sigmoid(x, L, x0, k, b):
-    y = ( L*np.exp(k*(x-x0))*(x-x0) )/( (np.exp(k*(x-x0))+1)**2 )
-    return y
 def load_displacement(temp, vel, force, orientation, grid, disp_template, initnum, seeds):
     disp_all = []
     for seed in seeds:
@@ -514,47 +505,7 @@ def plot_production(temp, vel, force, uc, asperities, time, orientation, grid, e
             axs[i].plot(load_curve[:,0], load_curve[:,1])
             axs[i].legend()
 
-            #fitting sigmoid to selected interval.
-            polfit_start_indx = (np.abs(load_curve[:,0] - 0.7)).argmin()
-            polfit_stop_indx = (np.abs(load_curve[:,0] - 1.3)).argmin()
-            #translation so it has same shape as load_curve
-            polfit_data = np.array((load_curve[polfit_start_indx:polfit_stop_indx,0],
-                                   load_curve[polfit_start_indx:polfit_stop_indx,1])).T
 
-
-            #curve fit doesn't like nan. removing theese for now
-            non_nan_mask = ~np.isnan(polfit_data[:,1])
-
-            #https://stackoverflow.com/questions/55725139/fit-sigmoid-function-s-shape-curve-to-data-using-python
-            time_nnan = polfit_data[non_nan_mask,0]
-            load_curve_nnan = polfit_data[non_nan_mask,1]
-            #this was [max(time_nnan), etc and worked.. website says ydata first
-            p0 = [max(time_nnan), np.median(time_nnan),1,min(load_curve_nnan)] # this is an mandatory initial guess
-            
-
-            popt, pcov = curve_fit(sigmoid, time_nnan, load_curve_nnan,p0, method='dogbox')
-            print(popt)
-            
-            #max_rise = np.max(np.gradient(sigmoid(time_nnan, *popt))) this gives wrong values. idk
-            
-            #repeating selection and polyfit but this time fitting linear func to sigmoid midriff
-            midriff = np.array((popt[1] - 0.05, popt[1] + 0.05))
-
-            print(f'midriff ',midriff)
-            midriff_start_indx = (np.abs(time_nnan - midriff[0])).argmin()
-            midriff_stop_indx = (np.abs(time_nnan - midriff[1])).argmin()
-
-            print('midriff indices ', midriff_start_indx, midriff_stop_indx)
-            polfit_data2 = np.array((time_nnan[midriff_start_indx:midriff_stop_indx], 
-                                    load_curve_nnan[midriff_start_indx:midriff_stop_indx])).T
-
-            rise, intersect = np.polyfit(polfit_data2[:,0], polfit_data2[:,1], 1)
-
-            print(rise, intersect)
-            print(polfit_data2)
-            axs[i].plot(polfit_data2[:,0], polfit_data2[:,0]*rise + intersect)
-            axs[i].plot(time_nnan, sigmoid(time_nnan, *popt), label = f'maximum rise {rise:.4e}')
-            axs[i].legend()
 
         for ms in ms_all:
             axs[i].plot(ms[0], ms[1], 'o') #this is just proprietary
