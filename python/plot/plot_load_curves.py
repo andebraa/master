@@ -259,15 +259,62 @@ def plot_all_curves_and_mean(temp, vel, force, asperities, grid, template_lc, te
     plt.legend()
     plt.savefig(fig_dir + 'png/load_curves_second_rendition_all_and_mean.png')
 
-def plot_mean_of_multiple(temp, vel, force, orientation, grid, template_lc, template_ms, seeds):
-    for i in range(len(seeds)):
-        load_curves, load_curves_mean = load_load_curves(temp, vel, 
-                                                                force, orientation, 
-                                                                grid, template_lc, 
-                                                                template_ms, seeds[i])
+def plot_mean_of_multiple():
+        # user input
+    temp = 2300
+    vel = 5
+    orientation = 110
+    grid = (4,4)
+    erratic = True
+    asperities = 8
+    initnum = 0
+    timestep = 0.002
+    time = 1800
+    reltime = 800
+    pushtime = 1000
+    relframe = int(reltime/timestep)
+    frames = int(time/timestep)
+    reldist = np.zeros((reltime))
+    pushdist = np.linspace(0,time, 1000)
+    pushdist = np.concatenate((reldist, pushdist))
 
-        plt.plot(load_curves_mean[0,:,0], load_curves_mean[0,:,1], label=seeds[i])
-        plt.xlabel(r"$t_p$ [ns]")
+    lc_len = 361
+    # paths
+    project_dir = '../../'
+    fig_dir = project_dir + 'fig/'
+    highz_dir = '../../txt/high_z/'
+
+    load_curve_dir = project_dir + 'txt/load_curves/production/'
+    max_static_dir = project_dir + 'txt/max_static/production/'
+    rise_dir = project_dir + 'txt/rise/production/'
+
+
+    template_lc = load_curve_dir + 'load_curves_temp{}_vel{}_force{}_asp{}_or{}_initnum{}_seed*_errgrid{}_{}.txt'
+    template_ms = max_static_dir + 'max_static_temp{}_vel{}_force{}_asp{}_or{}_initnum{}_seed*_errgrid{}_{}.txt'
+    template_r = rise_dir + 'rise_temp{}_vel{}_force{}_asp{}_or{}_initnum{}_seed*_errgrid4_4.txt'
+    template_aux = project_dir + 'simulations/sys_asp{}_uc{}/production/sim_temp{}_force{}_asp{}_or{}_time{}_initnum{}_seed*_errgrid4_4/system_asp{}_or{}_uc{}_initnum*_errgrid4_4_auxiliary.json'
+    for i in range(10):
+        lc_files = glob(template_lc.format(temp, vel, force, asperities,orientation, i, grid[0], grid[1]))
+        rise_files = glob(template_r.format(temp, vel, force, asperities, orientation,i, grid[0], grid[1]))
+        ms_files = glob(template_ms.format(temp, vel, force, asperities, orientation,i, grid[0], grid[1]))
+        load_curves = []
+        rise = []
+        ms = []
+        for lc_file in lc_files:
+            print(lc_file)
+            print('----------------')
+            load_curves.append(loadtxt(lc_file))
+        for rise_file in rise_files:
+            print(rise_file)
+            rise.append(loadtxt(rise_file))
+        #for ms_file in ms_files:
+        #    print(ms_file)
+        #    ms.append(ms_file)
+        print('**************')
+        print(len(rise))
+        print(len(load_curves))
+        short_straw = min(np.shape(load_curves))
+        avg_lc = mean(load_curves[:short_straw])
     plt.ylabel(r"$f$ [$\mu$N]")
     plt.title(f"mean of multiple load curves relax seeds, force {force}, vel {vel}")
     plt.legend()
@@ -572,7 +619,7 @@ if __name__ == '__main__':
         template_ms = max_static_dir + 'max_static_temp{}_vel{}_force{}_or{}_seed*_grid{}_{}.txt'
 
     #plot_all_curves_and_mean(temp, vel, force, orientation, grid, template_lc, template_ms, seeds)    
-    #plot_mean_of_multiple(temp, vel, force, orientation, grid, template_lc, template_ms, [seeds1, seeds2, seeds3])
+    plot_mean_of_multiple()
     #plot_load_curves_as_funciton_of_top_thiccness()
     #load_vs_normal_force()
     #plot_single_loadcurve()

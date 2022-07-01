@@ -173,11 +173,12 @@ def run_relaxpush(force = 0, init_num = 0, run_num = 0, asperities = 8, orientat
 
 
 if __name__ == '__main__':
+    #NOTE: erratic is currently vary_speed
     #run_relaxpush(init_num = 0, asperities = 8, production = False)
     #for force in [0, 0.0001, 0.001, 0.01]:
     #    run_relaxpush(force = force, production = False)
     
-    for vel in [2, 5, 7, 10]:
-        run_relaxpush(force = 0, production = False, vel = vel)
-    #for i in range(20, 30):
-    #    run_relaxpush(init_num = i, asperities = 8, force = 0, orientation = 110, production = True)
+    #for vel in [2, 5, 7, 10]:
+    #    run_relaxpush(force = 0, production = False, vel = vel)
+    for i in range(0, 10):
+        run_relaxpush(init_num = i, asperities = 8, force = 0, orientation = 110, production = True)
