@@ -295,26 +295,34 @@ def plot_mean_of_multiple():
     template_aux = project_dir + 'simulations/sys_asp{}_uc{}/production/sim_temp{}_force{}_asp{}_or{}_time{}_initnum{}_seed*_errgrid4_4/system_asp{}_or{}_uc{}_initnum*_errgrid4_4_auxiliary.json'
     for i in range(10):
         lc_files = glob(template_lc.format(temp, vel, force, asperities,orientation, i, grid[0], grid[1]))
+        print(lc_files)
         rise_files = glob(template_r.format(temp, vel, force, asperities, orientation,i, grid[0], grid[1]))
         ms_files = glob(template_ms.format(temp, vel, force, asperities, orientation,i, grid[0], grid[1]))
         load_curves = []
         rise = []
         ms = []
-        for lc_file in lc_files:
-            print(lc_file)
-            print('----------------')
-            load_curves.append(loadtxt(lc_file))
+        #finding the shortest in case one is longer and it needs to be truncated
+        shortest = (10000000, 0) #length, index
+        for j, lc_file in enumerate(lc_files):
+            infile = loadtxt(lc_file)
+            if np.shape(infile)[0] < shortest[0]:
+                shortest = (np.shape(infile)[0], j)
+            load_curves.append(lc_file)
+        print(shortest)
+        print(np.shape(load_curves[0]))
+        for j, load_curve in enumerate(load_curves):
+            if j != shortest[1]:
+                load_curves[j][:shortest[0]]
+        print(np.shape(load_curves))
+        stop
         for rise_file in rise_files:
-            print(rise_file)
             rise.append(loadtxt(rise_file))
         #for ms_file in ms_files:
         #    print(ms_file)
         #    ms.append(ms_file)
-        print('**************')
-        print(len(rise))
-        print(len(load_curves))
-        short_straw = min(np.shape(load_curves))
-        avg_lc = mean(load_curves[:short_straw])
+        print(shortest)
+        
+        avg_lc = mean(load_curves)
     plt.ylabel(r"$f$ [$\mu$N]")
     plt.title(f"mean of multiple load curves relax seeds, force {force}, vel {vel}")
     plt.legend()
