@@ -307,14 +307,15 @@ def plot_mean_of_multiple():
             infile = loadtxt(lc_file)
             if np.shape(infile)[0] < shortest[0]:
                 shortest = (np.shape(infile)[0], j)
-            load_curves.append(lc_file)
-        print(shortest)
+            load_curves.append(np.array(infile))
+        #for j, load_curve in enumerate(load_curves):
+        #    if j != shortest[1]:
+        #        print('twat')
+        #        print(np.shape(load_curves[0]))
+        #        load_curves[j][:shortest[0]]
+        #        print(np.shape(load_curves[0]))
         print(np.shape(load_curves[0]))
-        for j, load_curve in enumerate(load_curves):
-            if j != shortest[1]:
-                load_curves[j][:shortest[0]]
-        print(np.shape(load_curves))
-        stop
+        print(load_curves)
         for rise_file in rise_files:
             rise.append(loadtxt(rise_file))
         #for ms_file in ms_files:
