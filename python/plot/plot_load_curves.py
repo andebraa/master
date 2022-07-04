@@ -297,6 +297,7 @@ def plot_mean_of_multiple():
     fig, axs = plt.subplots(5,2, figsize = (20,20))
     axs = axs.ravel()
 
+    fig2, axs2 = plt.subplots()
     for i in range(10):
         lc_files = glob(template_lc.format(temp, vel, force, asperities,orientation, i, grid[0], grid[1]))
         print(lc_files)
@@ -326,16 +327,21 @@ def plot_mean_of_multiple():
         axs[i].set_xlabel(r"$t_p$ [ns]")
         axs[i].set_ylabel(r"$f$ [$\mu$N]")
         axs[i].legend()
+        axs2.plot(i, rise[0])
+        axs2.plot(i, rise[1])
         
         avg_lc = mean(load_curves)
         
         
 
-    plt.ylabel(r"$f$ [$\mu$N]")
-    plt.suptitle(f"Two runs of the first 10 random configurations \n temp {temp}, force {force}, vel {vel}, asperities {asperities}, orientation {orientation}")
-    plt.legend()
-    plt.savefig(fig_dir + 'png/first_10_double.png')
-    
+    fig.suptitle(f"Two runs of the first 10 random configurations \n temp {temp}, force {force}, vel {vel}, asperities {asperities}, orientation {orientation}")
+    fig.legend()
+    fig.savefig(fig_dir + 'png/first_10_double.png')
+
+    axs2.set_xlabel('random configuration number')
+    axs2.set_ylabel('rise of simoid fit')
+    fig2.suptitle(f"the rise of a fitted sigmoid curve, for the 10 first random 8 asperity configurations, \n temp {temp}, force {force}, vel {vel}, asperities {asperities}, orientation {orientation}")
+    fig2.savefig(fig_dir + 'png/10_first_rise.png')
 
 def plot_single_loadcurve():
     # user input
