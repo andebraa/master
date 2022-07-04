@@ -293,6 +293,10 @@ def plot_mean_of_multiple():
     template_ms = max_static_dir + 'max_static_temp{}_vel{}_force{}_asp{}_or{}_initnum{}_seed*_errgrid{}_{}.txt'
     template_r = rise_dir + 'rise_temp{}_vel{}_force{}_asp{}_or{}_initnum{}_seed*_errgrid4_4.txt'
     template_aux = project_dir + 'simulations/sys_asp{}_uc{}/production/sim_temp{}_force{}_asp{}_or{}_time{}_initnum{}_seed*_errgrid4_4/system_asp{}_or{}_uc{}_initnum*_errgrid4_4_auxiliary.json'
+    
+    fig, axs = plt.subplots(2,5)
+    axs = axs.ravel()
+
     for i in range(10):
         lc_files = glob(template_lc.format(temp, vel, force, asperities,orientation, i, grid[0], grid[1]))
         print(lc_files)
@@ -308,26 +312,26 @@ def plot_mean_of_multiple():
             if np.shape(infile)[0] < shortest[0]:
                 shortest = (np.shape(infile)[0], j)
             load_curves.append(np.array(infile))
-        #for j, load_curve in enumerate(load_curves):
-        #    if j != shortest[1]:
-        #        print('twat')
-        #        print(np.shape(load_curves[0]))
-        #        load_curves[j][:shortest[0]]
-        #        print(np.shape(load_curves[0]))
-        print(np.shape(load_curves[0]))
-        print(load_curves)
+        for j, load_curve in enumerate(load_curves):
+            if j != shortest[1]:
+                load_curves[j] = load_curves[j][:shortest[0]]
+
         for rise_file in rise_files:
             rise.append(loadtxt(rise_file))
         #for ms_file in ms_files:
         #    print(ms_file)
         #    ms.append(ms_file)
-        print(shortest)
+        axs[i].plot(load_curves[0][0,:], load_curves[0][1,:])
+        axs[i].plot(load_curves[1][0,:], load_curves[1][1,:])
         
         avg_lc = mean(load_curves)
+        
+        
+
     plt.ylabel(r"$f$ [$\mu$N]")
-    plt.title(f"mean of multiple load curves relax seeds, force {force}, vel {vel}")
+    plt.title(f"Two runs of the first 10 random configurations")
     plt.legend()
-    plt.savefig(fig_dir + 'png/means_of_multiple.png')
+    plt.savefig(fig_dir + 'png/first_10_double.png')
     
 
 def plot_single_loadcurve():
