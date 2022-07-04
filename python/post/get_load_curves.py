@@ -22,7 +22,7 @@ def get_load_curves():
     vel = 5
     time = '*'
     orientation = 110
-    window = 10
+    window = 2000
     #initnum = 0
     force = 0
     #initseed = {0:(77222, 66232, 79443), 1:(29672, 40129), 2:(64364, 32077), 3:(33829, 84296), 
@@ -73,7 +73,7 @@ def all_curves(production = True):
     vel = 5
     time = 2000 
     orientation = 110
-    window = 1500
+    window = 2000
     #initnum = 0
     force = 0
 
@@ -109,5 +109,5 @@ def all_curves(production = True):
 
 
 if __name__ == '__main__':
-    #get_load_curves()
+    get_load_curves()
     all_curves(production = True)
