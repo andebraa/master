@@ -23,6 +23,12 @@ def sigmoid(x, L ,x0, k, b):
     y = L / (1 + np.exp(-k*(x-x0))) + b
     return (y)
 
+def rip_norm(matrix):
+    matrix = np.array(matrix)
+    indices = np.asarray(np.where(matrix==1.0)).T
+    return np.linalg.norm(indices)
+
+
 def fit_sigmoid(load_curve, fig, axs):
     '''
     https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.curve_fit.html
@@ -385,8 +391,10 @@ def plot_mean_of_multiple():
             #note that seeds contain runs of the same system, so all are similar to seeds[0]
             aux_dict = json.loads(fp.read())
 
+    
         print(aux_dict['erratic'])
-        stop
+        matrix_norm = rip_norm(aux_dict['erratic'])
+
         axs[i].plot(load_curves[0][:,0], load_curves[0][:,1], label = f'rise {rise[0]}')
         axs[i].plot(load_curves[1][:,0], load_curves[1][:,1], label = f'rise {rise[1]}')
         axs[i].set_xlabel(r"$t_p$ [ns]")
@@ -395,8 +403,8 @@ def plot_mean_of_multiple():
         axs[i].legend()
 
 
-        axs2.plot(i, rise[0], 'o', color = 'blue')
-        axs2.plot(i, rise[1], 'o', color = 'red')
+        axs2.plot(matrix_norm, rise[0], 'o', color = 'blue')
+        axs2.plot(matrix_norm, rise[1], 'o', color = 'red')
         
         avg_lc = mean(load_curves)
         

@@ -21,10 +21,9 @@ with open ('2asp_init_dict.json') as fp:
 
 norms = np.zeros((len(aux_dict.keys())))
 for i, elem in enumerate(aux_dict.items()):
-    print(elem)
     trix = aux_dict[str(i)]
     trix = np.array(trix)
 
     indices = np.asarray(np.where(trix==1)).T
+    print(indices)
     norms[i] = np.linalg.norm((indices[0]- indices[1]))
-print(norms)
