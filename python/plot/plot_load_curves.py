@@ -320,7 +320,7 @@ def plot_mean_of_multiple():
     asperities = 8
     initnum = 0
     timestep = 0.002
-    time = 1800
+    time = 2000
     reltime = 800
     pushtime = 1000
     relframe = int(reltime/timestep)
@@ -343,7 +343,7 @@ def plot_mean_of_multiple():
     template_lc = load_curve_dir + 'load_curves_temp{}_vel{}_force{}_asp{}_or{}_initnum{}_seed*_errgrid{}_{}.txt'
     template_ms = max_static_dir + 'max_static_temp{}_vel{}_force{}_asp{}_or{}_initnum{}_seed*_errgrid{}_{}.txt'
     template_r = rise_dir + 'rise_temp{}_vel{}_force{}_asp{}_or{}_initnum{}_seed*_errgrid4_4.txt'
-    template_aux = project_dir + 'simulations/sys_asp{}_uc{}/production/sim_temp{}_force{}_asp{}_or{}_time{}_initnum{}_seed*_errgrid4_4/system_asp{}_or{}_uc{}_initnum*_errgrid4_4_auxiliary.json'
+    template_aux = project_dir + 'simulations/sys_asp{}_uc{}/production/sim_temp{}_force{}_asp{}_or{}_time*_initnum{}_seed{}_errgrid4_4/system_asp{}_or{}_uc{}_initnum{}_errgrid4_4_auxiliary.json'
     
     fig, axs = plt.subplots(5,2, figsize = (20,20))
     axs = axs.ravel()
@@ -352,6 +352,10 @@ def plot_mean_of_multiple():
     for i in range(10):
         lc_files = glob(template_lc.format(temp, vel, force, asperities,orientation, i, grid[0], grid[1]))
         print(lc_files)
+        
+        matches = re.findall('\d+', lc_files[0])
+        seed = matches[-3]
+
         rise_files = glob(template_r.format(temp, vel, force, asperities, orientation,i, grid[0], grid[1]))
         ms_files = glob(template_ms.format(temp, vel, force, asperities, orientation,i, grid[0], grid[1]))
         load_curves = []
@@ -375,14 +379,22 @@ def plot_mean_of_multiple():
         #for ms_file in ms_files:
         #    print(ms_file)
         #    ms.append(ms_file)
+        ##finding the auxiliary folder of the run to find the norm
+        with open (glob(template_aux.format(asperities, uc, temp, force, asperities, orientation, 
+                              i, seed, asperities, orientation, uc, seed))[0]) as fp:
+            #note that seeds contain runs of the same system, so all are similar to seeds[0]
+            aux_dict = json.loads(fp.read())
 
-
+        print(aux_dict['erratic'])
+        stop
         axs[i].plot(load_curves[0][:,0], load_curves[0][:,1], label = f'rise {rise[0]}')
         axs[i].plot(load_curves[1][:,0], load_curves[1][:,1], label = f'rise {rise[1]}')
         axs[i].set_xlabel(r"$t_p$ [ns]")
         axs[i].set_ylabel(r"$f$ [$\mu$N]")
         axs[i].set_xlim([0.7, 1.3])
         axs[i].legend()
+
+
         axs2.plot(i, rise[0], 'o', color = 'blue')
         axs2.plot(i, rise[1], 'o', color = 'red')
         
