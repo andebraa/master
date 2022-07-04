@@ -340,7 +340,7 @@ def plot_mean_of_multiple():
         
         
 
-    fig.suptitle(f"Two runs of the first 10 random configurations \n temp {temp}, force {force}, vel {vel}, asperities {asperities}, orientation {orientation}")
+    fig.suptitle(f"Two runs of the first 10 random configurations \n temp {temp}, force {force}, vel {vel}, asperities {asperities}, orientation {orientation} window 10")
     fig.legend()
     fig.savefig(fig_dir + 'png/first_10_double.png')
 
