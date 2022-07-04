@@ -327,8 +327,8 @@ def plot_mean_of_multiple():
         axs[i].set_xlabel(r"$t_p$ [ns]")
         axs[i].set_ylabel(r"$f$ [$\mu$N]")
         axs[i].legend()
-        axs2.plot(i, rise[0])
-        axs2.plot(i, rise[1])
+        axs2.plot(i, rise[0], 'o')
+        axs2.plot(i, rise[1], 'o')
         
         avg_lc = mean(load_curves)
         
