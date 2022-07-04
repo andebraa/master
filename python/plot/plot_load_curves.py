@@ -294,7 +294,7 @@ def plot_mean_of_multiple():
     template_r = rise_dir + 'rise_temp{}_vel{}_force{}_asp{}_or{}_initnum{}_seed*_errgrid4_4.txt'
     template_aux = project_dir + 'simulations/sys_asp{}_uc{}/production/sim_temp{}_force{}_asp{}_or{}_time{}_initnum{}_seed*_errgrid4_4/system_asp{}_or{}_uc{}_initnum*_errgrid4_4_auxiliary.json'
     
-    fig, axs = plt.subplots(2,5, figsize = (15,15))
+    fig, axs = plt.subplots(5,2, figsize = (20,20))
     axs = axs.ravel()
 
     for i in range(10):
