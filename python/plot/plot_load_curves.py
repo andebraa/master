@@ -381,6 +381,7 @@ def plot_mean_of_multiple():
         axs[i].plot(load_curves[1][:,0], load_curves[1][:,1], label = f'rise {rise[1]}')
         axs[i].set_xlabel(r"$t_p$ [ns]")
         axs[i].set_ylabel(r"$f$ [$\mu$N]")
+        axs[i].set_xlim([0.7, 1.3])
         axs[i].legend()
         axs2.plot(i, rise[0], 'o', color = 'blue')
         axs2.plot(i, rise[1], 'o', color = 'red')
@@ -390,9 +391,7 @@ def plot_mean_of_multiple():
         
 
     fig.suptitle(f"Two runs of the first 10 random configurations \n temp {temp}, force {force}, vel {vel}, asperities {asperities}, orientation {orientation} window 10")
-    fig.legend()
     fig.savefig(fig_dir + 'png/first_10_double.png')
-
     axs2.set_xlabel('random configuration number')
     axs2.set_ylabel('rise of simoid fit')
     fig2.suptitle(f"the rise of a fitted sigmoid curve, for the 10 first random 8 asperity configurations, \n temp {temp}, force {force}, vel {vel}, asperities {asperities}, orientation {orientation}")
