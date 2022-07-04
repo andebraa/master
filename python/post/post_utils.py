@@ -322,7 +322,6 @@ def extract_load_curves(logfile, delta=None, init_time=0, window=1,
     #running mean before finding rise?
     
     #finding where push starts, and about where it breaks
-    print(len(time))
     push_start_indx = (np.abs(time - 1.0)).argmin()
     push_stop_indx = (np.abs(time-1.03)).argmin()
 
@@ -348,7 +347,6 @@ def extract_load_curves(logfile, delta=None, init_time=0, window=1,
 
 
     popt, pcov = curve_fit(sigmoid, time_nnan, load_curve_nnan,p0, method='dogbox')
-    print(popt)
 
     #max_rise = np.max(np.gradient(sigmoid(time_nnan, *popt))) this gives wrong values. idk
 
