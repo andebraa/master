@@ -18,6 +18,12 @@ from multiline import multiline
 from matplotlib import style
 plt.style.use('seaborn')
 
+def sigmoid(x, L ,x0, k, b):
+    y = L / (1 + np.exp(-k*(x-x0))) + b
+    return (y)
+
+def plot_sigmoid(load_curve):
+    pass
 
 def load_displacement(temp, vel, force, orientation, grid, disp_template, initnum, seeds):
     disp_all = []
@@ -327,8 +333,8 @@ def plot_mean_of_multiple():
         axs[i].set_xlabel(r"$t_p$ [ns]")
         axs[i].set_ylabel(r"$f$ [$\mu$N]")
         axs[i].legend()
-        axs2.plot(i, rise[0], 'o')
-        axs2.plot(i, rise[1], 'o')
+        axs2.plot(i, rise[0], 'o', color = 'blue')
+        axs2.plot(i, rise[1], 'o', color = 'red')
         
         avg_lc = mean(load_curves)
         
