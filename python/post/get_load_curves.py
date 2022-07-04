@@ -73,7 +73,7 @@ def all_curves(production = True):
     vel = 5
     time = 2000 
     orientation = 110
-    window = 10
+    window = 2500
     #initnum = 0
     force = 0
 
