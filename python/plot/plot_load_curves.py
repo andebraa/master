@@ -355,6 +355,9 @@ def plot_mean_of_multiple():
     axs = axs.ravel()
 
     fig2, axs2 = plt.subplots()
+    
+    c = plt.cm.viridis((9 - np.arange(10))/(9 - 0 + 0.01))
+
     for i in range(10):
         lc_files = glob(template_lc.format(temp, vel, force, asperities,orientation, i, grid[0], grid[1]))
         print(lc_files)
@@ -392,7 +395,6 @@ def plot_mean_of_multiple():
             aux_dict = json.loads(fp.read())
 
     
-        print(aux_dict['erratic'])
         matrix_norm = rip_norm(aux_dict['erratic'])
 
         axs[i].plot(load_curves[0][:,0], load_curves[0][:,1], label = f'rise {rise[0]}')
@@ -403,8 +405,8 @@ def plot_mean_of_multiple():
         axs[i].legend()
 
 
-        axs2.plot(matrix_norm, rise[0], 'o', color = 'blue')
-        axs2.plot(matrix_norm, rise[1], 'o', color = 'red')
+        axs2.plot(matrix_norm, rise[0], 'o', color = c[i])
+        axs2.plot(matrix_norm, rise[1], 'o', color = c[i])
         
         avg_lc = mean(load_curves)
         
