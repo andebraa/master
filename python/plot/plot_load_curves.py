@@ -26,6 +26,13 @@ def sigmoid(x, L ,x0, k, b):
 def rip_norm(matrix):
     matrix = np.array(matrix)
     indices = np.asarray(np.where(matrix==1.0)).T
+    x = indices[np.newaxis,:]
+    y = indices[:,np.newaxis]
+    res = x-y
+    res = res - (np.round(res/4))*4
+    
+    #sum over øvre triangel i annen, del på 8
+    stop
     return np.linalg.norm(indices)
 
 

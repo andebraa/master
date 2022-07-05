@@ -113,7 +113,7 @@ def run_relaxpush(force = 0, init_num = 0, run_num = 0, asperities = 8, orientat
     lammps_dir = project_dir + "lammps/"
     if production:
         init_dir = project_dir + f"initial_system/production/erratic/"
-        relax_dir = project_dir + f"simulations/sys_asp{asperities}_uc{uc}/production/datset/"
+        relax_dir = project_dir + f"simulations/sys_asp{asperities}_uc{uc}/production/"
     else:
         init_dir = project_dir + f'initial_system/erratic/'
         relax_dir = project_dir + f"simulations/sys_asp{asperities}_uc{uc}/vary_speed/"
@@ -180,5 +180,6 @@ if __name__ == '__main__':
     
     #for vel in [2, 5, 7, 10]:
     #    run_relaxpush(force = 0, production = False, vel = vel)
-    for i in range(30, 40):
+    #ran 40 last time
+    for i in range(0, 10):
         run_relaxpush(init_num = i, asperities = 8, force = 0, orientation = 110, production = True)
