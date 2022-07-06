@@ -365,7 +365,7 @@ def plot_mean_of_multiple():
     
     c = plt.cm.viridis((9 - np.arange(10))/(9 - 0 + 0.01))
 
-    for i in range(10):
+    for i in range(10): #this code now works with producition 
         lc_files = glob(template_lc.format(temp, vel, force, asperities,orientation, i, grid[0], grid[1]))
         print(lc_files)
         
