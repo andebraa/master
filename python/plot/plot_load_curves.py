@@ -24,17 +24,32 @@ def sigmoid(x, L ,x0, k, b):
     return (y)
 
 def rip_norm(matrix):
+    '''
+    script for finding average square norm with periodic boundary conditions
+    assumes 4x4 matrix
+    '''
     matrix = np.array(matrix)
+    print(matrix)
     indices = np.asarray(np.where(matrix==1.0)).T
-    x = indices[np.newaxis,:]
+    #goes from (1,8,2) to (8,8,2)
+    x = indices[np.newaxis,:] #this basically meshgrids a new axis
     y = indices[:,np.newaxis]
-    res = x-y
-    res = res - (np.round(res/4))*4
+    dist = x-y #subtract x and y to find distance
+    dist = dist - (np.round(dist/4))*4 #if distance is more than 2, the other way is shorter
     
-    #sum over øvre triangel i annen, del på 8
-    stop
-    return np.linalg.norm(indices)
+    norm = np.linalg.norm(dist, axis = 2)
+    norm = norm**2 #square so small differences are more apparent
+    res = np.sum(norm)/2 #matrix is symmetric, so upper triangle is just half of the sum
+    ones_matrix = np.ones((len(norm[0]), len(norm[1]))) #number of elements in upper triangle
+    res = res/((ones_matrix.sum() - np.trace(ones_matrix))/2)
+    print(res)
 
+    #sum over øvre triangel i annen, del på 8
+    return res
+
+def test_rip_norm():
+    a = np.array(([[0,0,0,0,],[0,1,1,0],[0,0,0,0],[0,0,0,0]]))
+    assert rip_norm(a) ==1
 
 def fit_sigmoid(load_curve, fig, axs):
     '''
@@ -728,34 +743,5 @@ if __name__ == '__main__':
     #plot_load_curves_as_funciton_of_top_thiccness()
     #load_vs_normal_force()
     #plot_single_loadcurve()
-    plot_production(temp, vel, force, uc, 8, time,orientation, grid, erratic, production = False)
-    """
-    stop
-
-    # select a few curves
-    select = [20, 40, 60, 80, 99]
-    push_times = asarray(push_times)[select]
-    times = [1, 2, 3, 4, 5]
-    load_curves = load_curves[select]
-    max_static = max_static[select]
-
-
-    # cut the curves
-    load_curves = load_curves[:, :600]
-
-
-    # plot selected curves with legends and max static force marked with a X
-    fig, ax = plt.subplots()
-    for i, time in enumerate(times):
-        plt.plot(load_curves[i, :, 0], load_curves[i, :, 1], label=fr'$t={time}$ ns')
-    for i, time in enumerate(push_times):
-        plt.plot(max_static[i, 0]-time, max_static[i, 1], 'kX', markersize=10)
-    plt.legend(loc='best')
-    plt.xlabel(r"$t_p$ [ns]")
-    plt.ylabel(r"$f$ [$\mu$N]")
-    plt.savefig(fig_dir + 'png/load_curves_2450_selected.png')
-    plt.savefig(fig_dir + 'pgf/load_curves_2450_selected.pgf')
-    #plt.show()
-    """
-
-
+    #plot_production(temp, vel, force, uc, 8, time,orientation, grid, erratic, production = False)
+    #test_rip_norm()
