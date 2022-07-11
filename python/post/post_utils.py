@@ -296,8 +296,11 @@ def extract_load_curves(logfile, delta=None, init_time=0, window=1,
         fx = -np.append(log_obj.get("v_fx"), log_obj2.get('v_fx')) # change sign of friction force
     
     else:
-        time = log_obj.get("Time") / 1000    # convert from ps to ns
-        fx = -log_obj.get("v_fx")            # change sign of friction force
+        try:
+            time = log_obj.get("Time") / 1000    # convert from ps to ns
+            fx = -log_obj.get("v_fx")            # change sign of friction force
+        except:
+            return 0
 
 
     print("Length of log file: ", len(time))
@@ -313,15 +316,15 @@ def extract_load_curves(logfile, delta=None, init_time=0, window=1,
 
     #-------------------------------------------------------------------------------finding rise
     #finding where push starts, and about where it breaks
-    #push_start_indx = (np.abs(time - 1.0)).argmin()
-    #push_stop_indx = (np.abs(time-1.03)).argmin()
+    push_start_indx = (np.abs(time - 1.0)).argmin()
+    push_stop_indx = (np.abs(time-1.03)).argmin()
 
     
     #fitting sigmoid to selected interval.
     polfit_start_indx = (np.abs(time - 0.7)).argmin()
     polfit_stop_indx = (np.abs(time - 1.3)).argmin()
-    print(f'polfit start indx, time: {time[polfit_start_indx]}, {polfit_start_indx}')
-    print(f'polfit stop indx, time: {time[polfit_stop_indx]}, {polfit_stop_indx}')
+    #print(f'polfit start indx, time: {time[polfit_start_indx]}, {polfit_start_indx}')
+    #print(f'polfit stop indx, time: {time[polfit_stop_indx]}, {polfit_stop_indx}')
     #translation so it has same shape as load_curve
     polfit_data = np.array((time[polfit_start_indx:polfit_stop_indx],
                            fx[polfit_start_indx:polfit_stop_indx])).T
@@ -334,8 +337,11 @@ def extract_load_curves(logfile, delta=None, init_time=0, window=1,
     time_nnan = polfit_data[non_nan_mask,0]
     load_curve_nnan = polfit_data[non_nan_mask,1]
     #this was [max(time_nnan), etc and worked.. website says ydata first
-    p0 = [max(time_nnan), np.median(time_nnan),1,min(load_curve_nnan)] # this is an mandatory initial guess
-
+    print(time_nnan)
+    try:
+        p0 = [max(time_nnan), np.median(time_nnan),1,min(load_curve_nnan)] # this is an mandatory initial guess
+    except:
+        return 0
 
     popt, pcov = curve_fit(sigmoid, time_nnan, load_curve_nnan,p0, method='dogbox')
 
