@@ -18,6 +18,7 @@ from lammps_logfile import File, running_mean
 from scipy.optimize import curve_fit
 import warnings
 import numpy as np
+import matplotlib.pyplot as plt
 
 def sigmoid(x, L ,x0, k, b):
     y = L / (1 + np.exp(-k*(x-x0))) + b
@@ -297,6 +298,8 @@ def extract_load_curves(logfile, delta=None, init_time=0, window=1,
     else:
         time = log_obj.get("Time") / 1000    # convert from ps to ns
         fx = -log_obj.get("v_fx")            # change sign of friction force
+
+
     print("Length of log file: ", len(time))
     #-------------------------------------------------------------------------------finding rise
     #finding where push starts, and about where it breaks
@@ -328,7 +331,10 @@ def extract_load_curves(logfile, delta=None, init_time=0, window=1,
 
     #max_rise = np.max(np.gradient(sigmoid(time_nnan, *popt))) this gives wrong values. idk
 
+    plt.plot(time, fx)
+    plt.savefig('loadcurve.png')
     #repeating selection and polyfit but this time fitting linear func to sigmoid midriff
+    print('popt ', popt[1])
     midriff = np.array((popt[1] - 0.05, popt[1] + 0.05))
 
     print(f'midriff ',midriff)
