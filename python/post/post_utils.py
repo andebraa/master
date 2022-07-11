@@ -342,7 +342,9 @@ def extract_load_curves(logfile, delta=None, init_time=0, window=1,
     #max_rise = np.max(np.gradient(sigmoid(time_nnan, *popt))) this gives wrong values. idk
 
     plt.plot(time, fx)
+    plt.plot(time_nnan, sigmoid(time-nnan, *popt))
     plt.savefig('loadcurve.png')
+
     #repeating selection and polyfit but this time fitting linear func to sigmoid midriff
     print('popt ', popt[1])
     midriff = np.array((popt[1] - 0.05, popt[1] + 0.05))
