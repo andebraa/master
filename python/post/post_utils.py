@@ -298,29 +298,7 @@ def extract_load_curves(logfile, delta=None, init_time=0, window=1,
         time = log_obj.get("Time") / 1000    # convert from ps to ns
         fx = -log_obj.get("v_fx")            # change sign of friction force
     print("Length of log file: ", len(time))
-
-    # smooth friction force
-    fx = running_mean(fx, window)
-
-
-    # convert friction force from eV/Å to μN (micro Newton)
-    eV = value(u'elementary charge')  # J
-    Å = 1e-10  # m
-    fx *= eV / Å  # J/m = N
-    fx *= 1e6  # mN
-
-    # identify first prominent peak
-    peaks, _ = find_peaks(fx, prominence=prominence)
-
-    #peaks = (np.nanargmax(fx), np.nanmax(fx))
-    try:
-        first_peak = peaks[0]
-    except IndexError:
-        first_peak = 0
-        warnings.warn("No prominent peaks found, try a lower prominence")
-
-    #running mean before finding rise?
-    
+    #-------------------------------------------------------------------------------finding rise
     #finding where push starts, and about where it breaks
     push_start_indx = (np.abs(time - 1.0)).argmin()
     push_stop_indx = (np.abs(time-1.03)).argmin()
@@ -363,11 +341,40 @@ def extract_load_curves(logfile, delta=None, init_time=0, window=1,
 
     rise, intersect = np.polyfit(polfit_data2[:,0], polfit_data2[:,1], 1)
 
-
-
-
     print(rise)
     savetxt(f_r, asarray([rise]))
+
+
+
+    # smooth friction force
+    fx = running_mean(fx, window)
+
+
+    # convert friction force from eV/Å to μN (micro Newton)
+    eV = value(u'elementary charge')  # J
+    Å = 1e-10  # m
+    fx *= eV / Å  # J/m = N
+    fx *= 1e6  # mN
+
+    # identify first prominent peak
+    peaks, _ = find_peaks(fx, prominence=prominence)
+    print('peaks')
+    print(peaks)
+
+    peaks = (np.nanargmax(fx[push_start_indx: push_stop_indx]),
+            np.nanmax(fx[push_start_indx: push_stop_indx]))
+    print(peaks)
+    try:
+        first_peak = peaks[0]
+    except IndexError:
+        first_peak = 0
+        warnings.warn("No prominent peaks found, try a lower prominence")
+
+    #running mean before finding rise?
+    
+
+
+
 
     # save data to files
     # we do not really need 250000 points, it just takes up
