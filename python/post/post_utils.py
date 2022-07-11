@@ -301,17 +301,27 @@ def extract_load_curves(logfile, delta=None, init_time=0, window=1,
 
 
     print("Length of log file: ", len(time))
+
+    # smooth friction force
+    fx = running_mean(fx, 40)
+
+    # convert friction force from eV/Å to μN (micro Newton)
+    eV = value(u'elementary charge')  # J
+    Å = 1e-10  # m
+    fx *= eV / Å  # J/m = N
+    fx *= 1e6  # mN
+
     #-------------------------------------------------------------------------------finding rise
     #finding where push starts, and about where it breaks
-    push_start_indx = (np.abs(time - 1.0)).argmin()
-    push_stop_indx = (np.abs(time-1.03)).argmin()
+    #push_start_indx = (np.abs(time - 1.0)).argmin()
+    #push_stop_indx = (np.abs(time-1.03)).argmin()
 
-    print(f'push start indx, time: {time[push_start_indx]}, {push_start_indx}')
-    print(f'push stop indx, time: {time[push_stop_indx]}, {push_stop_indx}')
     
     #fitting sigmoid to selected interval.
     polfit_start_indx = (np.abs(time - 0.7)).argmin()
     polfit_stop_indx = (np.abs(time - 1.3)).argmin()
+    print(f'polfit start indx, time: {time[polfit_start_indx]}, {polfit_start_indx}')
+    print(f'polfit stop indx, time: {time[polfit_stop_indx]}, {polfit_stop_indx}')
     #translation so it has same shape as load_curve
     polfit_data = np.array((time[polfit_start_indx:polfit_stop_indx],
                            fx[polfit_start_indx:polfit_stop_indx])).T
@@ -352,15 +362,8 @@ def extract_load_curves(logfile, delta=None, init_time=0, window=1,
 
 
 
-    # smooth friction force
-    fx = running_mean(fx, window)
 
 
-    # convert friction force from eV/Å to μN (micro Newton)
-    eV = value(u'elementary charge')  # J
-    Å = 1e-10  # m
-    fx *= eV / Å  # J/m = N
-    fx *= 1e6  # mN
 
     # identify first prominent peak
     peaks, _ = find_peaks(fx, prominence=prominence)
