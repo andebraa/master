@@ -6,13 +6,10 @@ import keras
 from keras.datasets import fashion_mnist 
 from keras.layers import Dense, Activation, Flatten, Conv2D, MaxPooling2D
 from keras.models import Sequential
-from keras.utils import to_categorical
+from tensorflow.keras.utils import to_categorical
 import numpy as np
 import matplotlib.pyplot as plt
 
 def load_data():
     (train_x, train_y), (test_x, test_y) = fashion_mnist.load_data()
-    print(train_x)
-    print(train_y)
-
 load_data()
