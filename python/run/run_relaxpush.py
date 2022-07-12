@@ -181,5 +181,5 @@ if __name__ == '__main__':
     #for vel in [2, 5, 7, 10]:
     #    run_relaxpush(force = 0, production = False, vel = vel)
     #ran 40 last time
-    for i in range(65, 75):
+    for i in range(95, 100):
         run_relaxpush(init_num = i, asperities = 8, force = 0, orientation = 110, production = True)

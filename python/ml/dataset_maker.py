@@ -78,6 +78,7 @@ def dataset_maker():
             print('rise')
             print(rise)
             print('ms')
+            print(np.shape(ms))
             print(ms)
             rise = np.mean(rise)
             ms = np.mean(ms)

@@ -329,28 +329,21 @@ def extract_load_curves(logfile, delta=None, init_time=0, window=1,
     polfit_data = np.array((time[polfit_start_indx:polfit_stop_indx],
                            fx[polfit_start_indx:polfit_stop_indx])).T
 
-
     #curve fit doesn't like nan. removing theese for now
     non_nan_mask = ~np.isnan(polfit_data[:,1])
-
     #https://stackoverflow.com/questions/55725139/fit-sigmoid-function-s-shape-curve-to-data-using-python
     time_nnan = polfit_data[non_nan_mask,0]
-    load_curve_nnan = polfit_data[non_nan_mask,1]
+    fx_nnan = polfit_data[non_nan_mask,1]
     #this was [max(time_nnan), etc and worked.. website says ydata first
-    print(time_nnan)
-    try:
-        p0 = [max(time_nnan), np.median(time_nnan),1,min(load_curve_nnan)] # this is an mandatory initial guess
-    except:
-        return 0
-
-    popt, pcov = curve_fit(sigmoid, time_nnan, load_curve_nnan,p0, method='dogbox')
-
-    #max_rise = np.max(np.gradient(sigmoid(time_nnan, *popt))) this gives wrong values. idk
+    print(fx_nnan)
+    p0 = [max(time_nnan), np.median(time_nnan),1,min(fx_nnan)] # this is an mandatory initial guess
+    popt, pcov = curve_fit(sigmoid, time_nnan, fx_nnan,p0, method='dogbox')
 
     plt.plot(time, fx)
     plt.plot(time_nnan, sigmoid(time_nnan, *popt))
     plt.savefig('loadcurve.png')
 
+    stop
     #repeating selection and polyfit but this time fitting linear func to sigmoid midriff
     print('popt ', popt[1])
     midriff = np.array((popt[1] - 0.05, popt[1] + 0.05))
@@ -361,7 +354,7 @@ def extract_load_curves(logfile, delta=None, init_time=0, window=1,
 
     print('midriff indices ', midriff_start_indx, midriff_stop_indx)
     polfit_data2 = np.array((time_nnan[midriff_start_indx:midriff_stop_indx],
-                            load_curve_nnan[midriff_start_indx:midriff_stop_indx])).T
+                            fx_nnan[midriff_start_indx:midriff_stop_indx])).T
 
     rise, intersect = np.polyfit(polfit_data2[:,0], polfit_data2[:,1], 1)
 
@@ -373,14 +366,17 @@ def extract_load_curves(logfile, delta=None, init_time=0, window=1,
 
 
 
-    # identify first prominent peak
-    peaks, _ = find_peaks(fx, prominence=prominence)
+    # identify first prominent peak, old method
+    #peaks, _ = find_peaks(fx, prominence=prominence)
     print('peaks')
+    #print(peaks)
+    argmax = np.nanargmax(fx[push_start_indx: push_stop_indx])
+    peaks = (time_nnan[argmax],fx_nnan[argmax])
     print(peaks)
-
-    peaks = (np.nanargmax(fx[push_start_indx: push_stop_indx]),
-            np.nanmax(fx[push_start_indx: push_stop_indx]))
-    print(peaks)
+    if np.isnan(peaks).any(): 
+        breakpoint()
+    else:
+        pass
     try:
         first_peak = peaks[0]
     except IndexError:
@@ -406,7 +402,7 @@ def extract_load_curves(logfile, delta=None, init_time=0, window=1,
       "time [ns]\t\t friction force [mN]")
     savetxt(f_lc, asarray([time_short, fx_short]).T,
             header=header_lc_intermediate)
-    f_ms.write(f"{push_time + time[first_peak]:.10e} {fx[first_peak]:.10e} \n")
+    f_ms.write(f"{push_time + peaks[0]:.10e} {peaks[1]:.10e} \n")
     f_ms.flush()
 
 
