@@ -101,8 +101,10 @@ def random_dataset():
     real_matrix = np.load('../pre/config_list.npy')
     real_y = np.load('temp_out_y.npy')
     print(np.shape(real_y))
+    print(real_y)
     avg_time, avg_ms, avg_rise = np.mean(real_y, axis=0)
     std_time, std_ms, std_rise = np.std(real_y, axis=0)#overflow here
+    print(std_time, std_ms, std_rise)
     print('twat')
     
     N = 100 #number of fake samples
@@ -126,6 +128,6 @@ def random_dataset():
 
 
 if __name__ == '__main__':
-    #dataset_maker()
-    random_dataset()
+    dataset_maker()
+    #random_dataset()
         
