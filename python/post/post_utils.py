@@ -316,8 +316,6 @@ def extract_load_curves(logfile, delta=None, init_time=0, window=1,
 
     #-------------------------------------------------------------------------------finding rise
     #finding where push starts, and about where it breaks
-    push_start_indx = (np.abs(time - 1.0)).argmin()
-    push_stop_indx = (np.abs(time-1.03)).argmin()
 
     
     #fitting sigmoid to selected interval.
@@ -339,11 +337,14 @@ def extract_load_curves(logfile, delta=None, init_time=0, window=1,
     p0 = [max(time_nnan), np.median(time_nnan),1,min(fx_nnan)] # this is an mandatory initial guess
     popt, pcov = curve_fit(sigmoid, time_nnan, fx_nnan,p0, method='dogbox')
 
+    
+    push_start_indx_nnan = (np.abs(time_nnan - 1.0)).argmin()
+    push_stop_indx_nnan = (np.abs(time_nnan-1.03)).argmin()
+    
     plt.plot(time, fx)
     plt.plot(time_nnan, sigmoid(time_nnan, *popt))
     plt.savefig('loadcurve.png')
 
-    stop
     #repeating selection and polyfit but this time fitting linear func to sigmoid midriff
     print('popt ', popt[1])
     midriff = np.array((popt[1] - 0.05, popt[1] + 0.05))
@@ -370,8 +371,12 @@ def extract_load_curves(logfile, delta=None, init_time=0, window=1,
     #peaks, _ = find_peaks(fx, prominence=prominence)
     print('peaks')
     #print(peaks)
-    argmax = np.nanargmax(fx[push_start_indx: push_stop_indx])
-    peaks = (time_nnan[argmax],fx_nnan[argmax])
+    peak = np.max(fx_nnan[push_start_indx_nnan:push_stop_indx_nnan])
+    argpeak = np.where(fx_nnan == np.max(fx_nnan[push_start_indx_nnan:push_stop_indx_nnan]))[0][0]
+    print(peak)
+    print(type(argpeak))
+    print(fx_nnan[argpeak])
+    peaks = (time_nnan[argpeak], peak)
     print(peaks)
     if np.isnan(peaks).any(): 
         breakpoint()

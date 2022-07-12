@@ -39,11 +39,17 @@ def dataset_maker():
 
     n = 47
     out_matrix = np.empty((n, 4,4)) #4,4 matrix, 1 rise, 1 max static
-    out_y = np.empty((n, 2))
-    for i in range(47): #this code now works with producition 
+    out_y = np.empty((n, 3))
+    for i in range(47): #this code now works with producition
+        print('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
         print(i)
         lc_files = glob(template_lc.format(temp, vel, force, asperities,orientation, i, grid[0], grid[1]))
-        matches = re.findall('\d+', lc_files[0])
+        try:
+            matches = re.findall('\d+', lc_files[0])
+        except:
+            print(i)
+            print('failed to run')
+            continue #not all files are completed. if this is the case, continue onto next one
         seed = matches[-3]
 
         rise_files = glob(template_r.format(temp, vel, force, asperities, orientation,i, grid[0], grid[1]))
@@ -51,18 +57,6 @@ def dataset_maker():
         load_curves = []
         rise = []
         ms = []
-        #finding the shortest in case one is longer and it needs to be truncated
-        shortest = (1000000000, 0) #length, index
-        #for j, lc_file in enumerate(lc_files):
-        #    infile = loadtxt(lc_file)
-        #    if np.shape(infile)[0] < shortest[0]:
-        #        shortest = (np.shape(infile)[0], j)
-        #    load_curves.append(np.array(infile))
-        #for j, load_curve in enumerate(load_curves):
-        #    if j != shortest[1]:
-        #        load_curves[j] = load_curves[j][:shortest[0]]
-        #
-        #    fit_sigmoid(load_curve, fig, axs[i])
 
         for rise_file in rise_files:
             rise.append(np.loadtxt(rise_file))
@@ -76,25 +70,62 @@ def dataset_maker():
         
         if len(rise) > 1:
             print('rise')
-            print(rise)
+            print(np.shape(rise))
             print('ms')
             print(np.shape(ms))
-            print(ms)
             rise = np.mean(rise)
-            ms = np.mean(ms)
+            ms = np.mean(ms, axis = 0)
         else:
             rise = rise[0]
             ms = ms[0]
         
     
-        print(aux_dict['erratic'])
         out_matrix[i, :,:] = np.array(aux_dict['erratic'])
         print('-------rise---------ms---------')
         print(rise)
         print(ms)
+        print(np.shape(out_y))
+        print(np.shape((np.array((rise, ms[0], ms[1])))))
+        out_y[i,:]= np.array((rise, ms[0], ms[1]))
+    np.save( 'temp_out_y.npy', out_y)
+    np.save('temp_out_matrix.npy', out_matrix)
+
+
+def random_dataset():
+    '''
+    Script that makes a random datset of matrices and values for rise and ms. 
+    If we attempt to apply machine learning to this, will we se the same results as 
+    for the simulated dataset? 
+    '''
+
+    real_matrix = np.load('../pre/config_list.npy')
+    real_y = np.load('temp_out_y.npy')
+    print(np.shape(real_y))
+    avg_time, avg_ms, avg_rise = np.mean(real_y, axis=0)
+    std_time, std_ms, std_rise = np.std(real_y, axis=0)#overflow here
+    print('twat')
+    
+    N = 100 #number of fake samples
+    matrices = np.load('../pre/config_list.npy')
+    out_matrix = np.empty((N, 4,4))
+    out_y = np.empty((N,3))
+    
+    for i in range(N):
+        print(i)
+        out_matrix[i, :,:] = matrices[np.random.randint(0, len(matrices))] #select random matrix setup
+        rand_time = np.random.normal(avg_time, std_time)
+        rand_ms = np.random.normal(avg_ms, std_ms)
+        rand_rise = np.random.normal(avg_rise, std_rise)
+
+        out_y[i, :] = np.array((rand_time, rand_ms, rand_rise))
+
         
-        out_y[i,:] = np.array((rise, ms))
+    np.save('random_matrix.npy', out_matrix)
+    np.save('rand_out_y.npy', out_y)
+
+
 
 if __name__ == '__main__':
-    dataset_maker()
+    #dataset_maker()
+    random_dataset()
         

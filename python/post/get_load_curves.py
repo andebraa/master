@@ -82,7 +82,6 @@ def all_curves(production = True):
     else:
         filetemplate = f'../../simulations/sys_asp{asperities}_uc{uc}/erratic/sim_temp{temp}_force{force}_asp{asperities}_or{orientation}_time{time}_seed*_errgrid4_4/log.lammps'
 
-    print(filetemplate)
     files = glob(filetemplate)
     for _file in files:
         if production: 
@@ -99,8 +98,6 @@ def all_curves(production = True):
         matches = re.findall('\d+', _file)
         seed = matches[-3]
         initnum = matches[-4]
-        print(seed, initnum)
-        print(_file)
         outfile_lc = outfile_lc.format(temp, vel, force, asperities, orientation, initnum, seed) 
         outfile_ms = outfile_ms.format(temp, vel, force, asperities, orientation, initnum,  seed) 
         outfile_rise = outfile_rise.format(temp, vel, force, asperities, orientation, initnum, seed) 
