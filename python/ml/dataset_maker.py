@@ -37,10 +37,10 @@ def dataset_maker():
     template_r = rise_dir + 'rise_temp{}_vel{}_force{}_asp{}_or{}_initnum{}_seed*_errgrid4_4.txt'
     template_aux = project_dir + 'simulations/sys_asp{}_uc{}/production/dataset/sim_temp{}_force{}_asp{}_or{}_time*_initnum{}_seed{}_errgrid4_4/system_asp{}_or{}_uc{}_initnum{}_errgrid4_4_auxiliary.json'
 
-    n = 47
-    out_matrix = np.empty((n, 4,4)) #4,4 matrix, 1 rise, 1 max static
-    out_y = np.empty((n, 3))
-    for i in range(47): #this code now works with producition
+    n = 36
+    out_matrix = np.zeros((n, 4,4)) #4,4 matrix, 1 rise, 1 max static
+    out_y = np.zeros((n, 2))
+    for i in range(n): #this code now works with producition
         print('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
         print(i)
         lc_files = glob(template_lc.format(temp, vel, force, asperities,orientation, i, grid[0], grid[1]))
@@ -61,7 +61,7 @@ def dataset_maker():
         for rise_file in rise_files:
             rise.append(np.loadtxt(rise_file))
         for ms_file in ms_files:
-            ms.append(np.loadtxt(ms_file))
+            ms.append(np.loadtxt(ms_file)[1])
         ##finding the auxiliary folder of the run to find the norm
         with open (glob(template_aux.format(asperities, uc, temp, force, asperities, orientation,
                                i, seed, asperities, orientation, uc, seed))[0]) as fp:
@@ -85,8 +85,8 @@ def dataset_maker():
         print(rise)
         print(ms)
         print(np.shape(out_y))
-        print(np.shape((np.array((rise, ms[0], ms[1])))))
-        out_y[i,:]= np.array((rise, ms[0], ms[1]))
+        print(np.shape((np.array((rise, ms)))))
+        out_y[i,:]= np.array((rise,ms))
     np.save( 'temp_out_y.npy', out_y)
     np.save('temp_out_matrix.npy', out_matrix)
 
@@ -102,24 +102,22 @@ def random_dataset():
     real_y = np.load('temp_out_y.npy')
     print(np.shape(real_y))
     print(real_y)
-    avg_time, avg_ms, avg_rise = np.mean(real_y, axis=0)
-    std_time, std_ms, std_rise = np.std(real_y, axis=0)#overflow here
-    print(std_time, std_ms, std_rise)
-    print('twat')
+    avg_ms, avg_rise = np.mean(real_y, axis=0)
+    std_ms, std_rise = np.std(real_y, axis=0)#overflow here
+    print(std_ms, std_rise)
     
     N = 100 #number of fake samples
     matrices = np.load('../pre/config_list.npy')
     out_matrix = np.empty((N, 4,4))
-    out_y = np.empty((N,3))
+    out_y = np.empty((N,2))
     
     for i in range(N):
         print(i)
         out_matrix[i, :,:] = matrices[np.random.randint(0, len(matrices))] #select random matrix setup
-        rand_time = np.random.normal(avg_time, std_time)
         rand_ms = np.random.normal(avg_ms, std_ms)
         rand_rise = np.random.normal(avg_rise, std_rise)
 
-        out_y[i, :] = np.array((rand_time, rand_ms, rand_rise))
+        out_y[i, :] = np.array((rand_ms, rand_rise))
 
         
     np.save('random_matrix.npy', out_matrix)
@@ -129,5 +127,5 @@ def random_dataset():
 
 if __name__ == '__main__':
     dataset_maker()
-    #random_dataset()
+    random_dataset()
         
