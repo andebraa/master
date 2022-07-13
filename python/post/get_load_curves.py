@@ -80,7 +80,7 @@ def all_curves(production = True):
     if production: #beware /datset here
         filetemplate = f'../../simulations/sys_asp{asperities}_uc{uc}/production/dataset/sim_temp{temp}_force{force}_asp{asperities}_or{orientation}_time*_initnum*_seed*_errgrid4_4/log.lammps'
     else:
-        filetemplate = f'../../simulations/sys_asp{asperities}_uc{uc}/erratic/sim_temp{temp}_force{force}_asp{asperities}_or{orientation}_time{time}_seed*_errgrid4_4/log.lammps'
+        filetemplate = f'../../simulations/sys_asp{asperities}_uc{uc}/vary_normforce/sim_temp{temp}_force*_asp{asperities}_or{orientation}_time{time}_seed*_errgrid4_4/log.lammps'
 
     files = glob(filetemplate)
     for _file in files:
@@ -98,6 +98,7 @@ def all_curves(production = True):
         matches = re.findall('\d+', _file)
         seed = matches[-3]
         initnum = matches[-4]
+        force = matches
         outfile_lc = outfile_lc.format(temp, vel, force, asperities, orientation, initnum, seed) 
         outfile_ms = outfile_ms.format(temp, vel, force, asperities, orientation, initnum,  seed) 
         outfile_rise = outfile_rise.format(temp, vel, force, asperities, orientation, initnum, seed) 
@@ -107,4 +108,4 @@ def all_curves(production = True):
 
 if __name__ == '__main__':
     #get_load_curves()
-    all_curves(production = True)
+    all_curves(production = False)
