@@ -12,39 +12,20 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
+def pp(a, padding):
+    b = np.zeros((a.shape[0], a.shape[1] + (padding*2), a.shape[2] + (padding*2)))
+    print(a.shape)
+    print(b.shape)
+    print(len(a[0,:]))
+    for i,m in enumerate(a):
+        for j in range(b.shape[1]):
+            for k in range(b.shape[2]):
+                b[i,j,k] = m[(j-padding)%m.shape[0],(k-padding)%m.shape[1]]
 
-def periodic_padding_flexible(tensor, axis,padding=1):
-    """
-        add periodic padding to a tensor for specified axis
-        tensor: input tensor
-        axis: on or multiple axis to pad along, int or tuple
-        padding: number of cells to pad, int or tuple
-
-        return: padded tensor
-        https://stackoverflow.com/questions/39088489/tensorflow-periodic-padding
-    """
+    return b
 
 
-    if isinstance(axis,int):
-        axis = (axis,)
-    if isinstance(padding,int):
-        padding = (padding,)
-
-    ndim = len(tensor.shape)
-    for ax,p in zip(axis,padding):
-        # create a slice object that selects everything from all axes,
-        # except only 0:p for the specified for right, and -p: for left
-
-        ind_right = [slice(-p,None) if i == ax else slice(None) for i in range(ndim)]
-        ind_left = [slice(0, p) if i == ax else slice(None) for i in range(ndim)]
-        right = tensor[ind_right]
-        left = tensor[ind_left]
-        middle = tensor
-        tensor = tf.concat([right,middle,left], axis=ax)
-
-    return tensor
-
-def load_data(pp = 2):
+def load_data(padding = 2):
     X = np.load('temp_out_matrix.npy')
     Y = np.load('temp_out_y.npy')
 
@@ -52,10 +33,11 @@ def load_data(pp = 2):
                                                     random_state = 69)
     
     #add padding
+    xtrain = pp(xtrain, padding)
+    xtest = pp(xtest, padding)
+    print(xtest.shape)
     print(xtrain.shape)
-    xtrain_p = np.zeros((xtrain.shape[0], xtrain.shape[1]+pp, xtrain.shape[2]+pp))
-    print(xtrain_p.shape)
-
+    stop
 
     xtrain = xtrain.reshape(-1, 4,4, 1)
     xtest = xtest.reshape(-1, 4,4, 1)
