@@ -37,7 +37,7 @@ def dataset_maker():
     template_r = rise_dir + 'rise_temp{}_vel{}_force{}_asp{}_or{}_initnum{}_seed*_errgrid4_4.txt'
     template_aux = project_dir + 'simulations/sys_asp{}_uc{}/production/dataset/sim_temp{}_force{}_asp{}_or{}_time*_initnum{}_seed{}_errgrid4_4/system_asp{}_or{}_uc{}_initnum{}_errgrid4_4_auxiliary.json'
 
-    n = 36
+    n = 75
     out_matrix = np.zeros((n, 4,4)) #4,4 matrix, 1 rise, 1 max static
     out_y = np.zeros((n, 2))
     for i in range(n): #this code now works with producition

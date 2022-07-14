@@ -98,10 +98,17 @@ def all_curves(production = True):
         matches = re.findall('\d+', _file)
         seed = matches[-3]
         initnum = matches[-4]
-        force = matches
+        if production:
+            pass
+        else:
+            force = matches
         outfile_lc = outfile_lc.format(temp, vel, force, asperities, orientation, initnum, seed) 
         outfile_ms = outfile_ms.format(temp, vel, force, asperities, orientation, initnum,  seed) 
         outfile_rise = outfile_rise.format(temp, vel, force, asperities, orientation, initnum, seed) 
+        print(outfile_lc)
+        print(outfile_ms)
+        print(outfile_rise)
+        print(initnum)
 
         extract_load_curves(_file, None, 0, window = window, outfile_load_curves = outfile_lc, outfile_max_static = outfile_ms, outfile_rise = outfile_rise)
 

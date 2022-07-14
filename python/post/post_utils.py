@@ -346,20 +346,16 @@ def extract_load_curves(logfile, delta=None, init_time=0, window=1,
     plt.savefig('loadcurve.png')
 
     #repeating selection and polyfit but this time fitting linear func to sigmoid midriff
-    print('popt ', popt[1])
     midriff = np.array((popt[1] - 0.05, popt[1] + 0.05))
 
-    print(f'midriff ',midriff)
     midriff_start_indx = (np.abs(time_nnan - midriff[0])).argmin()
     midriff_stop_indx = (np.abs(time_nnan - midriff[1])).argmin()
 
-    print('midriff indices ', midriff_start_indx, midriff_stop_indx)
     polfit_data2 = np.array((time_nnan[midriff_start_indx:midriff_stop_indx],
                             fx_nnan[midriff_start_indx:midriff_stop_indx])).T
 
     rise, intersect = np.polyfit(polfit_data2[:,0], polfit_data2[:,1], 1)
 
-    print(rise)
     savetxt(f_r, asarray([rise]))
 
 
@@ -373,11 +369,7 @@ def extract_load_curves(logfile, delta=None, init_time=0, window=1,
     #print(peaks)
     peak = np.max(fx_nnan[push_start_indx_nnan:push_stop_indx_nnan])
     argpeak = np.where(fx_nnan == np.max(fx_nnan[push_start_indx_nnan:push_stop_indx_nnan]))[0][0]
-    print(peak)
-    print(type(argpeak))
-    print(fx_nnan[argpeak])
     peaks = (time_nnan[argpeak], peak)
-    print(peaks)
     if np.isnan(peaks).any(): 
         breakpoint()
     else:
