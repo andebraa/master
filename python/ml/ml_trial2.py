@@ -3,6 +3,7 @@ Attempt at 2d ncc using keras.
 https://towardsdatascience.com/mnist-cnn-python-c61a5bce7a19
 '''
 import keras
+import tensorflow as tf
 from keras.datasets import fashion_mnist 
 from keras.layers import Dense, Activation, Flatten, Conv2D, MaxPooling2D
 from keras.models import Sequential
@@ -14,9 +15,6 @@ import matplotlib.pyplot as plt
 
 def pp(a, padding):
     b = np.zeros((a.shape[0], a.shape[1] + (padding*2), a.shape[2] + (padding*2)))
-    print(a.shape)
-    print(b.shape)
-    print(len(a[0,:]))
     for i,m in enumerate(a):
         for j in range(b.shape[1]):
             for k in range(b.shape[2]):
@@ -35,43 +33,54 @@ def load_data(padding = 2):
     #add padding
     xtrain = pp(xtrain, padding)
     xtest = pp(xtest, padding)
-    print(xtest.shape)
-    print(xtrain.shape)
-    stop
 
-    xtrain = xtrain.reshape(-1, 4,4, 1)
-    xtest = xtest.reshape(-1, 4,4, 1)
+    xtrain = xtrain.reshape(-1, xtrain.shape[1],xtrain.shape[2], 1)
+    xtest = xtest.reshape(-1, xtest.shape[1],xtest.shape[2], 1)
     return xtrain, xtest, ytrain, ytest
 
-xtrain, xtest, ytrain, ytest = load_data()
+xtrain, xtest, ytrain, ytest = load_data(padding = 1)
 
 print(xtrain.shape)
 print(xtest.shape)
+print(ytrain.shape)
+print(ytest.shape)
 
-stop
 
 ytrain = to_categorical(ytrain)
 ytest = to_categorical(ytest)
 
+
 model = Sequential()
-
-model.add(Conv2D(64, (3,3), input_shape=(4, 4, 1)))
-model.add(Activation('relu'))
+model.add(Conv2D(filters=1, kernel_size=(2,2) , input_shape=(6,6, 1)), activation = 'relu')
 model.add(MaxPooling2D(pool_size=(2,2)))
 
-model.add(Conv2D(64, (3,3)))
-model.add(Activation('relu'))
-model.add(MaxPooling2D(pool_size=(2,2)))
+#model.add(Conv2D(xtrain.shape[0], (3,3)))
+#model.add(Activation('relu'))
+#model.add(MaxPooling2D(pool_size=(2,2)))
 
 model.add(Flatten())
-model.add(Dense(64))
+model.add(Dense(xtrain.shape[0]))
 
+print('x: 2')
 model.add(Dense(10))
 model.add(Activation('softmax'))
 
-model.compile(loss=keras.losses.categorical_crossentropy, optimizer=keras.optimizers.Adam(),metrics=['accuracy'])
+model.compile(loss=keras.losses.categorical_crossentropy, optimizer=tf.keras.optimizers.Adam(),metrics=['accuracy'])
 
-model.fit(train_X, train_Y_one_hot, batch_size=64, epochs=5)
+print('x: 3')
+model.fit(xtrain, ytrain, batch_size=8, epochs=5)
+
+print('x: 4')
+
+test_loss, test_acc = model.evaluate(xtest, ytest)
+print('Test loss', test_loss)
+print('Test accuracy', test_acc)
+
+predictions = model.predict(test_X)
+print(np.argmax(np.round(predictions[0])))
+
+plt.imshow(xtest[0].reshape(28, 28), cmap = plt.cm.binary)
+plt.show()
 '''
 import keras
 from keras.datasets import fashion_mnist 
