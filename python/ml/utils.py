@@ -12,50 +12,8 @@ import glob
 import torch.nn.functional as F
 import torch.optim as optim
 import torch.nn as nn
-
-class conv2d(nn.Module):
-    def __init__(self, 
-                 imput_shape, 
-                 n_kernels=(8),
-                 kernel_sizes=(3,3),
-                 n_dense = 16, 
-                 padding = 2,
-                 stride = 1,
-                 init = None,
-                 bias = True,
-                 batch_norm = False,
-                 dropout = None,
-                 verbose = True):
-        super(Conv2D, self).__init__()
-
-        self.layers = nn.ModuleList()
-        #torch.nn.Conv2d(in_channels, out_channels, kernel_size, stride=1, 
-        #                padding=0, dilation=1, groups=1, bias=True, 
-        #                padding_mode='zeros', device=None, dtype=None)
-        self.layers.append(nn.Conv2d(input_shape[0], n_kernels[0], kernel_sizes[0], padding=padding, bias=bias, dilation=dilation)) 
-        self.layers.append(nn.BatchNorm2d(n_kernels[0]))
-
-        for i in range(1, len(n_kernels)):
-            self.layers.append(nn.Conv2d(n_kernels[i-1], n_kernels[i], kernel_sizes[i], 
-                               padding=padding, bias=bias, dilation=dilation)) 
-            
-            self.layers.append(nn.BatchNorm2d(n_kernels[i])) 
-        
-        self.layers.append(nn.Flatten())
-       
-
-    def outsize(self, input_shape, kernel_size, padding, dialation, stride):
-        Hout = ((input_shape[0] + 2*padding[0] - dialation[0] * (kernel_size[0] -1)-1)/stride[0]) +1 
-        Wout = ((input_shape[1] + 2*padding[1] - dialation[1] * (kernel_size[1] -1)-1)/stride[1]) +1 
-        return int(Hout*Wout)
-
-    def forward(self, x):
-        for layer in self.layers:
-            x = F.leaky_relu(layer(x))
-        return x.view(x.size()[0])
-
-
-
+from torch.utils.data import Dataset
+from sklearn.model_selection import train_test_split
 
 def get_device(computer="gpu", verbose=False):
     if computer == "gpu":
@@ -118,7 +76,7 @@ def train_model(model,device,train_loader,val_loader,epochs,
             pred = model(X)
             loss = criterion(pred, y)
             with torch.set_grad_enabled(False):
-                r2 = r2_score(pred.cpu().numpy(), y.cpu().numpy(), False)
+                r2 = r2_score(pred.cpu().numpy(), y.cpu().numpy())
                 cum_r2 += r2
 
             # Accumulate errors
@@ -140,7 +98,7 @@ def train_model(model,device,train_loader,val_loader,epochs,
                     X_val, y_val = X_val.to(device), y_val.to(device)
                     pred_val = model(X_val)
                     loss_val = criterion(pred_val, y_val)
-                    r2_val = r2_score(pred_val.cpu().numpy(), y_val.cpu().numpy(), debug=False)
+                    r2_val = r2_score(pred_val.cpu().numpy(), y_val.cpu().numpy())
 
                     cum_loss_val += loss_val.item()
                     cum_r2_val += r2_val
@@ -230,6 +188,7 @@ def load_data(padding = 2):
     #NOTE, dnn; torch, cnn torch 
     X = np.load('temp_out_matrix.npy') 
     Y = np.load('temp_out_y.npy') 
+    Y = Y[:,0]
  
     #shuffle 
     indx = np.arange(0, X.shape[0]) 
@@ -240,12 +199,159 @@ def load_data(padding = 2):
  
     xtrain, xtest, ytrain, ytest = train_test_split(X,Y, test_size=0.33, 
                                                     random_state = 69) 
- 
     #add padding 
     xtrain, newdim = pp(xtrain, padding) 
     xtest, newdim = pp(xtest, padding) 
  
-    xtrain = xtrain.reshape(newdim[0], 1, newdim[1], newdim[2]) #usure  
+    
+    xtrain = np.expand_dims(xtrain,1)
+    #xtrain = xtrain.reshape(None,newdim[0], newdim[1], newdim[2]) #usure  
      
     return xtrain, ytrain, xtest, ytest 
+
+
+
+
+class CustomDataset(Dataset):
+    def __init__(self, X, y):
+        self.X = torch.FloatTensor(X)
+        self.y = torch.FloatTensor(y)
+
+    def __len__(self):
+        return self.X.shape[0]
+
+    def __getitem__(self, idx):
+        input = self.X[idx,:]
+        target = self.y[idx]
+        return (input, target)
+
+class Result:
+    def __init__(self,
+                r2_train:float,
+                r2_val:float,
+                mse_train:float,
+                mse_val:float,
+                model_params:dict):
+
+        self.r2_train = r2_train
+        self.r2_val = r2_val
+        self.mse_train = mse_train
+        self.mse_val = mse_val
+        self.model_params = model_params
+
+    def __lt__(self, other):
+        return self.r2_val < other.r2_val
+
+    def __repr__(self):
+        return f"{self.__class__.__name__}({self.r2_train=:.5f}, {self.r2_val=:.5f}, {self.mse_train=:.5f}, {self.mse_val=:.5f}, {self.model_params=})"
+
+class FinalResult:
+    def __init__(self, r2_test, mse_test, model_params, model_state, true, pred, history):
+        self.r2_test = r2_test
+        self.mse_test = mse_test
+        self.model_params = model_params
+        self.model_state = model_state
+        self.true = true
+        self.pred = pred
+        self.history = history
+
+    def __repr__(self):
+        return f"{self.__class__.__name__}({self.r2_test=:.5f}, {self.mse_test=:.5f}, {self.model_params=})"
+
+def test_model(model, device, criterion, test_loader, plot_predictions=True, title=None, predictor = "yield", savefig=None, verbose=True):
+    num_batches = 0
+    model.eval()
+    true_list = []
+    pred_list = []
+    with torch.no_grad():
+        for batch, (X, y) in enumerate(test_loader):
+            X, y = X.to(device), y.to(device)
+            pred = model(X)
+            true_list.extend(y.cpu().numpy())
+            pred_list.extend(pred.cpu().numpy())
+            num_batches += 1
+
+
+    true_list = np.asarray(true_list)
+    pred_list = np.asarray(pred_list)
+
+    loss = MSE(pred_list, true_list)
+    r2 = r2_score(pred_list, true_list)
+
+    if verbose:
+        print(f"{title:10s}: MSE: {loss:.3e}, R2: {r2:.3e}")
+
+    if predictor == "yield":
+        std = 0.126
+    elif predictor == "residual":
+        std = 1.01
+    else:
+        std = 0
+
+    if plot_predictions:
+        x0 = np.min(true_list)
+        x1 = np.max(true_list)
+        y0 = np.min(pred_list)
+        y1 = np.max(pred_list)
+
+        fig, ax = plt.subplots(figsize=(8, 8))
+
+        ax.scatter(true_list, pred_list, c="b", alpha=0.5)
+        ax.plot((x0, x1), (x0, x1), "k--")
+
+        ax.plot((x0, x1), (x0+std, x1+std), "r--")
+        ax.plot((x0, x1), (x0-std, x1-std), "r--", label=f"Std. of {predictor} stress in equal pore configurations: {std:.2f}")
+
+
+        ax.set_xlabel(f"True stress [GPa]")
+        ax.set_ylabel(f"Predicted stress [GPa]")
+        ax.legend()
+        if title is not None:
+            ax.set_title(f"{title}\nMSE:{loss:.2e}, R2:{r2:.2f}")
+        else:
+            ax.set_title(f"MSE:{loss:.2e}, R2:{r2:.2f}")
+
+        if savefig is not None:
+            plt.savefig(savefig)
+
+    return true_list, pred_list
+
+
+def MSE(pred, true):
+    squared_err = np.sum((pred - true)**2)/len(pred)
+    return squared_err
+
+
+class Result:
+    def __init__(self,
+                r2_train:float,
+                r2_val:float,
+                mse_train:float,
+                mse_val:float,
+                model_params:dict):
+
+        self.r2_train = r2_train
+        self.r2_val = r2_val
+        self.mse_train = mse_train
+        self.mse_val = mse_val
+        self.model_params = model_params
+
+    def __lt__(self, other):
+        return self.r2_val < other.r2_val
+
+    def __repr__(self):
+        return f"{self.__class__.__name__}({self.r2_train=:.5f}, {self.r2_val=:.5f}, {self.mse_train=:.5f}, {self.mse_val=:.5f}, {self.model_params=})"
+
+class FinalResult:
+    def __init__(self, r2_test, mse_test, model_params, model_state, true, pred, history):
+        self.r2_test = r2_test
+        self.mse_test = mse_test
+        self.model_params = model_params
+        self.model_state = model_state
+        self.true = true
+        self.pred = pred
+        self.history = history
+
+    def __repr__(self):
+        return f"{self.__class__.__name__}({self.r2_test=:.5f}, {self.mse_test=:.5f}, {self.model_params=})"
 

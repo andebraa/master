@@ -1,42 +1,57 @@
-import torch
-import torch.nn as nn
+from sklearn.model_selection import KFold, train_test_split
+import numpy as np
+import os, sys
+import matplotlib.pyplot as plt
 import utils
+from torch.utils.data import DataLoader
+import torch.nn.functional as F
+import torch.nn as nn
+import torch.optim as optim
+import itertools as it
+from tqdm import trange
+from dataclasses import dataclass
+from typing import OrderedDict
 
 class conv2d(nn.Module):
-    def __init__(self, 
-                 imput_shape, 
-                 n_kernels=(8,16,32),
-                 kernel_sizes=(3,3,3),
-                 n_dense = 64, 
-                 padding = 1,
-                 stride = 1,
-                 init = None,
-                 bias = True,
-                 batch_norm = False,
-                 dropout = None,
-                 verbose = True):
-        super(Conv2D, self).__init__()
-
+    def __init__(self, input_shape, n_kernels=(8, 16, 32), 
+                 kernel_sizes=(3, 3, 3), n_dense=64, padding=1, 
+                 init=None, bias=True, verbose=True):
+        super(conv2d, self).__init__()
+        dilation = 1
         self.layers = nn.ModuleList()
-        #torch.nn.Conv2d(in_channels, out_channels, kernel_size, stride=1, 
-        #                padding=0, dilation=1, groups=1, bias=True, 
-        #                padding_mode='zeros', device=None, dtype=None)
-        self.layers.append(nn.Conv2d(input_shape[0], n_kernels[0], kernel_sizes[0], padding=padding, bias=bias, dilation=dilation)) 
+        self.layers.append(nn.Conv2d(input_shape[0], n_kernels[0], kernel_sizes[0], padding=padding, bias=bias, dilation=dilation))
         self.layers.append(nn.BatchNorm2d(n_kernels[0]))
-
         for i in range(1, len(n_kernels)):
-            self.layers.append(nn.Conv2d(n_kernels[i-1], n_kernels[i], kernel_sizes[i], 
-                               padding=padding, bias=bias, dilation=dilation)) 
-            
-            self.layers.append(nn.BatchNorm2d(n_kernels[i])) 
-        
+            self.layers.append(nn.Conv2d(n_kernels[i-1], n_kernels[i], kernel_sizes[i], padding=padding, bias=bias, dilation=dilation))
+            self.layers.append(nn.BatchNorm2d(n_kernels[i]))
         self.layers.append(nn.Flatten())
-       
+        dense_inp_shape = self.final_conv_out_shape(input_shape, kernel_sizes, padding, dilation)*n_kernels[-1]
+        self.layers.append(nn.Linear(dense_inp_shape, n_dense, bias=bias))
+        self.layers.append(nn.Linear(n_dense, 1))
 
-    def outsize(self, input_shape, kernel_size, padding, dialation, stride):
-        Hout = ((input_shape[0] + 2*padding[0] - dialation[0] * (kernel_size[0] -1)-1)/stride[0]) +1 
-        Wout = ((input_shape[1] + 2*padding[1] - dialation[1] * (kernel_size[1] -1)-1)/stride[1]) +1 
+        if init is not None:
+            for layer in self.layers:
+                if not isinstance(layer, nn.Flatten):
+                    init(layer.weight)
 
+        if verbose:
+            print(self)
+
+    def final_conv_out_shape(self, input_shape, kernel_sizes, pad, dilation):
+        stride = 1
+        #NOTE changed inputshape[1] and [2] to 0 and 1
+        out_h = input_shape[1]
+        out_w = input_shape[2]
+        for kernel in kernel_sizes:
+            out_h = np.floor((out_h + 2*pad - dilation * (kernel-1) - 1)/stride + 1)
+            out_w = np.floor((out_w + 2*pad - dilation * (kernel-1) - 1)/stride + 1)
+
+        return int(out_h*out_w)
+
+    def forward(self, x):
+        for layer in self.layers:
+            x = F.leaky_relu(layer(x))
+        return x.view(x.size()[0])
 
 
 
@@ -101,7 +116,7 @@ class CrossValidation:
                     best_inds = param_indices
                     best_params = params
 
-            result = Result(
+            result = utils.Result(
                 r2_train = fit_results["r2_train"],
                 r2_val = fit_results["r2_val"],
                 mse_train = fit_results["mse_train"],
@@ -200,8 +215,8 @@ class GridSearchCNN(GridSearch):
 
         for train_idx, val_idx in KFold(n_splits=kfold_splits, random_state=0, shuffle=True).split(X):
 
-            data_train = CustomDataset(X[train_idx], y[train_idx])
-            data_val = CustomDataset(X[val_idx], y[val_idx])
+            data_train = utils.CustomDataset(X[train_idx], y[train_idx])
+            data_val = utils.CustomDataset(X[val_idx], y[val_idx])
 
             train_loader = DataLoader(data_train, batch_size=batch_size, shuffle=False)
             val_loader = DataLoader(data_val, batch_size=batch_size, shuffle=False)
@@ -279,19 +294,10 @@ def run_cnn_search(epochs, mode):
         return
     else:
         print(f"running search, saving to {outname}")
-    preprocessor_params = {
-        "data_path": "../data/model_input.npy",
-        "split_ratios": (0.6, 0.2, 0.2),  #train, val, test
-        "include_symmetries":1,             #0 = no, 1 = rotational, 2 = rot + periodic
-        "mode": "torch",
-        "batch_size": None,
-        "predictor": "yield",
-        "remove_outliers": None
-    }
-    preprocessor = DataPreprocessor(**preprocessor_params)
     padding = 2
-    X_CV, y_CV, X_test, y_test = load_data(padding) #X_CV, y_CV, X_test, y_test
-    device = utils.get_device("gpu")
+    X_CV, y_CV, X_test, y_test = utils.load_data(padding) #X_CV, y_CV, X_test, y_test
+    device = utils.get_device("gpu", verbose = True)
+
 
     kernel_size_list = [3, 4, 5] #need to have a good look at the kernels, so they fit my system
     n_kernels_list = [(8, 16, 32), (16, 32, 64), (32, 64, 128)]
@@ -302,7 +308,9 @@ def run_cnn_search(epochs, mode):
         "n_kernels": n_kernels_list,
         "n_dense": n_dense_list,
         "learning_rate": [1e-5],
-        "batch_size": [32]
+        "batch_size": [32],
+        "bias": [1]
+
     }
 
     splits = 4
@@ -311,8 +319,9 @@ def run_cnn_search(epochs, mode):
     best_inds, best_instance_vars, final_params, results = gridsearch.fit(X_CV, y_CV, epochs, splits, verbose=True)
 
     model = best_instance_vars["model"]
-    test_loader = DataLoader(CustomDataset(X_test, y_test))
+    test_loader = DataLoader(utils.CustomDataset(X_test, y_test))
     history = best_instance_vars["history"]
+    print(test_loader)
     test_true, test_pred = utils.test_model(model, device, nn.MSELoss, test_loader, title="test")
     r2_test = utils.r2_score(test_pred, test_true)
     mse_test = utils.MSE(test_pred, test_true)
@@ -322,7 +331,7 @@ def run_cnn_search(epochs, mode):
     print(f"{best_inds=}")
     print(f"{final_params=}")
 
-    final_result = FinalResult(r2_test, mse_test, final_params, final_state, test_true, test_pred, history)
+    final_result = utils.FinalResult(r2_test, mse_test, final_params, final_state, test_true, test_pred, history)
     results = list(results)
     results.insert(0, final_result)
     np.savez(outname, results, allow_pickle=True)
