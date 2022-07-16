@@ -516,8 +516,8 @@ def load_vs_normal_force():
     #    axs2.append(ax.twinx())
     #axs2 = np.array((axs2))
 
-    varyforce = {0.0001: (11678, 27618, 89567), 0.001:(43698, 76180,77635) , 
-                 0.01:(70338, 80288, 83673) , 0:(26926, 43898, 74145)}
+    varyforce = {0:(26926, 43898, 74145), 0.0001: (11678, 27618, 89567), 0.001:(43698, 76180,77635) , 
+                 0.01:(70338, 80288, 83673)}
 
     #c = plt.cm.viridis(np.array(tuple(varyforce))/(0.01))
     for i, (force, seed) in enumerate(varyforce.items()):
@@ -567,8 +567,10 @@ def load_vs_normal_force():
         else:
             #axs[0].plot(disp_mean[0,:,0], disp_mean[0,:,1], label = f'force {force}')
             #axs[1].plot(disp_mean[0,:,0], disp_mean[0,:,1], label = f'force {force}')
-            axs[i].plot(load_curves_mean[0,:,0], load_curves_mean[0,:,1], label=f'{force}')
+            axs[i].plot(load_curves_mean[0,:,0], load_curves_mean[0,:,1], label=f'average')
+            axs[i].legend()
             #axs[1].plot(timeframes, height)
+            axs[i].set_ylim([-0.03, 0.5])
             axs[i].set_xlabel(r"$t_p$ [ns]")
             axs[i].set_ylabel(r"$f$ [$\mu$N]")
             axs[i].set_title(f'normal force {force}')
