@@ -519,6 +519,7 @@ def load_vs_normal_force():
     varyforce = {0.0001: (11678, 27618, 89567), 0.001:(43698, 76180,77635) , 
                  0.01:(70338, 80288, 83673) , 0:(26926, 43898, 74145)}
 
+    #c = plt.cm.viridis(np.array(tuple(varyforce))/(0.01))
     for i, (force, seed) in enumerate(varyforce.items()):
         
         load_curves_all, load_curves_mean = load_load_curves(temp, vel, force, asperities, orientation,
@@ -536,7 +537,7 @@ def load_vs_normal_force():
         #assert len(glob(heights_file)) == 1
         
         for curve in load_curves_all:
-            axs[i].plot(curve[:,0], curve[:,1], alpha = 0.7)
+            axs[i].plot(curve[:,0], curve[:,1], alpha = 0.3)
         #height plot 
         
         #data = np.loadtxt(maxz_file)
@@ -568,6 +569,9 @@ def load_vs_normal_force():
             #axs[1].plot(disp_mean[0,:,0], disp_mean[0,:,1], label = f'force {force}')
             axs[i].plot(load_curves_mean[0,:,0], load_curves_mean[0,:,1], label=f'{force}')
             #axs[1].plot(timeframes, height)
+            axs[i].set_xlabel(r"$t_p$ [ns]")
+            axs[i].set_ylabel(r"$f$ [$\mu$N]")
+            axs[i].set_title(f'normal force {force}')
     
     plt.suptitle(f"temp {temp}, force {force}, vel {vel}")
     plt.legend()
