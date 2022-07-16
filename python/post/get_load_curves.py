@@ -79,7 +79,7 @@ def all_curves(production = True):
     if production: #beware /datset here
         filetemplate = f'../../simulations/sys_asp{asperities}_uc{uc}/production/dataset/sim_temp{temp}_force{force}_asp{asperities}_or{orientation}_time*_initnum*_seed*_errgrid4_4/log.lammps'
     else:
-        filetemplate = f'../../simulations/sys_asp{asperities}_uc{uc}/vary_normforce/sim_temp{temp}_force*_asp{asperities}_or{orientation}_time{time}_seed*_errgrid4_4/log.lammps'
+        filetemplate = f'../../simulations/sys_asp{asperities}_uc{uc}/vary_speed/sim_temp{temp}_force*_asp{asperities}_or{orientation}_time{time}_seed*_errgrid4_4/log.lammps'
 
     files = glob(filetemplate)
     for _file in files:
