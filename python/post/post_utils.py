@@ -306,7 +306,7 @@ def extract_load_curves(logfile, delta=None, init_time=0, window=1,
     print("Length of log file: ", len(time))
 
     # smooth friction force
-    fx = running_mean(fx, 40)
+    fx = running_mean(fx, 1000)
 
     # convert friction force from eV/Å to μN (micro Newton)
     eV = value(u'elementary charge')  # J
