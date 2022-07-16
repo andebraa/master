@@ -14,7 +14,7 @@ from typing import OrderedDict
 
 class conv2d(nn.Module):
     def __init__(self, input_shape, n_kernels=(8, 16, 32), 
-                 kernel_sizes=(3, 3, 3), n_dense=64, padding=1, 
+                 kernel_sizes=(3, 3), n_dense=64, padding=1, 
                  init=None, bias=True, verbose=True):
         super(conv2d, self).__init__()
         dilation = 1
@@ -51,6 +51,7 @@ class conv2d(nn.Module):
     def forward(self, x):
         for layer in self.layers:
             x = F.leaky_relu(layer(x))
+
         return x.view(x.size()[0])
 
 
@@ -300,7 +301,7 @@ def run_cnn_search(epochs, mode):
 
 
     kernel_size_list = [3, 4, 5] #need to have a good look at the kernels, so they fit my system
-    n_kernels_list = [(8, 16, 32), (16, 32, 64), (32, 64, 128)]
+    n_kernels_list = [(8, 16), (16, 32), (32, 64)]
     n_dense_list = 2**np.arange(2, 11)
 
     search_params = {
@@ -322,7 +323,7 @@ def run_cnn_search(epochs, mode):
     test_loader = DataLoader(utils.CustomDataset(X_test, y_test))
     history = best_instance_vars["history"]
     print(test_loader)
-    test_true, test_pred = utils.test_model(model, device, nn.MSELoss, test_loader, title="test")
+    test_true, test_pred = utils.test_model(model, device, nn.MSELoss, test_loader, title="test")# this call leads to error......
     r2_test = utils.r2_score(test_pred, test_true)
     mse_test = utils.MSE(test_pred, test_true)
     final_state = best_instance_vars["model_state"]
@@ -343,7 +344,7 @@ def run_cnn_search(epochs, mode):
 
 def main():
 
-    epochs = 3
+    epochs = 300
     mode = "mse"
     run_cnn_search(epochs=epochs, mode=mode)
 

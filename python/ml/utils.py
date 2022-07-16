@@ -205,6 +205,7 @@ def load_data(padding = 2):
  
     
     xtrain = np.expand_dims(xtrain,1)
+    xtest = np.expand_dims(xtest,1)
     #xtrain = xtrain.reshape(None,newdim[0], newdim[1], newdim[2]) #usure  
      
     return xtrain, ytrain, xtest, ytest 
