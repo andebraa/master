@@ -75,7 +75,6 @@ def all_curves(production = True):
     orientation = 110
     window = 2000
     #initnum = 0
-    force = 0
 
     if production: #beware /datset here
         filetemplate = f'../../simulations/sys_asp{asperities}_uc{uc}/production/dataset/sim_temp{temp}_force{force}_asp{asperities}_or{orientation}_time*_initnum*_seed*_errgrid4_4/log.lammps'
@@ -89,30 +88,41 @@ def all_curves(production = True):
             outfile_ms = '../../txt/max_static/production/max_static_temp{}_vel{}_force{}_asp{}_or{}_initnum{}_seed{}_errgrid4_4.txt'
             outfile_rise = '../../txt/rise/production/rise_temp{}_vel{}_force{}_asp{}_or{}_initnum{}_seed{}_errgrid4_4.txt'
         else:
-            outfile_lc= '../../txt/load_curves/erratic/load_curves_temp{}_vel{}_force{}_asp{}_or{}_initnum{}_seed{}_errgrid4_4.txt'
-            outfile_ms = '../../txt/max_static/erratic/max_static_temp{}_vel{}_force{}_asp{}_or{}_initnum{}_seed{}_errgrid4_4.txt'
-            outfile_rise = '../../txt/rise/erratic/rise_temp{}_vel{}_force{}_asp{}_or{}_initnum{}_seed{}_errgrid4_4.txt'
+            outfile_lc= '../../txt/load_curves/erratic/load_curves_temp{}_vel{}_force{}_asp{}_or{}_seed{}_errgrid4_4.txt'
+            outfile_ms = '../../txt/max_static/erratic/max_static_temp{}_vel{}_force{}_asp{}_or{}_seed{}_errgrid4_4.txt'
+            outfile_rise = '../../txt/rise/erratic/rise_temp{}_vel{}_force{}_asp{}_or{}_seed{}_errgrid4_4.txt'
 
 
 
-        matches = re.findall('\d+', _file)
+        matches = re.findall('(\d+(?:\.\d+)?)', _file)
+        print(matches)    
         seed = matches[-3]
-        initnum = matches[-4]
+        print(matches)
+        print('seed: ',seed)
         if production:
             pass
         else:
-            force = matches
-        outfile_lc = outfile_lc.format(temp, vel, force, asperities, orientation, initnum, seed) 
-        outfile_ms = outfile_ms.format(temp, vel, force, asperities, orientation, initnum,  seed) 
-        outfile_rise = outfile_rise.format(temp, vel, force, asperities, orientation, initnum, seed) 
+            force = matches[3]
+            
+        print('force: ', force)
+        if production:
+            outfile_lc = outfile_lc.format(temp, vel, force, asperities, orientation, initnum, seed) 
+            outfile_ms = outfile_ms.format(temp, vel, force, asperities, orientation, initnum,  seed) 
+            outfile_rise = outfile_rise.format(temp, vel, force, asperities, orientation, initnum, seed) 
+        
+        else:
+            outfile_lc = outfile_lc.format(temp, vel, force, asperities, orientation, seed) 
+            outfile_ms = outfile_ms.format(temp, vel, force, asperities, orientation,  seed) 
+            outfile_rise = outfile_rise.format(temp, vel, force, asperities, orientation, seed) 
+
         print(outfile_lc)
+
         print(outfile_ms)
         print(outfile_rise)
-        print(initnum)
 
         extract_load_curves(_file, None, 0, window = window, outfile_load_curves = outfile_lc, outfile_max_static = outfile_ms, outfile_rise = outfile_rise)
 
 
 if __name__ == '__main__':
     #get_load_curves()
-    all_curves(production = True)
+    all_curves(production = False)

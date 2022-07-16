@@ -343,7 +343,7 @@ def run_cnn_search(epochs, mode):
 
 def main():
 
-    epochs = 300
+    epochs = 3
     mode = "mse"
     run_cnn_search(epochs=epochs, mode=mode)
 
