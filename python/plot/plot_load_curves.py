@@ -575,7 +575,7 @@ def load_vs_normal_force():
             axs[i].set_ylabel(r"$f$ [$\mu$N]")
             axs[i].set_title(f'normal force {force}')
     
-    plt.suptitle(f"temp {temp}, force {force}, vel {vel}")
+    plt.suptitle(f"Load curves for varying normal force, average of three identical systems with unique seeds")
     plt.legend()
     fig.tight_layout(pad=1.8)
     plt.savefig(fig_dir + 'varying_normalforce_chess.png')
