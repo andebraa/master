@@ -506,7 +506,7 @@ def load_vs_normal_force():
     foursquare = True
 
     if foursquare:
-        fig, axs = plt.subplots(2,2, figsize = (10,10))
+        fig, axs = plt.subplots(2,2, figsize = (12,12))
     else:
         fig, axs = plt.subplots(1, figsize = (10,10))
     
@@ -577,7 +577,7 @@ def load_vs_normal_force():
     
     plt.suptitle(f"temp {temp}, force {force}, vel {vel}")
     plt.legend()
-    fig.tight_layout(pad=0.2)
+    #fig.tight_layout(pad=0.2)
     plt.savefig(fig_dir + 'varying_normalforce_chess.png')
 
 
