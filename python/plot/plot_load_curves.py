@@ -503,14 +503,14 @@ def load_vs_normal_force():
     template_lc = load_curve_dir + 'load_curves_temp{}_vel{}_force{}_asp{}_or{}_seed{}_errgrid{}_{}.txt'
     template_ms = max_static_dir + 'max_static_temp{}_vel{}_force{}_asp{}_or{}_seed{}_errgrid{}_{}.txt'
     
-    foursquare = False
+    foursquare = True
 
     if foursquare:
-        fig, axs = plt.subplots(2,3, figsize = (10,10))
+        fig, axs = plt.subplots(2,2, figsize = (10,10))
     else:
         fig, axs = plt.subplots(1, figsize = (10,10))
     
-    #axs = axs.ravel()
+    axs = axs.ravel()
     #axs2 = []
     #for ax in axs:
     #    axs2.append(ax.twinx())
@@ -536,7 +536,7 @@ def load_vs_normal_force():
         #assert len(glob(heights_file)) == 1
         
         for curve in load_curves_all:
-            axs.plot(curve[:,0], curve[:,1])
+            axs[i].plot(curve[:,0], curve[:,1], alpha = 0.7)
         #height plot 
         
         #data = np.loadtxt(maxz_file)
@@ -566,7 +566,7 @@ def load_vs_normal_force():
         else:
             #axs[0].plot(disp_mean[0,:,0], disp_mean[0,:,1], label = f'force {force}')
             #axs[1].plot(disp_mean[0,:,0], disp_mean[0,:,1], label = f'force {force}')
-            axs.plot(load_curves_mean[0,:,0], load_curves_mean[0,:,1], label=f'{force}')
+            axs[i].plot(load_curves_mean[0,:,0], load_curves_mean[0,:,1], label=f'{force}')
             #axs[1].plot(timeframes, height)
     
     plt.suptitle(f"temp {temp}, force {force}, vel {vel}")
