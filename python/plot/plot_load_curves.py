@@ -577,7 +577,7 @@ def load_vs_normal_force():
     
     plt.suptitle(f"temp {temp}, force {force}, vel {vel}")
     plt.legend()
-    fig.tight_layout(pad=0.2)
+    fig.tight_layout(pad=0.5)
     plt.savefig(fig_dir + 'varying_normalforce_chess.png')
 
 
