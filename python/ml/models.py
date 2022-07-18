@@ -3,7 +3,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 
-class Dnn(nn.Module):
+class dnn(nn.Module):
     def __init__(self, input_shape, n_layers, n_nodes, bias=True, verbose=False):
         super(Dnn, self).__init__()
 
