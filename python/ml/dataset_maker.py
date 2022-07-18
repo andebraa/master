@@ -32,18 +32,18 @@ def dataset_maker():
     rise_dir = project_dir + 'txt/rise/production/'
 
 
-    template_lc = load_curve_dir + 'load_curves_temp{}_vel{}_force{}_asp{}_or{}_initnum{}_seed*_errgrid{}_{}.txt'
+    template_lc = load_curve_dir + 'load_curves_temp{}_vel{}_force{}_asp{}_or{}_initnum*_seed*_errgrid{}_{}.txt'
     template_ms = max_static_dir + 'max_static_temp{}_vel{}_force{}_asp{}_or{}_initnum{}_seed*_errgrid{}_{}.txt'
     template_r = rise_dir + 'rise_temp{}_vel{}_force{}_asp{}_or{}_initnum{}_seed*_errgrid4_4.txt'
     template_aux = project_dir + 'simulations/sys_asp{}_uc{}/production/dataset/sim_temp{}_force{}_asp{}_or{}_time*_initnum{}_seed{}_errgrid4_4/system_asp{}_or{}_uc{}_initnum{}_errgrid4_4_auxiliary.json'
 
-    n = 75
+    lc_files = glob(template_lc.format(temp, vel, force, asperities,orientation, grid[0], grid[1]))
+    n = len(lc_files)
+    print('len lc files: ', n)
     out_matrix = np.zeros((n, 4,4)) #4,4 matrix, 1 rise, 1 max static
     out_y = np.zeros((n, 2))
-    for i in range(n): #this code now works with producition
+    for i, lc_file in enumerate(lc_files): #this code now works with producition
         print('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
-        print(i)
-        lc_files = glob(template_lc.format(temp, vel, force, asperities,orientation, i, grid[0], grid[1]))
         try:
             matches = re.findall('\d+', lc_files[0])
         except:
@@ -51,9 +51,10 @@ def dataset_maker():
             print('failed to run')
             continue #not all files are completed. if this is the case, continue onto next one
         seed = matches[-3]
+        initnum = matches[-4]
 
-        rise_files = glob(template_r.format(temp, vel, force, asperities, orientation,i, grid[0], grid[1]))
-        ms_files = glob(template_ms.format(temp, vel, force, asperities, orientation,i, grid[0], grid[1]))
+        rise_files = glob(template_r.format(temp, vel, force, asperities, orientation,initnum, grid[0], grid[1]))
+        ms_files = glob(template_ms.format(temp, vel, force, asperities, orientation,initnum, grid[0], grid[1]))
         load_curves = []
         rise = []
         ms = []
@@ -64,7 +65,7 @@ def dataset_maker():
             ms.append(np.loadtxt(ms_file)[1])
         ##finding the auxiliary folder of the run to find the norm
         with open (glob(template_aux.format(asperities, uc, temp, force, asperities, orientation,
-                               i, seed, asperities, orientation, uc, seed))[0]) as fp:
+                               initnum, seed, asperities, orientation, uc, seed))[0]) as fp:
             #note that seeds contain runs of the same system, so all are similar to seeds[0]
             aux_dict = json.loads(fp.read())
         

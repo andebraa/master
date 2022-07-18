@@ -289,7 +289,7 @@ class GridSearchCNN(GridSearch):
 
 def run_cnn_search(epochs, mode):
 
-    outname = f"CV_results/scores_cnn.npz"
+    outname = f"CV_results/scores_cnn1.npz"
     if os.path.exists(outname):
         print(f"WARNING: {outname} exists. Exiting..")
         return
@@ -300,17 +300,17 @@ def run_cnn_search(epochs, mode):
     device = utils.get_device("gpu", verbose = True)
 
 
-    kernel_size_list = [3, 4, 5] #need to have a good look at the kernels, so they fit my system
-    n_kernels_list = [(8, 16), (16, 32), (32, 64)]
+    kernel_size_list = [2,3, 4, 5] #need to have a good look at the kernels, so they fit my system
+    n_kernels_list = [(8, 16, 32), (16, 32, 64), (32, 64, 128)]
     n_dense_list = 2**np.arange(2, 11)
 
     search_params = {
         "kernel_sizes": kernel_size_list,
         "n_kernels": n_kernels_list,
         "n_dense": n_dense_list,
-        "learning_rate": [1e-5],
-        "batch_size": [32],
-        "bias": [1]
+        "learning_rate": [1e-5, 1e-4, 1e-3, 1e-2],
+        "batch_size": [16, 32, 64],
+        "bias": [1, 2, 5, 7]
 
     }
 
@@ -344,7 +344,7 @@ def run_cnn_search(epochs, mode):
 
 def main():
 
-    epochs = 300
+    epochs = 400
     mode = "mse"
     run_cnn_search(epochs=epochs, mode=mode)
 
