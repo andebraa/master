@@ -11,49 +11,7 @@ import itertools as it
 from tqdm import trange
 from dataclasses import dataclass
 from typing import OrderedDict
-
-class conv2d(nn.Module):
-    def __init__(self, input_shape, n_kernels=(8, 16, 32), 
-                 kernel_sizes=(3, 3), n_dense=64, padding=1, 
-                 init=None, bias=True, verbose=True):
-        super(conv2d, self).__init__()
-        dilation = 1
-        self.layers = nn.ModuleList()
-        self.layers.append(nn.Conv2d(input_shape[0], n_kernels[0], kernel_sizes[0], padding=padding, bias=bias, dilation=dilation))
-        self.layers.append(nn.BatchNorm2d(n_kernels[0]))
-        for i in range(1, len(n_kernels)):
-            self.layers.append(nn.Conv2d(n_kernels[i-1], n_kernels[i], kernel_sizes[i], padding=padding, bias=bias, dilation=dilation))
-            self.layers.append(nn.BatchNorm2d(n_kernels[i]))
-        self.layers.append(nn.Flatten())
-        dense_inp_shape = self.final_conv_out_shape(input_shape, kernel_sizes, padding, dilation)*n_kernels[-1]
-        self.layers.append(nn.Linear(dense_inp_shape, n_dense, bias=bias))
-        self.layers.append(nn.Linear(n_dense, 1))
-
-        if init is not None:
-            for layer in self.layers:
-                if not isinstance(layer, nn.Flatten):
-                    init(layer.weight)
-
-        if verbose:
-            print(self)
-
-    def final_conv_out_shape(self, input_shape, kernel_sizes, pad, dilation):
-        stride = 1
-        #NOTE changed inputshape[1] and [2] to 0 and 1
-        out_h = input_shape[1]
-        out_w = input_shape[2]
-        for kernel in kernel_sizes:
-            out_h = np.floor((out_h + 2*pad - dilation * (kernel-1) - 1)/stride + 1)
-            out_w = np.floor((out_w + 2*pad - dilation * (kernel-1) - 1)/stride + 1)
-
-        return int(out_h*out_w)
-
-    def forward(self, x):
-        for layer in self.layers:
-            x = F.leaky_relu(layer(x))
-
-        return x.view(x.size()[0])
-
+from models import conv2d
 
 
 class CrossValidation:
