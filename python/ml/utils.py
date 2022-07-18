@@ -184,7 +184,7 @@ def pp(a, padding):
     return b, newdim 
  
  
-def load_data(padding = 2): 
+def load_data(padding = 2, method = 'cnn'): 
     #NOTE, dnn; torch, cnn torch 
     X = np.load('temp_out_matrix.npy') 
     Y = np.load('temp_out_y.npy') 
@@ -203,9 +203,9 @@ def load_data(padding = 2):
     xtrain, newdim = pp(xtrain, padding) 
     xtest, newdim = pp(xtest, padding) 
  
-    
-    xtrain = np.expand_dims(xtrain,1)
-    xtest = np.expand_dims(xtest,1)
+    if method == 'cnn': 
+        xtrain = np.expand_dims(xtrain,1)
+        xtest = np.expand_dims(xtest,1)
     #xtrain = xtrain.reshape(None,newdim[0], newdim[1], newdim[2]) #usure  
      
     return xtrain, ytrain, xtest, ytest 
