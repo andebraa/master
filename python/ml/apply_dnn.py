@@ -24,7 +24,6 @@ class GridSearchDNN(GridSearch):
 
         batch_size = params.get("batch_size") or 32
         learning_rate = params.get("learning_rate") or 1e-5
-
         model_params = {
             "input_shape": X[0].shape[0],
             "n_layers": params["n_layers"],
@@ -123,14 +122,14 @@ class GridSearchDNN(GridSearch):
 
 def run_dnn_search(epochs, mode):
 
-    outname = f"CV_results/scores_dnn.npz"
+    outname = f"CV_results/scores_dnn3_r2.npz"
     if os.path.exists(outname):
         print(f"WARNING: {outname} exists. Exiting..")
         return
     else:
         print(f"running search, saving to {outname}")
 
-    padding = 2
+    padding = 0
     X_CV, y_CV, X_test, y_test = utils.load_data(padding, method = 'dnn') #X_CV, y_CV, X_test, y_test
 
     device = utils.get_device("cpu", verbose = True)
@@ -142,8 +141,8 @@ def run_dnn_search(epochs, mode):
         "n_nodes": n_nodes_list,
         "n_layers": n_layers_list,
         "learning_rate": [1e-5],
-        "batch_size": [32],
-        "bias": [0]
+        "batch_size": [64],
+        "bias": [1]
     }
 
     splits = 5
@@ -164,7 +163,7 @@ def run_dnn_search(epochs, mode):
     print(f"{best_inds=}")
     print(f"{final_params=}")
 
-    final_result = FinalResult(r2_test, mse_test, final_params, final_state, test_true, test_pred, history)
+    final_result = utils.FinalResult(r2_test, mse_test, final_params, final_state, test_true, test_pred, history)
     results = list(results)
     results.insert(0, final_result)
 
@@ -174,7 +173,7 @@ def run_dnn_search(epochs, mode):
 
 def main():
     epochs = 300
-    mode = 'mse'
+    mode = 'r2'
 
     run_dnn_search(epochs=epochs, mode=mode)
 

@@ -206,6 +206,9 @@ def load_data(padding = 2, method = 'cnn'):
     if method == 'cnn': 
         xtrain = np.expand_dims(xtrain,1)
         xtest = np.expand_dims(xtest,1)
+    else:
+        xtrain = xtrain.reshape(-1, xtrain.shape[0]).T
+        xtest = xtest.reshape(-1 ,xtest.shape[0]).T
     #xtrain = xtrain.reshape(None,newdim[0], newdim[1], newdim[2]) #usure  
      
     return xtrain, ytrain, xtest, ytest 
