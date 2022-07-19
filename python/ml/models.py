@@ -1,3 +1,4 @@
+import numpy as np
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -34,7 +35,7 @@ def He_init_CNN(m):
 
 class conv2d(nn.Module):
     def __init__(self, input_shape, n_kernels=(8, 16, 32), kernel_sizes=(3, 3, 3), n_dense=64, padding=1, init=None, bias=True, verbose=True):
-        super(Conv2D, self).__init__()
+        super(conv2d, self).__init__()
         dilation = 1
         self.layers = nn.ModuleList()
         self.layers.append(nn.Conv2d(input_shape[0], n_kernels[0], kernel_sizes[0], padding=padding, bias=bias, dilation=dilation))
