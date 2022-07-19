@@ -11,7 +11,8 @@ import itertools as it
 from tqdm import trange
 from dataclasses import dataclass
 from typing import OrderedDict
-from models import conv2d, dnn
+from apply_cnn import *
+from models import *
 
         
 
@@ -53,8 +54,8 @@ class GridSearchDNN(GridSearch):
 
         for train_idx, val_idx in KFold(n_splits=kfold_splits, random_state=0, shuffle=True).split(X):
 
-            data_train = CustomDataset(X[train_idx], y[train_idx])
-            data_val = CustomDataset(X[val_idx], y[val_idx])
+            data_train = utils.CustomDataset(X[train_idx], y[train_idx])
+            data_val = utils.CustomDataset(X[val_idx], y[val_idx])
 
             train_loader = DataLoader(data_train, batch_size=batch_size, shuffle=False)
             val_loader = DataLoader(data_val, batch_size=batch_size, shuffle=False)
@@ -128,19 +129,11 @@ def run_dnn_search(epochs, mode):
         return
     else:
         print(f"running search, saving to {outname}")
-    preprocessor_params = {
-        "data_path": "../data/model_input.npy",
-        "split_ratios": (0.6, 0.2, 0.2),  #train, val, test
-        "include_symmetries":1,             #0 = no, 1 = rotational, 2 = rot + periodic
-        "mode": "torch",
-        "batch_size": None,
-        "predictor": "yield",
-        "remove_outliers": None
-    }
-    preprocessor = DataPreprocessor(**preprocessor_params)
-    num_periodic = 2
-    X_CV, y_CV, X_test, y_test = CVDataDNN(preprocessor, num_periodic = num_periodic).get() #X_CV, y_CV, X_test, y_test
-    device = utils.get_device("cpu")
+
+    padding = 2
+    X_CV, y_CV, X_test, y_test = utils.load_data(padding, method = 'dnn') #X_CV, y_CV, X_test, y_test
+
+    device = utils.get_device("cpu", verbose = True)
 
     n_nodes_list = 2**np.arange(2, 11) # 4 - 1024 nodes
     n_layers_list = 2**np.arange(1, 8) # 2 - 128 layers
@@ -149,16 +142,17 @@ def run_dnn_search(epochs, mode):
         "n_nodes": n_nodes_list,
         "n_layers": n_layers_list,
         "learning_rate": [1e-5],
-        "batch_size": [32]
+        "batch_size": [32],
+        "bias": [0]
     }
 
     splits = 5
 
-    gridsearch = GridSearchDNN(search_params, Dnn, utils.train_model, device, mode = mode)
+    gridsearch = GridSearchDNN(search_params, dnn, utils.train_model, device, mode = mode)
     best_inds, best_instance_vars, final_params, results = gridsearch.fit(X_CV, y_CV, epochs, splits, verbose=True)
 
     model = best_instance_vars["model"]
-    test_loader = DataLoader(CustomDataset(X_test, y_test))
+    test_loader = DataLoader(utils.CustomDataset(X_test, y_test))
     history = best_instance_vars["history"]
     test_true, test_pred = utils.test_model(model, device, nn.MSELoss, test_loader, title="test")
     r2_test = utils.r2_score(test_pred, test_true)
