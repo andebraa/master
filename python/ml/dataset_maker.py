@@ -43,8 +43,6 @@ def dataset_maker():
     out_matrix = np.zeros((n, 4,4)) #4,4 matrix, 1 rise, 1 max static
     out_y = np.zeros((n, 2))
     for i, lc_file in enumerate(lc_files): #this code now works with producition
-        print('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
-        print(lc_file)
         try:
             matches = re.findall('\d+', lc_file)
         except:
@@ -82,7 +80,7 @@ def dataset_maker():
         out_y[i,:]= np.array((rise,ms))
     print(out_y)
     print(out_matrix)
-    stop
+    print('number of datasets: ', len(out_y))
     np.save( 'temp_out_y.npy', out_y)
     np.save('temp_out_matrix.npy', out_matrix)
 
@@ -108,7 +106,6 @@ def random_dataset():
     out_y = np.empty((N,2))
     
     for i in range(N):
-        print(i)
         out_matrix[i, :,:] = matrices[np.random.randint(0, len(matrices))] #select random matrix setup
         rand_ms = np.random.normal(avg_ms, std_ms)
         rand_rise = np.random.normal(avg_rise, std_rise)
