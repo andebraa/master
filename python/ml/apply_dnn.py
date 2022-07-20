@@ -131,7 +131,9 @@ def run_dnn_search(epochs, mode):
 
     padding = 0
     X_CV, y_CV, X_test, y_test = utils.load_data(padding, method = 'dnn') #X_CV, y_CV, X_test, y_test
-
+    print(X_CV)
+    print(y_CV)
+    stop
     device = utils.get_device("cpu", verbose = True)
 
     n_nodes_list = 2**np.arange(2, 11) # 4 - 1024 nodes
