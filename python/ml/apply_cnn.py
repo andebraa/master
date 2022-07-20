@@ -137,6 +137,9 @@ class GridSearchCNN(GridSearch):
         batch_size = params.get("batch_size") or 32
         learning_rate = params.get("learning_rate") or 1e-5
 
+        print(X)
+        print(y)
+
 
         kernel_sizes = []
         for i in range(len(params["n_kernels"])):
@@ -200,6 +203,9 @@ class GridSearchCNN(GridSearch):
             true_train, pred_train = utils.test_model(model, self.device, self.criterion, train_loader, plot_predictions=False, verbose=False, title="train")
             true_val, pred_val = utils.test_model(model, self.device, self.criterion, val_loader, plot_predictions=False, verbose=False, title="val")
 
+            print(pred_train, true_train)
+            stop
+            
             r2_train = utils.r2_score(pred_train, true_train)
             r2_val = utils.r2_score(pred_val, true_val)
 
@@ -247,7 +253,7 @@ class GridSearchCNN(GridSearch):
 
 def run_cnn_search(epochs, mode):
 
-    outname = f"CV_results/scores_cnn1.npz"
+    outname = f"CV_results/scores_cnn_test.npz"
     if os.path.exists(outname):
         print(f"WARNING: {outname} exists. Exiting..")
         return
@@ -258,21 +264,21 @@ def run_cnn_search(epochs, mode):
     device = utils.get_device("gpu", verbose = True)
 
 
-    kernel_size_list = [2,3, 4] #need to have a good look at the kernels, so they fit my system
-    n_kernels_list = [(8, 16, 32), (16, 32, 64), (32, 64, 128)]
-    n_dense_list = 2**np.arange(2, 11)
+    kernel_size_list = [2] #need to have a good look at the kernels, so they fit my system
+    n_kernels_list = [(8, 16, 32)]
+    n_dense_list = [8]#2**np.arange(2, 11)
 
     search_params = {
         "kernel_sizes": kernel_size_list,
         "n_kernels": n_kernels_list,
         "n_dense": n_dense_list,
-        "learning_rate": [1e-5, 1e-4, 1e-3],
+        "learning_rate": [1e-5, 1e-6],
         "batch_size": [16, 32, 64],
-        "bias": [1, 2]
+        "bias": [1, 0]
 
     }
 
-    splits = 4
+    splits = 6
 
     gridsearch = GridSearchCNN(search_params, conv2d, utils.train_model, device, mode = mode)
     best_inds, best_instance_vars, final_params, results = gridsearch.fit(X_CV, y_CV, epochs, splits, verbose=True)
@@ -303,7 +309,7 @@ def run_cnn_search(epochs, mode):
 def main():
 
     epochs = 400
-    mode = "mse"
+    mode = "r2"
     run_cnn_search(epochs=epochs, mode=mode)
 
 if __name__ == '__main__':

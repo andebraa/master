@@ -44,8 +44,9 @@ def dataset_maker():
     out_y = np.zeros((n, 2))
     for i, lc_file in enumerate(lc_files): #this code now works with producition
         print('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
+        print(lc_file)
         try:
-            matches = re.findall('\d+', lc_files[0])
+            matches = re.findall('\d+', lc_file)
         except:
             print(i)
             print('failed to run')
@@ -70,10 +71,6 @@ def dataset_maker():
             aux_dict = json.loads(fp.read())
         
         if len(rise) > 1:
-            print('rise')
-            print(np.shape(rise))
-            print('ms')
-            print(np.shape(ms))
             rise = np.mean(rise)
             ms = np.mean(ms, axis = 0)
         else:
@@ -82,12 +79,10 @@ def dataset_maker():
         
     
         out_matrix[i, :,:] = np.array(aux_dict['erratic'])
-        print('-------rise---------ms---------')
-        print(rise)
-        print(ms)
-        print(np.shape(out_y))
-        print(np.shape((np.array((rise, ms)))))
         out_y[i,:]= np.array((rise,ms))
+    print(out_y)
+    print(out_matrix)
+    stop
     np.save( 'temp_out_y.npy', out_y)
     np.save('temp_out_matrix.npy', out_matrix)
 

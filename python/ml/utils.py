@@ -32,10 +32,18 @@ def get_device(computer="gpu", verbose=False):
 def r2_score(pred, true):
     if len(pred) == 1:
         return 0
+    print(pred)
+    print(true)
+    print('-------------')
     mean = np.mean(true)
     SS_res = np.sum((true - pred)**2)
     SS_tot = np.sum((true - mean)**2)
+    print(SS_res)
+    print(SS_tot)
+    print('.........')
     r2 = (1 - SS_res/SS_tot)
+    print(r2)
+    stop
     return r2
 
 def MSE(pred, true):
