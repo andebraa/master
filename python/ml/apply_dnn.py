@@ -122,29 +122,26 @@ class GridSearchDNN(GridSearch):
 
 def run_dnn_search(epochs, mode):
 
-    outname = f"CV_results/scores_dnn3_r2.npz"
+    outname = f"CV_results/scores_dnn_r2_pad1.npz"
     if os.path.exists(outname):
         print(f"WARNING: {outname} exists. Exiting..")
         return
     else:
         print(f"running search, saving to {outname}")
 
-    padding = 0
+    padding = 1
     X_CV, y_CV, X_test, y_test = utils.load_data(padding, method = 'dnn') #X_CV, y_CV, X_test, y_test
-    print(X_CV)
-    print(y_CV)
-    stop
     device = utils.get_device("cpu", verbose = True)
 
-    n_nodes_list = 2**np.arange(2, 11) # 4 - 1024 nodes
-    n_layers_list = 2**np.arange(1, 8) # 2 - 128 layers
+    n_nodes_list = 2**np.arange(2, 9) # 4 - 1024 nodes
+    n_layers_list = 2**np.arange(2, 9) # 2 - 128 layers
 
     search_params = {
         "n_nodes": n_nodes_list,
         "n_layers": n_layers_list,
-        "learning_rate": [1e-5],
-        "batch_size": [64],
-        "bias": [1]
+        "learning_rate": [1e-3, 1e-4, 1e-5],
+        "batch_size": [32, 64],
+        "bias": [1, 2]
     }
 
     splits = 5
@@ -174,7 +171,7 @@ def run_dnn_search(epochs, mode):
 
 
 def main():
-    epochs = 300
+    epochs = 400
     mode = 'r2'
 
     run_dnn_search(epochs=epochs, mode=mode)
