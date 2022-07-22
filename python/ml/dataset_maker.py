@@ -110,8 +110,8 @@ def random_dataset():
         out_y[i, :] = np.array((rand_ms, rand_rise))
 
         
-    np.save('random_matrix.npy', out_matrix)
-    np.save('rand_out_y.npy', out_y)
+    np.save('rand_matrix.npy', out_matrix)
+    np.save('rand_y.npy', out_y)
 
 
 
