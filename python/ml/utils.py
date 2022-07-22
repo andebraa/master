@@ -187,8 +187,8 @@ def pp(a, padding):
 def load_data(padding = 2, method = 'cnn', random = False): 
     
     if random:
-        X = np.load('temp_random_matrix.npy') 
-        Y = np.load('temp_out_y.npy') 
+        X = np.load('rand_matrix.npy') 
+        Y = np.load('rand_y.npy') 
         Y = Y[:,0]
 
     else:
