@@ -78,8 +78,8 @@ def dataset_maker():
     print(out_y)
     print(out_matrix)
     print('number of datasets: ', len(out_y))
-    np.save( 'temp_out_y.npy', out_y)
-    np.save('temp_out_matrix.npy', out_matrix)
+    np.save( 'out_y.npy', out_y)
+    np.save('out_matrix.npy', out_matrix)
 
 
 def random_dataset():
@@ -90,7 +90,7 @@ def random_dataset():
     '''
 
     real_matrix = np.load('../pre/config_list.npy')
-    real_y = np.load('temp_out_y.npy')
+    real_y = np.load('out_y.npy')
     print(np.shape(real_y))
     print(real_y)
     avg_ms, avg_rise = np.mean(real_y, axis=0)
