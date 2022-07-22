@@ -122,14 +122,14 @@ class GridSearchDNN(GridSearch):
 
 def run_dnn_search(epochs, mode):
 
-    outname = f"CV_results/scores_dnn_r2_pad1.npz"
+    outname = f"CV_results/scores_dnn_mse_pad0.npz"
     if os.path.exists(outname):
         print(f"WARNING: {outname} exists. Exiting..")
         return
     else:
         print(f"running search, saving to {outname}")
 
-    padding = 1
+    padding = 0
     X_CV, y_CV, X_test, y_test = utils.load_data(padding, method = 'dnn') #X_CV, y_CV, X_test, y_test
     device = utils.get_device("cpu", verbose = True)
 
@@ -172,7 +172,7 @@ def run_dnn_search(epochs, mode):
 
 def main():
     epochs = 400
-    mode = 'r2'
+    mode = 'mse'
 
     run_dnn_search(epochs=epochs, mode=mode)
 

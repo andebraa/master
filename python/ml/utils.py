@@ -184,11 +184,17 @@ def pp(a, padding):
     return b, newdim 
  
  
-def load_data(padding = 2, method = 'cnn'): 
-    #NOTE, dnn; torch, cnn torch 
-    X = np.load('temp_out_matrix.npy') 
-    Y = np.load('temp_out_y.npy') 
-    Y = Y[:,0]
+def load_data(padding = 2, method = 'cnn', random = False): 
+    
+    if random:
+        X = np.load('temp_random_matrix.npy') 
+        Y = np.load('temp_out_y.npy') 
+        Y = Y[:,0]
+
+    else:
+        X = np.load('temp_out_matrix.npy') 
+        Y = np.load('temp_out_y.npy') 
+        Y = Y[:,0]
  
     #shuffle 
     indx = np.arange(0, X.shape[0]) 
