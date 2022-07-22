@@ -249,13 +249,13 @@ class GridSearchCNN(GridSearch):
 
 def run_cnn_search(epochs, mode):
 
-    outname = f"CV_results/scores_cnn.npz"
+    outname = f"CV_results/scores_cnn_mse_epoch300_padding1.npz"
     if os.path.exists(outname):
         print(f"WARNING: {outname} exists. Exiting..")
         return
     else:
         print(f"running search, saving to {outname}")
-    padding = 2
+    padding = 1
     X_CV, y_CV, X_test, y_test = utils.load_data(padding) #X_CV, y_CV, X_test, y_test
     device = utils.get_device("gpu", verbose = True)
 
