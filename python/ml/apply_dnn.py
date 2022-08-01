@@ -122,12 +122,6 @@ class GridSearchDNN(GridSearch):
 
 def run_dnn_search(epochs, mode):
 
-    outname = f"CV_results/scores_dnn_mse_pad0_random.npz"
-    if os.path.exists(outname):
-        print(f"WARNING: {outname} exists. Exiting..")
-        return
-    else:
-        print(f"running search, saving to {outname}")
 
     padding = 0
     X_CV, y_CV, X_test, y_test = utils.load_data(padding, method = 'dnn', random = True) #X_CV, y_CV, X_test, y_test
@@ -166,12 +160,19 @@ def run_dnn_search(epochs, mode):
     results = list(results)
     results.insert(0, final_result)
 
+    outname = f"CV_results/scores_dnn_{mode}_epochs{epochs}_pad{padding}_splits{splits}_random.npz"
+    if os.path.exists(outname):
+        print(f"WARNING: {outname} exists. Exiting..")
+        return
+    else:
+        print(f"running search, saving to {outname}")
+
     np.savez(outname, results, allow_pickle=True)
     print(f"wrote {outname}")
 
 
 def main():
-    epochs = 400
+    epochs = 4
     mode = 'mse'
 
     run_dnn_search(epochs=epochs, mode=mode)
