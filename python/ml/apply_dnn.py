@@ -172,7 +172,7 @@ def run_dnn_search(epochs, mode):
 
 def main():
     epochs = 400
-    mode = 'mse'
+    mode = 'r2'
 
     run_dnn_search(epochs=epochs, mode=mode)
 
