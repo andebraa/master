@@ -123,8 +123,8 @@ class GridSearchDNN(GridSearch):
 def run_dnn_search(epochs, mode):
 
 
-    padding = 0
-    X_CV, y_CV, X_test, y_test = utils.load_data(padding, method = 'dnn', random = True) #X_CV, y_CV, X_test, y_test
+    padding = 1
+    X_CV, y_CV, X_test, y_test = utils.load_data(padding, method = 'dnn', random = False) #X_CV, y_CV, X_test, y_test
     device = utils.get_device("cpu", verbose = True)
 
     n_nodes_list = 2**np.arange(2, 9) # 4 - 1024 nodes
@@ -160,7 +160,7 @@ def run_dnn_search(epochs, mode):
     results = list(results)
     results.insert(0, final_result)
 
-    outname = f"CV_results/scores_dnn_{mode}_epochs{epochs}_pad{padding}_splits{splits}_random.npz"
+    outname = f"CV_results/scores_dnn_{mode}_epochs{epochs}_pad{padding}_splits{splits}_run2.npz"
     if os.path.exists(outname):
         print(f"WARNING: {outname} exists. Exiting..")
         return
@@ -172,8 +172,8 @@ def run_dnn_search(epochs, mode):
 
 
 def main():
-    epochs = 4
-    mode = 'mse'
+    epochs = 400
+    mode = 'r2'
 
     run_dnn_search(epochs=epochs, mode=mode)
 
