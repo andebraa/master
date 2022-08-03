@@ -249,13 +249,7 @@ class GridSearchCNN(GridSearch):
 
 def run_cnn_search(epochs, mode):
 
-    outname = f"CV_results/scores_cnn_mse_epoch300_padding1_random.npz"
-    if os.path.exists(outname):
-        print(f"WARNING: {outname} exists. Exiting..")
-        return
-    else:
-        print(f"running search, saving to {outname}")
-    padding = 1
+    padding = 2
     X_CV, y_CV, X_test, y_test = utils.load_data(padding, random = True) #X_CV, y_CV, X_test, y_test
     device = utils.get_device("gpu", verbose = True)
 
@@ -294,6 +288,13 @@ def run_cnn_search(epochs, mode):
     final_result = utils.FinalResult(r2_test, mse_test, final_params, final_state, test_true, test_pred, history)
     results = list(results)
     results.insert(0, final_result)
+
+    outname = f"CV_results/scores_cnn_{mode}_epochs{epochs}_pad{padding}_splits{splits}_random.npz"
+    if os.path.exists(outname):
+        print(f"WARNING: {outname} exists. Exiting..")
+        return
+    else:
+        print(f"running search, saving to {outname}")
     np.savez(outname, results, allow_pickle=True)
     print(f"wrote {outname}")
 
