@@ -192,8 +192,8 @@ def load_data(padding = 2, method = 'cnn', random = False):
         Y = Y[:,0]
 
     else:
-        X = np.load('temp_out_matrix.npy') 
-        Y = np.load('temp_out_y.npy') 
+        X = np.load('out_matrix.npy') 
+        Y = np.load('out_y.npy') 
         Y = Y[:,0]
  
     #shuffle 

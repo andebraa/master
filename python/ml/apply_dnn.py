@@ -123,7 +123,7 @@ class GridSearchDNN(GridSearch):
 def run_dnn_search(epochs, mode):
 
 
-    padding = 1
+    padding = 0
     X_CV, y_CV, X_test, y_test = utils.load_data(padding, method = 'dnn', random = False) #X_CV, y_CV, X_test, y_test
     device = utils.get_device("cpu", verbose = True)
 
@@ -173,7 +173,7 @@ def run_dnn_search(epochs, mode):
 
 def main():
     epochs = 400
-    mode = 'r2'
+    mode = 'mse'
 
     run_dnn_search(epochs=epochs, mode=mode)
 
