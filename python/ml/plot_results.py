@@ -43,4 +43,8 @@ for i,_file in enumerate(files_cnn):
 
 axs[1].set_title('cnn')
 axs[0].set_title('dnn')
+axs[0].set_xlabel('mse')
+axs[1].set_xlabel('mse')
+axs[0].set_ylabel('r2')
+axs[1].set_ylabel('r2')
 fig.savefig('fig/ml_plot.png')
