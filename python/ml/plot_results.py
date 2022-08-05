@@ -23,7 +23,8 @@ for i,_file in enumerate(files_dnn):
     best_mse = obj['arr_0'][0].mse_test
     best_r2 = obj['arr_0'][0].r2_test
     print('i, best config')
-    print(i, obj['arr_0'][1])
+    print(_file)
+    print(i, obj['arr_0'][0])
     if 'random' in _file:
         random_dnn.append((best_r2, best_mse))
         axs[0].plot(best_mse, best_r2, 'o',c='r')
