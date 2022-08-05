@@ -6,10 +6,11 @@ import numpy as np
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 from multiline import multiline
-from matplotlib import style
+from matplotlib import style, rcParams
 from scipy.optimize import curve_fit
 from plot_utils import sigmoid, rip_norm, fit_sigmoid
 plt.style.use('seaborn')
+rcParams['axes.titlepad'] = 20
 
 def plot_max_static_dist():
     '''
