@@ -249,7 +249,7 @@ class GridSearchCNN(GridSearch):
 
 def run_cnn_search(epochs, mode):
 
-    padding = 2
+    padding = 1
     X_CV, y_CV, X_test, y_test = utils.load_data(padding, random = True) #X_CV, y_CV, X_test, y_test
     device = utils.get_device("gpu", verbose = True)
 
@@ -289,7 +289,7 @@ def run_cnn_search(epochs, mode):
     results = list(results)
     results.insert(0, final_result)
 
-    outname = f"CV_results/scores_cnn_{mode}_epochs{epochs}_pad{padding}_splits{splits}_random.npz"
+    outname = f"CV_results/scores_cnn_{mode}_epochs{epochs}_pad{padding}_splits{splits}_random2.npz"
     if os.path.exists(outname):
         print(f"WARNING: {outname} exists. Exiting..")
         return
