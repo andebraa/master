@@ -488,7 +488,7 @@ def load_vs_normal_force():
             axs[i].plot(load_curves_mean[0,:,0], load_curves_mean[0,:,1], label=f'average')
             axs[i].legend()
             #axs[1].plot(timeframes, height)
-            axs[i].set_ylim([-0.03, 0.5])
+            axs[i].set_ylim([-0.03, 0.18])
             axs[i].set_xlabel(r"$t_p$ [ns]")
             axs[i].set_ylabel(r"$f$ [$\mu$N]")
             axs[i].set_title(f'velocity {vel}')
