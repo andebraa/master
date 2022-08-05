@@ -46,7 +46,7 @@ def plot_max_static_dist():
     fig, axs = plt.subplots(2)
     axs = axs.ravel()
 
-    for i in range(100): #this code now works with producition
+    for i in range(300): #this code now works with producition
         lc_files = glob(template_lc.format(temp, vel, force, asperities,orientation, i, grid[0], grid[1]))
         print(lc_files)
         lc_file = lc_files[0]
@@ -76,8 +76,8 @@ def plot_max_static_dist():
         print('twat')
         print(rise)
         print(ms)
-        axs[0].plot(matrix_norm, rise, 'o')
-        axs[1].plot(matrix_norm, ms[1], 'o')
+        axs[0].plot(matrix_norm, rise, 'o', c='b')
+        axs[1].plot(matrix_norm, ms[1], 'o', c = 'b')
 
 
 

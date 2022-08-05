@@ -19,8 +19,8 @@ def get_load_curves():
     asperities = 8
     uc = 5
     temp = 2300
-    vel = 5
-    time = '*'
+    #vel = 5
+    time = 2000
     orientation = 110
     window = 2000
     #initnum = 0
@@ -30,14 +30,14 @@ def get_load_curves():
     #initseed = {0: (47011, 82042, 22453), 1: (22453, 94902, 87980), 2: (21337, 87980), 3:(11962, 13930),
     #            4: (21979, 89876), 5: (43427, 48032)} # 8 asp
     initseed = {0: (88094, 43563, 94913), 1: (98414, 72415, 75761), 2: (86494, 67638, 60869), 3: (94091, 77768, 81554)}
-    
+    varyspeed = {2:(55910,60930,14424), 5:(72005,76229,37333), 7:(21702,77727,96687), 10:(56649,11605,41397)}
     #for force in [0.0001, 0.001, 0.01, 0]:
-    for initnum, seed in initseed.items():
+    for vel, seed in varyspeed.items():
 
 
         if isinstance(seed, tuple):
             for see in seed:
-                logfiles = f'../../simulations/sys_asp{asperities}_uc{uc}/production/sim_temp{temp}_force{force}_asp{asperities}_or{orientation}_time{time}_initnum{initnum}_seed{see}_errgrid4_4/log.lammps'
+                logfiles = f'../../simulations/sys_asp{asperities}_uc{uc}/vary_speed/sim_temp{temp}_force{force}_asp{asperities}_or{orientation}_time{time}_seed{see}_errgrid4_4/log.lammps'
                 print(logfiles)
                 if logfiles == []:
                     print(f'Warning, logfile not found; \n seed: {see}')
@@ -45,9 +45,9 @@ def get_load_curves():
                     print('--------------------------------------------------------------------------')
                     print('file: ', logfile)
                     matches = re.findall('\d+', logfile)
-                    outfile_lc = f'../../txt/load_curves/production/load_curves_temp{temp}_vel{vel}_force{force}_asp{asperities}_or{orientation}_initnum{initnum}_seed{see}_errgrid4_4.txt'
-                    outfile_ms = f'../../txt/max_static/production/max_static_temp{temp}_vel{vel}_force{force}_asp{asperities}_or{orientation}_initnum{initnum}_seed{see}_errgrid4_4.txt'
-                    outfile_rise = f'../../txt/rise/production/rise_temp{temp}_vel{vel}_force{force}_asp{asperities}_or{orientation}_initnum{initnum}_seed{see}_errgrid4_4.txt'
+                    outfile_lc = f'../../txt/load_curves/erratic/vary_speed/load_curves_temp{temp}_vel{vel}_force{force}_asp{asperities}_or{orientation}_seed{see}_errgrid4_4.txt'
+                    outfile_ms = f'../../txt/max_static/erratic/vary_speed/max_static_temp{temp}_vel{vel}_force{force}_asp{asperities}_or{orientation}_seed{see}_errgrid4_4.txt'
+                    outfile_rise = f'../../txt/rise/erratic/vary_speed/rise_temp{temp}_vel{vel}_force{force}_asp{asperities}_or{orientation}_seed{see}_errgrid4_4.txt'
 
                     extract_load_curves(logfile, None, 0, window = window, outfile_load_curves = outfile_lc, outfile_max_static = outfile_ms, outfile_rise = outfile_rise)
         else:
@@ -126,5 +126,5 @@ def all_curves(production = True):
 
 
 if __name__ == '__main__':
-    #get_load_curves()
-    all_curves(production = True)
+    get_load_curves()
+    #all_curves(production = True)

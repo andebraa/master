@@ -438,7 +438,7 @@ def load_vs_normal_force():
     varyspeed = {2:(55910,60930,14424), 5:(72005,76229,37333), 7:(21702,77727,96687), 10:(56649,11605,41397)}
 
     #c = plt.cm.viridis(np.array(tuple(varyforce))/(0.01))
-    for i, (cel, seed) in enumerate(varyspeed.items()):
+    for i, (vel, seed) in enumerate(varyspeed.items()):
         
         load_curves_all, load_curves_mean = load_load_curves(temp, vel, force, asperities, orientation,
                                                     grid, template_lc, template_ms, 0, seed, False)
@@ -622,7 +622,7 @@ def plot_production(temp, vel, force, uc, asperities, time, orientation, grid, e
 
 
 if __name__ == '__main__':
-
+    '''
     # user input
     temp = 2300
     time = 2000
@@ -652,7 +652,7 @@ if __name__ == '__main__':
 
         template_lc = load_curve_dir + 'load_curves_temp{}_vel{}_force{}_or{}_seed*_grid{}_{}.txt'
         template_ms = max_static_dir + 'max_static_temp{}_vel{}_force{}_or{}_seed*_grid{}_{}.txt'
-
+    '''
     #plot_all_curves_and_mean(temp, vel, force, orientation, grid, template_lc, template_ms, seeds)    
     #plot_mean_of_multiple()
     #plot_load_curves_as_funciton_of_top_thiccness()
