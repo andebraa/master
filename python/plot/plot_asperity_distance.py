@@ -48,24 +48,16 @@ def plot_max_static_dist():
 
     for i in range(100): #this code now works with producition
         lc_files = glob(template_lc.format(temp, vel, force, asperities,orientation, i, grid[0], grid[1]))
-        if len(lc_files) > 1:
-            lc_file = lc_files[0]
-        else:
-            lc_file = lc_files
+        print(lc_files)
+        lc_file = lc_files[0]
 
         matches = re.findall('\d+', lc_file)
         seed = matches[-3]
 
         rise_files = glob(template_r.format(temp, vel, force, asperities, orientation,i, grid[0], grid[1]))
         ms_files = glob(template_ms.format(temp, vel, force, asperities, orientation,i, grid[0], grid[1]))
-        if len(rise_files) > 1:
-            rise_file = rise_files[0]
-        else:
-            rise_file = rise_files
-        if len(ms_files) > 1:
-            ms_file = ms_files[0]
-        else:
-            ms_file = ms_files
+        rise_file = rise_files[0]
+        ms_file = ms_files[0]
         
         infile = loadtxt(lc_file)
         load_curve = np.array(infile)
