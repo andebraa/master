@@ -105,7 +105,7 @@ def run_relaxpush(force = 0, init_num = 0, run_num = 0, asperities = 8, orientat
     erratic = True
 
     #manually inputting init seed. 
-    _seed = 22580
+    _seed = 37216
     
     # paths
     #project_dir = "/run/user/1004/andebraa_masterdata/"
@@ -116,12 +116,17 @@ def run_relaxpush(force = 0, init_num = 0, run_num = 0, asperities = 8, orientat
         relax_dir = project_dir + f"simulations/sys_asp{asperities}_uc{uc}/production/"
     else:
         init_dir = project_dir + f'initial_system/erratic/'
-        relax_dir = project_dir + f"simulations/sys_asp{asperities}_uc{uc}/vary_speed/"
+        relax_dir = project_dir + f"simulations/sys_asp{asperities}_uc{uc}/"
 
     # Finding the init datafile
     #finding all files in directory, printing the seeds and having user write in desired seed
-    template_dump = init_dir +f"erratic/system_asp{asperities}_or{orientation}_uc{uc}_initnum{init_num}_errgrid{grid[0]}_{grid[1]}.data"
-   
+    
+    if production:
+        template_dump = init_dir +f"erratic/system_asp{asperities}_or{orientation}_uc{uc}_initnum{init_num}_errgrid{grid[0]}_{grid[1]}.data"
+    else:
+        template_dump = init_dir +f"erratic/system_asp{asperities}_or{orientation}_seed{_seed}_errgrid{grid[0]}_{grid[1]}.data"
+
+
     if not template_dump:
         raise IndexError('no files found')
     
@@ -173,13 +178,11 @@ def run_relaxpush(force = 0, init_num = 0, run_num = 0, asperities = 8, orientat
 
 
 if __name__ == '__main__':
-    #NOTE: erratic is currently vary_speed
-    #run_relaxpush(init_num = 0, asperities = 8, production = False)
+    run_relaxpush(init_num = 0, asperities = 8, production = False)
     #for force in [0, 0.0001, 0.001, 0.01]:
     #    run_relaxpush(force = force, production = False)
     
     #for vel in [2, 5, 7, 10]:
     #    run_relaxpush(force = 0, production = False, vel = vel)
-    #ran 40 last time
-    for i in range(304,312):
-        run_relaxpush(init_num = i, asperities = 8, force = 0, orientation = 110, production = True)
+    #for i in range(312,320):
+    #    run_relaxpush(init_num = i, asperities = 8, force = 0, orientation = 110, production = True)

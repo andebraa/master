@@ -16,87 +16,9 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 from multiline import multiline
 from matplotlib import style
-from scipy.optimize import curve_fit
+from plot_utils import sigmoid, rip_norm, test_rip_norm, fit_sigmoid
 plt.style.use('seaborn')
 
-def sigmoid(x, L ,x0, k, b):
-    y = L / (1 + np.exp(-k*(x-x0))) + b
-    return (y)
-
-def rip_norm(matrix):
-    '''
-    script for finding average square norm with periodic boundary conditions
-    assumes 4x4 matrix
-    '''
-    matrix = np.array(matrix)
-    print(matrix)
-    indices = np.asarray(np.where(matrix==1.0)).T
-    #goes from (1,8,2) to (8,8,2)
-    x = indices[np.newaxis,:] #this basically meshgrids a new axis
-    y = indices[:,np.newaxis]
-    dist = x-y #subtract x and y to find distance
-    dist = dist - (np.round(dist/4))*4 #if distance is more than 2, the other way is shorter
-    
-    norm = np.linalg.norm(dist, axis = 2)
-    norm = norm**2 #square so small differences are more apparent
-    res = np.sum(norm)/2 #matrix is symmetric, so upper triangle is just half of the sum
-    ones_matrix = np.ones((len(norm[0]), len(norm[1]))) #number of elements in upper triangle
-    res = res/((ones_matrix.sum() - np.trace(ones_matrix))/2)
-    print(res)
-
-    #sum over øvre triangel i annen, del på 8
-    return res
-
-def test_rip_norm():
-    a = np.array(([[0,0,0,0,],[0,1,1,0],[0,0,0,0],[0,0,0,0]]))
-    assert rip_norm(a) ==1
-
-def fit_sigmoid(load_curve, fig, axs):
-    '''
-    https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.curve_fit.html
-    https://stackoverflow.com/questions/55725139/fit-sigmoid-function-s-shape-curve-to-data-using-python
-    '''
-    time = load_curve[:,0]
-    fx = load_curve[:,1]
-    
-    #fitting sigmoid to selected interval.
-    polfit_start_indx = (np.abs(time - 0.7)).argmin()
-    polfit_stop_indx = (np.abs(time - 1.3)).argmin()
-    #translation so it has same shape as load_curve
-    polfit_data = np.array((time[polfit_start_indx:polfit_stop_indx],
-                           fx[polfit_start_indx:polfit_stop_indx])).T
-
-
-    #curve fit doesn't like nan. removing theese for now
-    non_nan_mask = ~np.isnan(polfit_data[:,1])
-
-    #https://stackoverflow.com/questions/55725139/fit-sigmoid-function-s-shape-curve-to-data-using-python
-    time_nnan = polfit_data[non_nan_mask,0]
-    load_curve_nnan = polfit_data[non_nan_mask,1]
-    #this was [max(time_nnan), etc and worked.. website says ydata first
-    p0 = [max(time_nnan), np.median(time_nnan),1,min(load_curve_nnan)] # this is an mandatory initial guess
-
-
-    popt, pcov = curve_fit(sigmoid, time_nnan, load_curve_nnan,p0, method='dogbox')
-
-    #max_rise = np.max(np.gradient(sigmoid(time_nnan, *popt))) this gives wrong values. idk
-
-    #repeating selection and polyfit but this time fitting linear func to sigmoid midriff
-    midriff = np.array((popt[1] - 0.05, popt[1] + 0.05))
-
-    print(f'midriff ',midriff)
-    midriff_start_indx = (np.abs(time_nnan - midriff[0])).argmin()
-    midriff_stop_indx = (np.abs(time_nnan - midriff[1])).argmin()
-
-    print('midriff indices ', midriff_start_indx, midriff_stop_indx)
-    polfit_data2 = np.array((time_nnan[midriff_start_indx:midriff_stop_indx],
-                            load_curve_nnan[midriff_start_indx:midriff_stop_indx])).T
-
-    rise, intersect = np.polyfit(polfit_data2[:,0], polfit_data2[:,1], 1)
-
-    axs.plot(time_nnan, sigmoid(time_nnan, *popt))
-    
-    return 1
 
 def load_displacement(temp, vel, force, orientation, grid, disp_template, initnum, seeds):
     disp_all = []
@@ -348,10 +270,7 @@ def plot_mean_of_multiple():
     erratic = True
     asperities = 8
     initnum = 0
-    timestep = 0.002
     time = 2000
-    reltime = 800
-    pushtime = 1000
 
     lc_len = 361
     # paths
@@ -486,10 +405,7 @@ def load_vs_normal_force():
     erratic = True
     asperities = 8
     initnum = 0
-    timestep = 0.002
-    time = 1800
-    reltime = 800
-    pushtime = 1000
+    time = 2000
 
     lc_len = 361
     # paths
@@ -497,11 +413,11 @@ def load_vs_normal_force():
     fig_dir = project_dir + 'fig/'
     highz_dir = '../../txt/high_z/'
 
-    load_curve_dir = project_dir + 'txt/load_curves/erratic/'
-    max_static_dir = project_dir + 'txt/max_static/erratic/'
+    load_curve_dir = project_dir + 'txt/load_curves/erratic/vary_normforce/'
+    max_static_dir = project_dir + 'txt/max_static/erratic/vary_normforce/'
 
-    template_lc = load_curve_dir + 'load_curves_temp{}_vel{}_force{}_asp{}_or{}_seed{}_errgrid{}_{}.txt'
-    template_ms = max_static_dir + 'max_static_temp{}_vel{}_force{}_asp{}_or{}_seed{}_errgrid{}_{}.txt'
+    template_lc = load_curve_dir + 'load_curves_temp{}_vel{}_force*_asp{}_or{}_seed*_errgrid{}_{}.txt'
+    template_ms = max_static_dir + 'max_static_temp{}_vel{}_force*_asp{}_or{}_seed*_errgrid{}_{}.txt'
     
     foursquare = True
 
@@ -515,12 +431,15 @@ def load_vs_normal_force():
     #for ax in axs:
     #    axs2.append(ax.twinx())
     #axs2 = np.array((axs2))
-
-    varyforce = {0:(26926, 43898, 74145), 0.0001: (11678, 27618, 89567), 0.001:(43698, 76180,77635) , 
-                 0.01:(70338, 80288, 83673)}
+    files = glob(template_lc.format(temp, vel, asperities, orientation)
 
     #c = plt.cm.viridis(np.array(tuple(varyforce))/(0.01))
     for i, (force, seed) in enumerate(varyforce.items()):
+        matches = re.findall('(\d+(?:\.\d+)?)', _file)
+        print(matches)
+        seed = matches[-3]
+        force = matches[-6]
+
         
         load_curves_all, load_curves_mean = load_load_curves(temp, vel, force, asperities, orientation,
                                                     grid, template_lc, template_ms, 0, seed, False)

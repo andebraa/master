@@ -89,9 +89,9 @@ def all_curves(production = True):
             outfile_ms = '../../txt/max_static/production/max_static_temp{}_vel{}_force{}_asp{}_or{}_initnum{}_seed{}_errgrid4_4.txt'
             outfile_rise = '../../txt/rise/production/rise_temp{}_vel{}_force{}_asp{}_or{}_initnum{}_seed{}_errgrid4_4.txt'
         else:
-            outfile_lc= '../../txt/load_curves/erratic/load_curves_temp{}_vel{}_force{}_asp{}_or{}_seed{}_errgrid4_4.txt'
-            outfile_ms = '../../txt/max_static/erratic/max_static_temp{}_vel{}_force{}_asp{}_or{}_seed{}_errgrid4_4.txt'
-            outfile_rise = '../../txt/rise/erratic/rise_temp{}_vel{}_force{}_asp{}_or{}_seed{}_errgrid4_4.txt'
+            outfile_lc= '../../txt/load_curves/erratic/vary_speed/load_curves_temp{}_vel{}_force{}_asp{}_or{}_seed{}_errgrid4_4.txt'
+            outfile_ms = '../../txt/max_static/erratic/vary_speed/max_static_temp{}_vel{}_force{}_asp{}_or{}_seed{}_errgrid4_4.txt'
+            outfile_rise = '../../txt/rise/erratic/vary_speed/rise_temp{}_vel{}_force{}_asp{}_or{}_seed{}_errgrid4_4.txt'
 
 
 
@@ -127,4 +127,4 @@ def all_curves(production = True):
 
 if __name__ == '__main__':
     #get_load_curves()
-    all_curves(production = True)
+    all_curves(production = False)
