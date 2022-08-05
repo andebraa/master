@@ -399,13 +399,16 @@ def load_vs_normal_force():
 
     # user input
     temp = 2300
-    vel = 5
+    force = 0
     orientation = 110
     grid = (4,4)
     erratic = True
     asperities = 8
     initnum = 0
-    time = 2000
+    timestep = 0.002
+    time = 1800
+    reltime = 800
+    pushtime = 1000
 
     lc_len = 361
     # paths
@@ -413,11 +416,11 @@ def load_vs_normal_force():
     fig_dir = project_dir + 'fig/'
     highz_dir = '../../txt/high_z/'
 
-    load_curve_dir = project_dir + 'txt/load_curves/erratic/vary_normforce/'
-    max_static_dir = project_dir + 'txt/max_static/erratic/vary_normforce/'
+    load_curve_dir = project_dir + 'txt/load_curves/erratic/vary_speed/'
+    max_static_dir = project_dir + 'txt/max_static/erratic/vary_speed/'
 
-    template_lc = load_curve_dir + 'load_curves_temp{}_vel{}_force*_asp{}_or{}_seed*_errgrid{}_{}.txt'
-    template_ms = max_static_dir + 'max_static_temp{}_vel{}_force*_asp{}_or{}_seed*_errgrid{}_{}.txt'
+    template_lc = load_curve_dir + 'load_curves_temp{}_vel{}_force{}_asp{}_or{}_seed{}_errgrid{}_{}.txt'
+    template_ms = max_static_dir + 'max_static_temp{}_vel{}_force{}_asp{}_or{}_seed{}_errgrid{}_{}.txt'
     
     foursquare = True
 
@@ -431,15 +434,11 @@ def load_vs_normal_force():
     #for ax in axs:
     #    axs2.append(ax.twinx())
     #axs2 = np.array((axs2))
-    files = glob(template_lc.format(temp, vel, asperities, orientation)
+
+    varyspeed = {2:(55910,60930,14424), 5:(72005,76229,37333), 7:(21702,77727,96687), 10:(56649,11605,41397)}
 
     #c = plt.cm.viridis(np.array(tuple(varyforce))/(0.01))
-    for i, (force, seed) in enumerate(varyforce.items()):
-        matches = re.findall('(\d+(?:\.\d+)?)', _file)
-        print(matches)
-        seed = matches[-3]
-        force = matches[-6]
-
+    for i, (cel, seed) in enumerate(varyspeed.items()):
         
         load_curves_all, load_curves_mean = load_load_curves(temp, vel, force, asperities, orientation,
                                                     grid, template_lc, template_ms, 0, seed, False)
@@ -492,13 +491,12 @@ def load_vs_normal_force():
             axs[i].set_ylim([-0.03, 0.5])
             axs[i].set_xlabel(r"$t_p$ [ns]")
             axs[i].set_ylabel(r"$f$ [$\mu$N]")
-            axs[i].set_title(f'normal force {force}')
+            axs[i].set_title(f'velocity {vel}')
     
-    plt.suptitle(f"Load curves for varying normal force, average of three identical systems with unique seeds")
+    plt.suptitle(f"Load curves for varying top plate velcity, average of three identical systems with unique seeds")
     plt.legend()
     fig.tight_layout(pad=1.8)
-    plt.savefig(fig_dir + 'varying_normalforce_chess.png')
-
+    plt.savefig(fig_dir + 'varying_vel_chess.png')
 
 def plot_production(temp, vel, force, uc, asperities, time, orientation, grid, erratic, production = True):
     
