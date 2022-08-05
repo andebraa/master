@@ -85,7 +85,7 @@ def plot_max_static_dist():
     axs[0].set_ylabel('rise of simoid fit')
     axs[1].set_xlabel('norm of asperity distance')
     axs[1].set_ylabel('max static')
-    fig.tight_layout()
+    fig.tight_layout(pad=0.8)
     
     fig.suptitle(f"the rise and max static as a function of the norm of asperity distances, \n temp {temp}, force {force}, vel {vel}, asperities {asperities}, orientation {orientation}")
     fig.savefig(fig_dir + 'png/asperity_distance_v_maxstatic.png')
