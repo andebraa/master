@@ -44,7 +44,7 @@ def plot_max_static_dist():
     template_r = rise_dir + 'rise_temp{}_vel{}_force{}_asp{}_or{}_initnum{}_seed*_errgrid4_4.txt'
     template_aux = project_dir + 'simulations/sys_asp{}_uc{}/production/dataset/sim_temp{}_force{}_asp{}_or{}_time*_initnum{}_seed{}_errgrid4_4/system_asp{}_or{}_uc{}_initnum{}_errgrid4_4_auxiliary.json'
 
-    fig, axs = plt.subplots(2)
+    fig, axs = plt.subplots(2, figsize=(10,10))
     axs = axs.ravel()
 
     for i in range(300): #this code now works with producition
