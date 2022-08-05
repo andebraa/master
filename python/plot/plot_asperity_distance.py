@@ -47,7 +47,7 @@ def plot_max_static_dist():
     fig, axs = plt.subplots(2)
     axs = axs.ravel()
 
-    for i in range(300): #this code now works with producition
+    for i in range(3): #this code now works with producition
         lc_files = glob(template_lc.format(temp, vel, force, asperities,orientation, i, grid[0], grid[1]))
         print(lc_files)
         lc_file = lc_files[0]
@@ -86,10 +86,9 @@ def plot_max_static_dist():
     axs[0].set_ylabel('rise of simoid fit')
     axs[1].set_xlabel('norm of asperity distance')
     axs[1].set_ylabel('max static')
-    fig.tight_layout(pad=0.8, h_pad = 1.0)
-    
+    #fig.tight_layout(pad=0.8, h_pad = 1.0)
     fig.suptitle(f"the rise and max static as a function of the norm of asperity distances, \n temp {temp}, force {force}, vel {vel}, asperities {asperities}, orientation {orientation}")
-    fig.savefig(fig_dir + 'png/asperity_distance_v_maxstatic.png')
+    fig.savefig(fig_dir + 'png/asperity_distance_v_maxstatic.png', dpi = 150)
 
 if __name__ == '__main__':
     plot_max_static_dist()
