@@ -96,9 +96,7 @@ def all_curves(production = True):
 
 
         matches = re.findall('(\d+(?:\.\d+)?)', _file)
-        print(matches)    
         seed = matches[-3]
-        print(matches)
         print('seed: ',seed)
         if production:
             initnum = matches [-4] 
@@ -117,14 +115,10 @@ def all_curves(production = True):
             outfile_ms = outfile_ms.format(temp, vel, force, asperities, orientation,  seed) 
             outfile_rise = outfile_rise.format(temp, vel, force, asperities, orientation, seed) 
 
-        print(outfile_lc)
-
-        print(outfile_ms)
-        print(outfile_rise)
 
         extract_load_curves(_file, None, 0, window = window, outfile_load_curves = outfile_lc, outfile_max_static = outfile_ms, outfile_rise = outfile_rise)
 
 
 if __name__ == '__main__':
-    get_load_curves()
-    #all_curves(production = True)
+    #get_load_curves()
+    all_curves(production = True)

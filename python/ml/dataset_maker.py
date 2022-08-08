@@ -97,7 +97,7 @@ def random_dataset():
     std_ms, std_rise = np.std(real_y, axis=0)#overflow here
     print(std_ms, std_rise)
     
-    N = 200 #number of fake samples
+    N = 310 #number of fake samples
     matrices = np.load('../pre/config_list.npy')
     out_matrix = np.empty((N, 4,4))
     out_y = np.empty((N,2))
