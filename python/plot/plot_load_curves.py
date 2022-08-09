@@ -460,7 +460,9 @@ def load_vs_normal_force():
         #assert len(glob(heights_file)) == 1
         
         for curve in load_curves_all:
-            axs[i].plot(curve[:,0], curve[:,1], alpha = 0.3)
+            axs[i].plot(curve[:,0], curve[:,1], alpha = 0.4)
+        for max_static in max_static_all:
+            axs[i].plot(max_static[0], max_static[1], 'o', alpha=0.4)
         #height plot 
         
         #data = np.loadtxt(maxz_file)
@@ -476,10 +478,10 @@ def load_vs_normal_force():
         
         #axs[0].plot(disp_mean[0,:,0], disp_mean[0,:,1], label = f'force {force}')
         #axs[1].plot(disp_mean[0,:,0], disp_mean[0,:,1], label = f'force {force}')
-        axs[i].plot(load_curves_mean[0,:,0], load_curves_mean[0,:,1], label=f'average')
+        #axs[i].plot(load_curves_mean[0,:,0], load_curves_mean[0,:,1], label=f'average')
         axs[i].legend()
         #axs[1].plot(timeframes, height)
-        axs[i].set_ylim([-0.03, 0.15])
+        axs[i].set_ylim([-0.03, 0.1])
         axs[i].set_xlabel(r"$t_p$ [ns]")
         axs[i].set_ylabel(r"$f$ [$\mu$N]")
         axs[i].set_title(f'{man_init_strange[layout_int]}')
