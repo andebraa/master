@@ -476,7 +476,7 @@ def load_vs_normal_force():
             axs2[1].plot(i, rise, 'o')
         #axs2[1].plot(rise_mean[0], rise_mean[1], 'o')
         axs2[0].legend()
-        
+
         #height plot 
         
         #data = np.loadtxt(maxz_file)
@@ -505,10 +505,18 @@ def load_vs_normal_force():
     fig.tight_layout(pad=1.8)
     fig.savefig(fig_dir + 'varying_strange.png')
 
-    fig2.suptitle(f'rise and max static for chosen layouts, {man_init_strange}')
+    axs2[0].set_xlabel('index of selected system')
+    axs2[1].set_xlabel('index of selected system')
+    axs2[0].set_ylabel(r"$f$ [$\mu$N]")
+    axs2[1].set_ylabel(r"$f$ [$\mu$N]")
+    
+
+    fig2.suptitle(f'rise and max static for chosen layouts,\n {man_init_strange}')
     fig2.legend()
     fig2.tight_layout()
     fig2.savefig(fig_dir + 'varying_strange_rise_ms.png')
+
+
 
 def plot_production(temp, vel, force, uc, asperities, time, orientation, grid, erratic, production = True):
     
