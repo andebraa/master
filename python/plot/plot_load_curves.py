@@ -456,8 +456,6 @@ def load_vs_normal_force():
         rise_all, rise_mean = load_rise(temp, vel, force, asperities, orientation,
                                                         grid, template_r, 0, seed, False)
         
-        print('mean load curves shape: ',load_curves_mean.shape)
-        print('all load curves shape: ',load_curves_all.shape)
         #disp_files = f'../../txt/displacement/production/displacement_temp{temp}_vel{vel}_force{force}_asp{asperities}_time{time}_initnum{initnum}_seed{seed}_errgrid4_4.txt'
         #disp, disp_mean = load_displacement(temp, vel, force, orientation, grid, disp_files, initnum)
         
@@ -470,11 +468,11 @@ def load_vs_normal_force():
             axs[i].plot(curve[:,0], curve[:,1], alpha = 0.4)
         for max_static in max_static_all:
             axs[i].plot(max_static[0], max_static[1], 'o')
-            axs2[0].plot(i, max_static[1], 'o')
-        axs2[0].plot(max_static_mean[0], max_static_mean[1], 'o')
+            axs2[0].plot(i, max_static[1], 'or')
+        axs2[0].plot(i, max_static_mean[1], '*', label='mean')
         for rise in rise_all:
-            axs2[1].plot(i, rise, 'o')
-        #axs2[1].plot(rise_mean[0], rise_mean[1], 'o')
+            axs2[1].plot(i, rise, 'or')
+        axs2[1].plot(i, rise_mean, '*', label='mean')
         axs2[0].legend()
 
         #height plot 
