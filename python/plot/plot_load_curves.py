@@ -400,6 +400,7 @@ def load_vs_normal_force():
     # user input
     temp = 2300
     force = 0
+    vel = 5
     orientation = 110
     grid = (4,4)
     erratic = True
@@ -416,18 +417,13 @@ def load_vs_normal_force():
     fig_dir = project_dir + 'fig/'
     highz_dir = '../../txt/high_z/'
 
-    load_curve_dir = project_dir + 'txt/load_curves/erratic/vary_speed/'
-    max_static_dir = project_dir + 'txt/max_static/erratic/vary_speed/'
+    load_curve_dir = project_dir + 'txt/load_curves/erratic/vary_strange/'
+    max_static_dir = project_dir + 'txt/max_static/erratic/vary_strange/'
 
     template_lc = load_curve_dir + 'load_curves_temp{}_vel{}_force{}_asp{}_or{}_seed{}_errgrid{}_{}.txt'
     template_ms = max_static_dir + 'max_static_temp{}_vel{}_force{}_asp{}_or{}_seed{}_errgrid{}_{}.txt'
     
-    foursquare = True
-
-    if foursquare:
-        fig, axs = plt.subplots(2,2, figsize = (12,12))
-    else:
-        fig, axs = plt.subplots(1, figsize = (10,10))
+    fig, axs = plt.subplots(2,2, figsize = (12,12))
     
     axs = axs.ravel()
     #axs2 = []
@@ -435,15 +431,24 @@ def load_vs_normal_force():
     #    axs2.append(ax.twinx())
     #axs2 = np.array((axs2))
 
-    varyspeed = {2:(55910,60930,14424), 5:(72005,76229,37333), 7:(21702,77727,96687), 10:(56649,11605,41397)}
+    #varyspeed = {2:(55910,60930,14424), 5:(72005,76229,37333), 7:(21702,77727,96687), 10:(56649,11605,41397)}
+    varystrange = {0:(84272,42413,16851,59401,17382), 1:(36208,37868,77248,12336,97530),
+                   2:(80943,24762,96976,15610,98229), 3:(53693,79014,53235,31096,89714)}
+
+    man_init_strange = {1: '[[0,1,1,0][0,1,1,0][0,1,1,0][0,1,1,0]]', 2: '[[0,0,0,0][1,1,1,1][1,1,1,1][0,0,0,0]]',
+                        3: '[[0,1,0,0][1,1,1,0][1,1,1,0][0,1,0,0]]', 0: '[[1,0,1,0][0,1,0,1][1,0,1,0][0,1,0,1]]'}
 
     #c = plt.cm.viridis(np.array(tuple(varyforce))/(0.01))
-    for i, (vel, seed) in enumerate(varyspeed.items()):
+    for i, (layout_int, seed) in enumerate(varystrange.items()):
         
         load_curves_all, load_curves_mean = load_load_curves(temp, vel, force, asperities, orientation,
                                                     grid, template_lc, template_ms, 0, seed, False)
+        
         print(load_curves_all)
         
+        max_static_all, max_static_mean = load_max_static(temp, vel, force, asperities, orientation,
+                                                        grid, template_lc, template_ms, 0, seed, False)
+
         print('mean load curves shape: ',load_curves_mean.shape)
         print('all load curves shape: ',load_curves_all.shape)
         #disp_files = f'../../txt/displacement/production/displacement_temp{temp}_vel{vel}_force{force}_asp{asperities}_time{time}_initnum{initnum}_seed{seed}_errgrid4_4.txt'
@@ -455,7 +460,7 @@ def load_vs_normal_force():
         #assert len(glob(heights_file)) == 1
         
         for curve in load_curves_all:
-            axs[i].plot(curve[:,0], curve[:,1], alpha = 0.3)
+            axs[i].plot(curve[:,0], curve[:,1])#, alpha = 0.3)
         #height plot 
         
         #data = np.loadtxt(maxz_file)
@@ -468,35 +473,21 @@ def load_vs_normal_force():
         #timeframes = np.array(timeframes)
         #height = np.array(height)
 
-        foursquare = False
-        if foursquare: 
-            axs[i].plot(disp_mean[0,:,0], disp_mean[0,:,1], label = 'displacement')
-            axs2[i].plot(timeframes, height, label = f'highest particle')
-            axs2[i].grid(False)
-            axs2[i].set_ylabel('Height [Å]')
-
-            #load plot
-            print(len(load_curves_mean[0,:,0]))
-            axs[i].plot(load_curves_mean[0,:,0], load_curves_mean[0,:,1], label = 'average')
-            axs[i].set_xlabel(r"$t_p$ [ns]")
-            axs[i].set_ylabel(r"$f$ [$\mu$N]")
-            axs[i].set_title(f'normal force {force}')
         
-        else:
-            #axs[0].plot(disp_mean[0,:,0], disp_mean[0,:,1], label = f'force {force}')
-            #axs[1].plot(disp_mean[0,:,0], disp_mean[0,:,1], label = f'force {force}')
-            axs[i].plot(load_curves_mean[0,:,0], load_curves_mean[0,:,1], label=f'average')
-            axs[i].legend()
-            #axs[1].plot(timeframes, height)
-            axs[i].set_ylim([-0.03, 0.15])
-            axs[i].set_xlabel(r"$t_p$ [ns]")
-            axs[i].set_ylabel(r"$f$ [$\mu$N]")
-            axs[i].set_title(f'velocity {vel}')
+        #axs[0].plot(disp_mean[0,:,0], disp_mean[0,:,1], label = f'force {force}')
+        #axs[1].plot(disp_mean[0,:,0], disp_mean[0,:,1], label = f'force {force}')
+        axs[i].plot(load_curves_mean[0,:,0], load_curves_mean[0,:,1], label=f'average')
+        axs[i].legend()
+        #axs[1].plot(timeframes, height)
+        axs[i].set_ylim([-0.03, 0.15])
+        axs[i].set_xlabel(r"$t_p$ [ns]")
+        axs[i].set_ylabel(r"$f$ [$\mu$N]")
+        axs[i].set_title(f'man_init_strange[layout_int]')
     
-    plt.suptitle(f"Load curves for varying top plate velcity, average of three identical systems with unique seeds")
+    plt.suptitle(f"Load curves for varying selected systems")
     plt.legend()
     fig.tight_layout(pad=1.8)
-    plt.savefig(fig_dir + 'varying_vel_chess.png')
+    plt.savefig(fig_dir + 'varying_strange.png')
 
 def plot_production(temp, vel, force, uc, asperities, time, orientation, grid, erratic, production = True):
     
