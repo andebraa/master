@@ -419,12 +419,17 @@ def load_vs_normal_force():
 
     load_curve_dir = project_dir + 'txt/load_curves/erratic/vary_strange/'
     max_static_dir = project_dir + 'txt/max_static/erratic/vary_strange/'
+    rise_dir = project_dir + 'txt/rise/erratic/vary_strange/'
 
     template_lc = load_curve_dir + 'load_curves_temp{}_vel{}_force{}_asp{}_or{}_seed{}_errgrid{}_{}.txt'
     template_ms = max_static_dir + 'max_static_temp{}_vel{}_force{}_asp{}_or{}_seed{}_errgrid{}_{}.txt'
+    template_r = rise_dir + 'rise_temp{}_vel{}_force{}_asp{}_or{}_seed{}_errgrid4_4.txt'
     
+    #axs1 is load curves over time
     fig, axs = plt.subplots(2,2, figsize = (12,12))
-    
+    #axs2 is max static and rise
+    fig2, axs2 = plt.subplots(2)
+    axs2 = axs2.ravel()
     axs = axs.ravel()
     #axs2 = []
     #for ax in axs:
@@ -442,13 +447,15 @@ def load_vs_normal_force():
     for i, (layout_int, seed) in enumerate(varystrange.items()):
         
         load_curves_all, load_curves_mean = load_load_curves(temp, vel, force, asperities, orientation,
-                                                    grid, template_lc, template_ms, 0, seed, False)
+                                                        grid, template_lc, template_ms, 0, seed, False)
         
-        print(load_curves_all)
         
         max_static_all, max_static_mean = load_max_static(temp, vel, force, asperities, orientation,
                                                         grid, template_lc, template_ms, 0, seed, False)
 
+        rise_all, rise_mean = load_rise(temp, vel, force, asperities, orientation,
+                                                        grid, template_r, 0, seed, False)
+        
         print('mean load curves shape: ',load_curves_mean.shape)
         print('all load curves shape: ',load_curves_all.shape)
         #disp_files = f'../../txt/displacement/production/displacement_temp{temp}_vel{vel}_force{force}_asp{asperities}_time{time}_initnum{initnum}_seed{seed}_errgrid4_4.txt'
@@ -463,6 +470,13 @@ def load_vs_normal_force():
             axs[i].plot(curve[:,0], curve[:,1], alpha = 0.4)
         for max_static in max_static_all:
             axs[i].plot(max_static[0], max_static[1], 'o')
+            axs2[0].plot(i, max_static[1], 'o')
+        axs2[0].plot(max_static_mean[0], max_static_mean[1], 'o')
+        for rise in rise_all:
+            axs2[1].plot(i, rise, 'o')
+        #axs2[1].plot(rise_mean[0], rise_mean[1], 'o')
+        axs2[0].legend()
+        
         #height plot 
         
         #data = np.loadtxt(maxz_file)
@@ -486,10 +500,15 @@ def load_vs_normal_force():
         axs[i].set_ylabel(r"$f$ [$\mu$N]")
         axs[i].set_title(f'{man_init_strange[layout_int]}')
     
-    plt.suptitle(f"Load curves for varying selected systems")
-    plt.legend()
+    fig.suptitle(f"Load curves for varying selected systems")
+    fig.legend()
     fig.tight_layout(pad=1.8)
-    plt.savefig(fig_dir + 'varying_strange.png')
+    fig.savefig(fig_dir + 'varying_strange.png')
+
+    fig2.suptitle(f'rise and max static for chosen layouts, {man_init_strange}')
+    fig2.legend()
+    fig2.tight_layout()
+    fig2.savefig(fig_dir + 'varying_strange_rise_ms.png')
 
 def plot_production(temp, vel, force, uc, asperities, time, orientation, grid, erratic, production = True):
     
