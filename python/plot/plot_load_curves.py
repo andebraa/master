@@ -462,7 +462,7 @@ def load_vs_normal_force():
         for curve in load_curves_all:
             axs[i].plot(curve[:,0], curve[:,1], alpha = 0.4)
         for max_static in max_static_all:
-            axs[i].plot(max_static[0], max_static[1], 'o', alpha=0.4)
+            axs[i].plot(max_static[0], max_static[1], 'o')
         #height plot 
         
         #data = np.loadtxt(maxz_file)
