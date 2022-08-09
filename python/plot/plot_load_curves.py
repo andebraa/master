@@ -460,7 +460,7 @@ def load_vs_normal_force():
         #assert len(glob(heights_file)) == 1
         
         for curve in load_curves_all:
-            axs[i].plot(curve[:,0], curve[:,1])#, alpha = 0.3)
+            axs[i].plot(curve[:,0], curve[:,1], alpha = 0.3)
         #height plot 
         
         #data = np.loadtxt(maxz_file)
@@ -482,7 +482,7 @@ def load_vs_normal_force():
         axs[i].set_ylim([-0.03, 0.15])
         axs[i].set_xlabel(r"$t_p$ [ns]")
         axs[i].set_ylabel(r"$f$ [$\mu$N]")
-        axs[i].set_title(f'man_init_strange[layout_int]')
+        axs[i].set_title(f'{man_init_strange[layout_int]}')
     
     plt.suptitle(f"Load curves for varying selected systems")
     plt.legend()
