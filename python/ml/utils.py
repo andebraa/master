@@ -19,9 +19,8 @@ def get_device(computer="gpu", verbose=False):
     if computer == "gpu":
         print(torch.cuda.list_gpu_processes())
         print(torch.cuda.device_count())
-        stop
         if torch.cuda.is_available():
-            device = torch.device("cuda:1")
+            device = torch.device("cuda:0")
             torch.backends.cudnn.benchmark = True
             if verbose:
                 print ('Current cuda device: ', torch.cuda.current_device())
