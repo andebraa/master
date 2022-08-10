@@ -160,7 +160,7 @@ def run_dnn_search(epochs, mode):
     results = list(results)
     results.insert(0, final_result)
 
-    outname = f"CV_results/scores_dnn_{mode}_epochs{epochs}_pad{padding}_splits{splits}.npz"
+    outname = f"CV_results/scores_dnn_{mode}_epochs{epochs}_pad{padding}_splits{splits}_3.npz"
     if os.path.exists(outname):
         print(f"WARNING: {outname} exists. Exiting..")
         return
