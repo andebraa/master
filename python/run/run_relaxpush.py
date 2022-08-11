@@ -87,7 +87,7 @@ def fetch_initial_system(initnum = 0, random_choice = False, uc = 5,asperities =
 def run_relaxpush(force = 0, init_num = 0, run_num = 0, asperities = 8, orientation = 110, vel = 5, production = False):
     temp = 2300
     reltime = 1000 #picosekunder
-    pushtime = 1000
+    pushtime = 400
     simtime = reltime + pushtime
 
     num_restart_points = 3
@@ -178,11 +178,11 @@ def run_relaxpush(force = 0, init_num = 0, run_num = 0, asperities = 8, orientat
 
 
 if __name__ == '__main__':
-    run_relaxpush(init_num = 0, asperities = 8, production = False)
+    #run_relaxpush(init_num = 0, asperities = 8, production = False)
     #for force in [0, 0.0001, 0.001, 0.01]:
     #    run_relaxpush(force = force, production = False)
     
     #for vel in [2, 5, 7, 10]:
     #    run_relaxpush(force = 0, production = False, vel = vel)
-    #for i in range(312,320):
-    #    run_relaxpush(init_num = i, asperities = 8, force = 0, orientation = 110, production = True)
+    for i in range(8,10):
+        run_relaxpush(init_num = i, asperities = 2, force = 0, orientation = 110, production = True)

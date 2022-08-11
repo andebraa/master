@@ -50,8 +50,8 @@ def setup_system(production = False, init_num = 0, asperities = 2):
 
     args = {'lx': lx, 'ly':ly, 'ax':ax, 'ay':ay, 'hl':hl, 'hu': hu, 'hup': hup, 'grid': grid, 'asperities':asperities,
             'lower_orient': lower_orient, 'erratic': erratic}
-
-    if production or isinstance(production, np.ndarray):
+    print(production)
+    if production.any() or isinstance(production, np.ndarray):
         print('------------------------production run--------------------')
         system_file = path + f"production/erratic/system_asp{asperities}_or{lower_orient}_uc{num_unit_cells}_initnum{init_num}_errgrid{grid[0]}_{grid[1]}"
         aux_path = path + f"production/erratic/aux/system_asp{asperities}_or{lower_orient}_uc{num_unit_cells}_initnum{init_num}_errgrid{grid[0]}_{grid[1]}_auxiliary.json"
