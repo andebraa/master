@@ -87,7 +87,7 @@ def fetch_initial_system(initnum = 0, random_choice = False, uc = 5,asperities =
 def run_relaxpush(force = 0, init_num = 0, run_num = 0, asperities = 8, orientation = 110, vel = 5, production = False):
     temp = 2300
     reltime = 1000 #picosekunder
-    pushtime = 400
+    pushtime = 1000
     simtime = reltime + pushtime
 
     num_restart_points = 3
@@ -105,8 +105,10 @@ def run_relaxpush(force = 0, init_num = 0, run_num = 0, asperities = 8, orientat
     erratic = True
 
     #manually inputting init seed. 
-    _seed = 37216
-    
+    _seed = 47345
+   
+    #chess: 47345, cols: 61672, rows 61474, blob 37216
+
     # paths
     #project_dir = "/run/user/1004/andebraa_masterdata/"
     project_dir = '../../'
@@ -116,7 +118,7 @@ def run_relaxpush(force = 0, init_num = 0, run_num = 0, asperities = 8, orientat
         relax_dir = project_dir + f"simulations/sys_asp{asperities}_uc{uc}/production/"
     else:
         init_dir = project_dir + f'initial_system/erratic/'
-        relax_dir = project_dir + f"simulations/sys_asp{asperities}_uc{uc}/"
+        relax_dir = project_dir + f"simulations/sys_asp{asperities}_uc{uc}/vary_speed/"
 
     # Finding the init datafile
     #finding all files in directory, printing the seeds and having user write in desired seed
@@ -182,7 +184,7 @@ if __name__ == '__main__':
     #for force in [0, 0.0001, 0.001, 0.01]:
     #    run_relaxpush(force = force, production = False)
     
-    #for vel in [2, 5, 7, 10]:
-    #    run_relaxpush(force = 0, production = False, vel = vel)
-    for i in range(8,10):
-        run_relaxpush(init_num = i, asperities = 2, force = 0, orientation = 110, production = True)
+    for vel in [1, 3, 8, 13]:
+        run_relaxpush(force = 0, production = False, vel = vel)
+    #for i in range(8,10):
+    #    run_relaxpush(init_num = i, asperities = 2, force = 0, orientation = 110, production = True)
