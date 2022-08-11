@@ -251,7 +251,7 @@ def run_cnn_search(epochs, mode):
 
     padding = 1
     X_CV, y_CV, X_test, y_test = utils.load_data(padding, random = False) #X_CV, y_CV, X_test, y_test
-    device = utils.get_device("gpu", verbose = True)
+    device = utils.get_device("cpu", verbose = True)
 
 
     kernel_size_list = [2, 3, 4] #need to have a good look at the kernels, so they fit my system
