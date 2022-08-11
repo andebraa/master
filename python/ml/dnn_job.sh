@@ -10,7 +10,7 @@
 #
 #SBATCH --gres=gpu:1
 #
-#SBATCH --output=slurm_dnn2.out
+#SBATCH --output=slurm_outs/slurm_dnn6.out
 #
 
 python3 apply_dnn.py

@@ -1,7 +1,0 @@
-GPU:0
-no processes are running
-1
-Current cuda device:  0
-cuda:0
-GridSearchCNN: total params: 1458
-  0%|          | 0/1458 [00:00<?, ?it/s]  0%|          | 0/1458 [01:22<?, ?it/s, current_r2=-3.99, best_r2=-inf]  0%|          | 1/1458 [01:22<33:35:19, 82.99s/it, current_r2=-3.99, best_r2=-inf]

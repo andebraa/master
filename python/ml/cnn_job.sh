@@ -10,7 +10,7 @@
 #
 #SBATCH --gres=gpu:1
 #
-#SBATCH --output=slurm_cnn.out
+#SBATCH --output=slurm_outs/slurm_cnn4.out
 #
 
 python3 apply_cnn.py
