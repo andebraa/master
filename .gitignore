@@ -145,7 +145,7 @@ test_block*
 
 */*.xsf
 *.xsf
-~/master/python/ml/CV_results/*/*
+python/ml/CV_results/
 ~/master/python/ml/CV_results/scores*
 python/ml/CV_results/*/scores*
 
