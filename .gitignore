@@ -145,3 +145,4 @@ test_block*
 
 */*.xsf
 *.xsf
+python/ml/CV_results/*
