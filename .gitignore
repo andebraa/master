@@ -145,8 +145,8 @@ test_block*
 
 */*.xsf
 *.xsf
-python/ml/CV_results/*/*
-python/ml/CV_results/scores*
+~/master/python/ml/CV_results/*/*
+~/master/python/ml/CV_results/scores*
 python/ml/CV_results/*/scores*
 
 python/ml/slurm_outs/*
