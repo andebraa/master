@@ -145,8 +145,11 @@ test_block*
 
 */*.xsf
 *.xsf
-python/ml/CV_results/
+python/ml/CV_results/*
+python/ml/CV_results/*/*
 ~/master/python/ml/CV_results/scores*
 python/ml/CV_results/*/scores*
+/home/users/andebraa/master/python/ml/CV_results/dnn/*
+/home/users/andebraa/master/python/ml/CV_results/cnn/*
 
 python/ml/slurm_outs/*
