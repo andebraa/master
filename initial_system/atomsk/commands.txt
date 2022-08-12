@@ -1,0 +1,17 @@
+#script logging some useful commands for atomsk
+atomsk --create diamond 4.3596 Si C orient [110] [1-10] [001] -duplicate 10 10 10 output_test.xsf
+#or 
+atomsk output_test.xsf -orient [100] [010] [001] [110] [101] [011] output_test_110.xsf
+
+#selecting makes the box not rotate, this whith a shift works fine  
+atomsk  output_test.xsf -select in box -10 -10 -10 10 10 10 -rotate [010] -45 output_rotated.xsf
+
+#Note that the right most atom is at -1.5E-06, so almost 0. might cause issues
+atomsk output_rotated.xsf -shift 1.54135 0 0 output_rotated_shifted.xsf
+
+atomsk --create diamond 5.86 Si C orient [10-1] [010] [101] -duplicate 30 20 1 sto.xsf
+
+------------------------------------------------------------------------------------------------
+ 1714  atomsk --create diamond 4.3956 Si C -spacegroup 216 -orient [100] [010] [001] [10-1] [010] [101] -duplicate 20 20 20 sto.xsf
+atomsk test.xsf -cut above 625 z xsf
+atomsk test.xsf -cut below 605 z xsf
