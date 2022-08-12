@@ -32,9 +32,9 @@ def load_vs_normal_force():
     fig_dir = project_dir + 'fig/'
     highz_dir = '../../txt/high_z/'
 
-    load_curve_dir = project_dir + 'txt/load_curves/erratic/vary_strange/'
-    max_static_dir = project_dir + 'txt/max_static/erratic/vary_strange/'
-    rise_dir = project_dir + 'txt/rise/erratic/vary_strange/'
+    load_curve_dir = project_dir + 'txt/load_curves/erratic/vary_normforce/'
+    max_static_dir = project_dir + 'txt/max_static/erratic/vary_normforce/'
+    rise_dir = project_dir + 'txt/rise/erratic/vary_normforce/'
 
     template_lc = load_curve_dir + 'load_curves_temp{}_vel{}_force{}_asp{}_or{}_seed{}_errgrid{}_{}.txt'
     template_ms = max_static_dir + 'max_static_temp{}_vel{}_force{}_asp{}_or{}_seed{}_errgrid{}_{}.txt'
@@ -116,7 +116,11 @@ def load_vs_normal_force():
     fig.suptitle(f"Load curves for varying selected systems")
     fig.legend()
     fig.tight_layout(pad=1.8)
-    fig.savefig(fig_dir + 'varying_normforce.png')
+    
+    outname = 'vary_normforce.png'
+
+    print(f'saved fig to {fig_dir + outname}')
+    fig.savefig(fig_dir + outname)
 
     axs2[0].set_xlabel('normal force ADD UNITS')
     axs2[1].set_xlabel('normal force')
@@ -129,3 +133,6 @@ def load_vs_normal_force():
     fig2.tight_layout()
     fig2.savefig(fig_dir + 'varying_normforce_rise_maxstatic.png')
 
+if __name__ == '__main__':
+
+    load_vs_normal_force()
