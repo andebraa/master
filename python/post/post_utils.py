@@ -339,7 +339,7 @@ def extract_load_curves(logfile, delta=None, init_time=0, window=1,
 
     
     push_start_indx_nnan = (np.abs(time_nnan - 1.0)).argmin()
-    push_stop_indx_nnan = (np.abs(time_nnan-1.15)).argmin()
+    push_stop_indx_nnan = (np.abs(time_nnan-1.1)).argmin()
     
     plt.plot(time, fx)
     plt.plot(time_nnan, sigmoid(time_nnan, *popt))
