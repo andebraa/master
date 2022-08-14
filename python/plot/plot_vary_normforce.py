@@ -84,10 +84,10 @@ def load_vs_normal_force():
         for max_static in max_static_all:
             axs[i].plot(max_static[0], max_static[1], 'o')
             axs2[0].plot(normforce, max_static[1], 'or')
-        axs2[0].plot(normforce, max_static_mean[1], '*', label='mean')
+        #axs2[0].plot(normforce, max_static_mean[1], '*', label='mean')
         for rise in rise_all:
-            axs2[1].plot(i, rise, 'or')
-        axs2[1].plot(normforce, rise_mean, '*', label='mean')
+            axs2[1].plot(normforce, rise, 'or')
+        #axs2[1].plot(normforce, rise_mean, '*', label='mean')
         axs2[0].legend()
 
         #height plot
@@ -111,7 +111,7 @@ def load_vs_normal_force():
         #axs[i].set_ylim([-0.03, 0.1])
         axs[i].set_xlabel(r"$t_p$ [ns]")
         axs[i].set_ylabel(r"$f$ [$\mu$N]")
-        axs[i].set_title(f'Normal force {normforce} UNITS')
+        axs[i].set_title(f'Normal force {normforce} [$\mu$N]')
 
     fig.suptitle(f"Load curves for varying selected systems")
     fig.legend()
