@@ -572,6 +572,7 @@ def plot_production():
     man_init_strange = {0: '[[0,1,1,0][0,1,1,0][0,1,1,0][0,1,1,0]]', 1: '[[0,0,0,0][1,1,1,1][1,1,1,1][0,0,0,0]]',
                         2: '[[0,1,0,0][1,1,1,0][1,1,1,0][0,1,0,0]]', 3: '[[1,0,1,0][0,1,0,1][1,0,1,0][0,1,0,1]]'}
     strange = True
+    c = plt.cm.viridis((9 - np.arange(10))/(9 - 0 + 0.01))
     for i, (initnum, seeds) in enumerate(initseed.items()):
         if production:
             load_curves_all, load_curves_mean= load_load_curves(temp, vel, force, asperities, orientation,
@@ -614,7 +615,7 @@ def plot_production():
         #print('ms all, ms mean ', ms_all, ms_mean) 
         #print('load curves', np.shape(load_curves_all), np.shape(load_curves_mean))
         for j, load_curve in enumerate(load_curves_all):
-            axs[i].plot(load_curve[:,0], load_curve[:,1], label = f'rise: {rise_all[j]:.4e}')
+            axs[i].plot(load_curve[:,0], load_curve[:,1], c = c[i], label = f'rise: {rise_all[j]:.4e}')
             axs[i].legend()
             fit_sigmoid(load_curve, fig, axs[i])
 
@@ -622,9 +623,9 @@ def plot_production():
 
         for ms in ms_all:
            axs[i].plot(ms[0], ms[1], 'o') #this is just proprietary
-           axs2[0].plot(i, ms[1], 'ro')
+           axs2[0].plot(i, ms[1], 'ro', c=c[i])
         for slope in rise_all:
-            axs2[1].plot(i, slope, 'ro')
+            axs2[1].plot(i, slope, 'ro', c = c[i])
 
         axs[i].set_xlabel(r"$t_p$ [ns]")
         axs[i].set_ylabel(r"$f$ [$\mu$N]")
@@ -658,6 +659,7 @@ def plot_production():
     fig.legend()
     fig.savefig(fig_dir + f'production_varying_initnum_temp{temp}_vel{vel}_force{force}_asp{asperities}_or{orientation}_time{time}.png')
     fig2.suptitle(f'maximum static and slope of sigmoid fit for all 10 two asperity configurations')
+    fig2.subplots_adjust(hspace=0.3)
     fig2.legend()
     fig2.savefig(fig_dir + f'production_varying_initnum_temp{temp}_vel{vel}_force{force}_asp{asperities}_or{orientation}_time{time}_maxstatic_rise.png')
 
