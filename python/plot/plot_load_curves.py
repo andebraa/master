@@ -551,7 +551,7 @@ def plot_production():
         template_aux = project_dir + 'simulations/sys_asp{}_uc{}/erratic/sim_temp{}_force{}_asp{}_or{}_time{}_seed{}_errgrid4_4/system_asp{}_or{}_uc{}_initnum{}_errgrid4_4_auxiliary.json'
 
     fig2, axs2 = plt.subplots(2,1) #slope and ms
-    fig, axs = plt.subplots(5,2, figsize = (15,15))
+    fig, axs = plt.subplots(5,2, sharex = True, figsize = (15,15))
     axs = axs.ravel()
     axs2 = axs2.ravel()
     #initseed = {0:(77222, 66232, 79443), 1:(29672, 40129), 2:(64364, 32077), 3:(33829, 84296),
@@ -572,7 +572,7 @@ def plot_production():
     man_init_strange = {0: '[[0,1,1,0][0,1,1,0][0,1,1,0][0,1,1,0]]', 1: '[[0,0,0,0][1,1,1,1][1,1,1,1][0,0,0,0]]',
                         2: '[[0,1,0,0][1,1,1,0][1,1,1,0][0,1,0,0]]', 3: '[[1,0,1,0][0,1,0,1][1,0,1,0][0,1,0,1]]'}
     strange = True
-    c = plt.cm.viridis((9 - np.arange(10))/(9 - 0 + 0.01))
+    c = plt.cm.viridis((3 - np.arange(3))/(3 - 0 + 0.01))
     for i, (initnum, seeds) in enumerate(initseed.items()):
         if production:
             load_curves_all, load_curves_mean= load_load_curves(temp, vel, force, asperities, orientation,
@@ -615,7 +615,7 @@ def plot_production():
         #print('ms all, ms mean ', ms_all, ms_mean) 
         #print('load curves', np.shape(load_curves_all), np.shape(load_curves_mean))
         for j, load_curve in enumerate(load_curves_all):
-            axs[i].plot(load_curve[:,0], load_curve[:,1], c = c[i], label = f'rise: {rise_all[j]:.4e}')
+            axs[i].plot(load_curve[:,0], load_curve[:,1], c = c[j], label = f'rise: {rise_all[j]:.4e}')
             axs[i].legend()
             fit_sigmoid(load_curve, fig, axs[i])
 
@@ -623,9 +623,9 @@ def plot_production():
 
         for ms in ms_all:
            axs[i].plot(ms[0], ms[1], 'o') #this is just proprietary
-           axs2[0].plot(i, ms[1], 'ro', c=c[i])
-        for slope in rise_all:
-            axs2[1].plot(i, slope, 'ro', c = c[i])
+        #   axs2[0].plot(i, ms[1], 'ro', c=c[i])
+        #for slope in rise_all:
+        #    axs2[1].plot(i, slope, 'ro', c = c[i])
 
         axs[i].set_xlabel(r"$t_p$ [ns]")
         axs[i].set_ylabel(r"$f$ [$\mu$N]")
@@ -655,13 +655,12 @@ def plot_production():
         
     
     fig.subplots_adjust(hspace=0.3)
-    fig.suptitle(f"temp {temp}, force {force}, vel {vel}, asperities {asperities}, orientation {orientation}")
-    fig.legend()
-    fig.savefig(fig_dir + f'production_varying_initnum_temp{temp}_vel{vel}_force{force}_asp{asperities}_or{orientation}_time{time}.png')
+    fig.suptitle('load curves, maximum static friction and a fitted sigmoid curve for all 10 two asperity systems')
+    fig.savefig(fig_dir + f'production_varying_initnum_temp{temp}_vel{vel}_force{force}_asp{asperities}_or{orientation}_time{time}.png', dpi = 200)
     fig2.suptitle(f'maximum static and slope of sigmoid fit for all 10 two asperity configurations')
     fig2.subplots_adjust(hspace=0.3)
     fig2.legend()
-    fig2.savefig(fig_dir + f'production_varying_initnum_temp{temp}_vel{vel}_force{force}_asp{asperities}_or{orientation}_time{time}_maxstatic_rise.png')
+    fig2.savefig(fig_dir + f'production_varying_initnum_temp{temp}_vel{vel}_force{force}_asp{asperities}_or{orientation}_time{time}_maxstatic_rise_altcolour.png', dpi = 200)
 
         
 
