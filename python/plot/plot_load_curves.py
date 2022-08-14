@@ -464,14 +464,14 @@ def load_vs_normal_force():
         #assert len(glob(heights_file)) == 1
         
         for j, curve in enumerate(load_curves_all):
-            axs[i].plot(curve[:,0], curve[:,1], alpha = 0.4, c = c[j])
+            axs[i].plot(curve[:,0], curve[:,1], alpha = 0.5, c = c[j])
         for j, max_static in enumerate(max_static_all):
             axs[i].plot(max_static[0], max_static[1], 'o')
             axs2[0].plot(i, max_static[1], 'o', c = c[j])
-        axs2[0].plot(i, max_static_mean[1], '*', label='mean')
+        #axs2[0].plot(i, max_static_mean[1], '*', label='mean')
         for j, rise in enumerate(rise_all):
             axs2[1].plot(i, rise, 'o', c=c[j])
-        axs2[1].plot(i, rise_mean, '*', label='mean')
+        #axs2[1].plot(i, rise_mean, '*', label='mean')
         axs2[0].legend()
 
         #height plot 
@@ -498,9 +498,8 @@ def load_vs_normal_force():
         axs[i].set_title(f'{man_init_strange[layout_int]}')
     
     fig.suptitle(f"Load curves for varying selected systems")
-    fig.legend()
     fig.tight_layout(pad=1.8)
-    fig.savefig(fig_dir + 'varying_strange.png')
+    fig.savefig(fig_dir + 'varying_strange.png', dpi = 200)
 
     axs2[0].set_xlabel('index of selected system')
     axs2[1].set_xlabel('index of selected system')
@@ -508,10 +507,9 @@ def load_vs_normal_force():
     axs2[1].set_ylabel(r"$f$ [$\mu$N]")
     
 
-    fig2.suptitle(f'rise and max static for chosen layouts,\n {man_init_strange}')
-    fig2.legend()
+    fig2.suptitle(f'rise and max static for chosen layouts,\n0: {man_init_strange[0]} 1: {man_init_strange[1]} \n 2: {man_init_strange[2]} 3: {man_init_strange[3]}')
     fig2.tight_layout()
-    fig2.savefig(fig_dir + 'varying_strange_rise_ms.png')
+    fig2.savefig(fig_dir + 'varying_strange_rise_ms.png', dpi = 200)
 
 
 
