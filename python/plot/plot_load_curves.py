@@ -442,7 +442,7 @@ def load_vs_normal_force():
     man_init_strange = {1: '[[0,1,1,0][0,1,1,0][0,1,1,0][0,1,1,0]]', 2: '[[0,0,0,0][1,1,1,1][1,1,1,1][0,0,0,0]]',
                         3: '[[0,1,0,0][1,1,1,0][1,1,1,0][0,1,0,0]]', 0: '[[1,0,1,0][0,1,0,1][1,0,1,0][0,1,0,1]]'}
 
-    #c = plt.cm.viridis(np.array(tuple(varyforce))/(0.01))
+    c = plt.cm.viridis((3 - np.arange(5))/(3 - 0 + 0.01))
     for i, (layout_int, seed) in enumerate(varystrange.items()):
         
         load_curves_all, load_curves_mean = load_load_curves(temp, vel, force, asperities, orientation,
@@ -463,14 +463,14 @@ def load_vs_normal_force():
         #print('glob heights file ',len(glob(heights_file)))
         #assert len(glob(heights_file)) == 1
         
-        for curve in load_curves_all:
-            axs[i].plot(curve[:,0], curve[:,1], alpha = 0.4)
-        for max_static in max_static_all:
+        for j, curve in enumerate(load_curves_all):
+            axs[i].plot(curve[:,0], curve[:,1], alpha = 0.4, c = c[j])
+        for j, max_static in enumerate(max_static_all):
             axs[i].plot(max_static[0], max_static[1], 'o')
-            axs2[0].plot(i, max_static[1], 'or')
+            axs2[0].plot(i, max_static[1], 'o', c = c[j])
         axs2[0].plot(i, max_static_mean[1], '*', label='mean')
-        for rise in rise_all:
-            axs2[1].plot(i, rise, 'or')
+        for j, rise in enumerate(rise_all):
+            axs2[1].plot(i, rise, 'o', c=c[j])
         axs2[1].plot(i, rise_mean, '*', label='mean')
         axs2[0].legend()
 
@@ -700,8 +700,8 @@ if __name__ == '__main__':
     #plot_all_curves_and_mean(temp, vel, force, orientation, grid, template_lc, template_ms, seeds)    
     #plot_mean_of_multiple()
     #plot_load_curves_as_funciton_of_top_thiccness()
-    #load_vs_normal_force()
+    load_vs_normal_force()
     #plot_single_loadcurve()
     #plot_production(temp, vel, force, uc, 8, time,orientation, grid, erratic, production = False)
     #test_rip_norm()
-    plot_production()
+    #plot_production()

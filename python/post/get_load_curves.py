@@ -37,7 +37,7 @@ def get_load_curves():
 
         if isinstance(seed, tuple):
             for see in seed:
-                logfiles = f'../../simulations/sys_asp{asperities}_uc{uc}/vary_speed/sim_temp{temp}_force{force}_asp{asperities}_or{orientation}_time{time}_seed{see}_errgrid4_4/log.lammps'
+                logfiles = f'../../simulations/sys_asp{asperities}_uc{uc}/vary_normforce/sim_temp{temp}_force{force}_asp{asperities}_or{orientation}_time{time}_seed{see}_errgrid4_4/log.lammps'
                 print(logfiles)
                 if logfiles == []:
                     print(f'Warning, logfile not found; \n seed: {see}')
@@ -45,9 +45,9 @@ def get_load_curves():
                     print('--------------------------------------------------------------------------')
                     print('file: ', logfile)
                     matches = re.findall('\d+', logfile)
-                    outfile_lc = f'../../txt/load_curves/erratic/vary_speed/load_curves_temp{temp}_vel{vel}_force{force}_asp{asperities}_or{orientation}_seed{see}_errgrid4_4.txt'
-                    outfile_ms = f'../../txt/max_static/erratic/vary_speed/max_static_temp{temp}_vel{vel}_force{force}_asp{asperities}_or{orientation}_seed{see}_errgrid4_4.txt'
-                    outfile_rise = f'../../txt/rise/erratic/vary_speed/rise_temp{temp}_vel{vel}_force{force}_asp{asperities}_or{orientation}_seed{see}_errgrid4_4.txt'
+                    outfile_lc = f'../../txt/load_curves/erratic/vary_normforce/load_curves_temp{temp}_vel{vel}_force{force}_asp{asperities}_or{orientation}_seed{see}_errgrid4_4.txt'
+                    outfile_ms = f'../../txt/max_static/erratic/vary_normforce/max_static_temp{temp}_vel{vel}_force{force}_asp{asperities}_or{orientation}_seed{see}_errgrid4_4.txt'
+                    outfile_rise = f'../../txt/rise/erratic/vary_normforce/rise_temp{temp}_vel{vel}_force{force}_asp{asperities}_or{orientation}_seed{see}_errgrid4_4.txt'
 
                     extract_load_curves(logfile, None, 0, window = window, outfile_load_curves = outfile_lc, outfile_max_static = outfile_ms, outfile_rise = outfile_rise)
         else:
@@ -67,7 +67,7 @@ def get_load_curves():
 
 
 def all_curves(production = True):
-    asperities = 2
+    asperities = 8
     uc = 5
     temp = 2300
     vel = 5
@@ -80,18 +80,19 @@ def all_curves(production = True):
         force = 0
         filetemplate = f'../../simulations/sys_asp{asperities}_uc{uc}/production/sim_temp{temp}_force{force}_asp{asperities}_or{orientation}_time*_initnum*_seed*_errgrid4_4/log.lammps'
     else:
-        filetemplate = f'../../simulations/sys_asp{asperities}_uc{uc}/vary_speed/sim_temp{temp}_force*_asp{asperities}_or{orientation}_time{time}_seed*_errgrid4_4/log.lammps'
+        filetemplate = f'../../simulations/sys_asp{asperities}_uc{uc}/vary_normforce/sim_temp{temp}_force*_asp{asperities}_or{orientation}_time{time}_seed*_errgrid4_4/log.lammps'
 
     files = glob(filetemplate)
     for _file in files:
+        print('file: ', _file)
         if production: 
             outfile_lc= '../../txt/load_curves/production/load_curves_temp{}_vel{}_force{}_asp{}_or{}_initnum{}_seed{}_errgrid4_4.txt'
             outfile_ms = '../../txt/max_static/production/max_static_temp{}_vel{}_force{}_asp{}_or{}_initnum{}_seed{}_errgrid4_4.txt'
             outfile_rise = '../../txt/rise/production/rise_temp{}_vel{}_force{}_asp{}_or{}_initnum{}_seed{}_errgrid4_4.txt'
         else:
-            outfile_lc= '../../txt/load_curves/erratic/vary_speed/load_curves_temp{}_vel{}_force{}_asp{}_or{}_seed{}_errgrid4_4.txt'
-            outfile_ms = '../../txt/max_static/erratic/vary_speed/max_static_temp{}_vel{}_force{}_asp{}_or{}_seed{}_errgrid4_4.txt'
-            outfile_rise = '../../txt/rise/erratic/vary_speed/rise_temp{}_vel{}_force{}_asp{}_or{}_seed{}_errgrid4_4.txt'
+            outfile_lc= '../../txt/load_curves/erratic/vary_normforce/load_curves_temp{}_vel{}_force{}_asp{}_or{}_seed{}_errgrid4_4.txt'
+            outfile_ms = '../../txt/max_static/erratic/vary_normforce/max_static_temp{}_vel{}_force{}_asp{}_or{}_seed{}_errgrid4_4.txt'
+            outfile_rise = '../../txt/rise/erratic/vary_normforce/rise_temp{}_vel{}_force{}_asp{}_or{}_seed{}_errgrid4_4.txt'
 
 
 
@@ -100,7 +101,6 @@ def all_curves(production = True):
         print('seed: ',seed)
         if production:
             initnum = matches [-4] 
-            pass
         else:
             force = matches[3]
             
@@ -121,4 +121,4 @@ def all_curves(production = True):
 
 if __name__ == '__main__':
     #get_load_curves()
-    all_curves(production = True)
+    all_curves(production = False)
