@@ -46,10 +46,9 @@ def plot_max_static_dist():
 
     fig, axs = plt.subplots(2, figsize=(10,10))
     axs = axs.ravel()
-
-    for i in range(300): #this code now works with producition
+    c = plt.cm.viridis(np.linspace(0, 1, 100))
+    for i in range(320): #this code now works with producition
         lc_files = glob(template_lc.format(temp, vel, force, asperities,orientation, i, grid[0], grid[1]))
-        print(lc_files)
         lc_file = lc_files[0]
 
         matches = re.findall('\d+', lc_file)
@@ -74,20 +73,17 @@ def plot_max_static_dist():
 
 
         matrix_norm = rip_norm(aux_dict['erratic'])
-        print('twat')
-        print(rise)
-        print(ms)
-        axs[0].plot(matrix_norm, rise, 'o', c='b')
-        axs[1].plot(matrix_norm, ms[1], 'o', c = 'b')
+        axs[0].plot(matrix_norm, rise, 'o', c = c[int(np.round(matrix_norm*10))])
+        axs[1].plot(matrix_norm, ms[1], 'o', c= c[int(np.round(matrix_norm*10))])
 
 
 
     axs[0].set_xlabel('norm of asperity distance')
-    axs[0].set_ylabel('rise of simoid fit')
+    axs[0].set_ylabel('slope of simoid fit')
     axs[1].set_xlabel('norm of asperity distance')
-    axs[1].set_ylabel('max static')
-    fig.suptitle(f"the rise and max static as a function of the norm of asperity distances, \n temp {temp}, force {force}, vel {vel}, asperities {asperities}, orientation {orientation}")
-    fig.savefig(fig_dir + 'png/asperity_distance_v_maxstatic.png', dpi = 150)
+    axs[1].set_ylabel('maximum static friction')
+    fig.suptitle(f"the slope and maximum static friction as a function of the norm of asperity distances, \n temp {temp}, force {force}, vel {vel}, asperities {asperities}, orientation {orientation}")
+    fig.savefig(fig_dir + 'png/asperity_distance_v_maxstatic.png', dpi = 200)
 
 if __name__ == '__main__':
     plot_max_static_dist()

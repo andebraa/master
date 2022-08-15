@@ -47,8 +47,7 @@ def load_vs_normal_force():
     fig2, axs2 = plt.subplots(2)
     axs2 = axs2.ravel()
     axs = axs.ravel()
-    varyspeed = {1: (66526), 2:(55910,60930,14424), 3: (90254), 5:(72005,76229,37333), 7:(21702,77727,96687), 
-                 8: (48242), 10:(56649,11605,41397), 13: (63868)}
+    varyspeed = {2:(55910,60930,14424),5:(72005,76229,37333), 7:(21702,77727,96687), 10:(56649,11605,41397)}
 
 
     c = plt.cm.viridis((3 - np.arange(len(varyspeed)))/(3 - 0 + 0.01))
@@ -66,10 +65,10 @@ def load_vs_normal_force():
 
 
         
-        #for j,curve in enumerate(load_curves_all):
-        #    axs[i].plot(curve[:,0], curve[:,1], alpha = 0.4, c=c[j])
+        for j,curve in enumerate(load_curves_all):
+            axs[i].plot(curve[:,0], curve[:,1], alpha = 0.4, c=c[j])
         for j, max_static in enumerate(max_static_all):
-        #    axs[i].plot(max_static[0], max_static[1], 'bo')
+            axs[i].plot(max_static[0], max_static[1], 'bo')
             axs2[0].plot(vel, max_static[1], 'o', c=c[j])
         #axs2[0].plot(normforce, max_static_mean[1], '*', label='mean')
         for j,rise in enumerate(rise_all):
@@ -78,12 +77,12 @@ def load_vs_normal_force():
         axs2[0].legend()
 
     
-        #axs[i].plot(load_curves_mean[0,:,0], load_curves_mean[0,:,1], label = f'average')
-        #axs[i].legend()
-        #axs[i].set_xlabel(r"$t_p$ [ns]")
-        #axs[i].set_ylabel(r"$f$ [$\mu$N]")
-        #axs[i].set_title(f'velocity {vel} [m/s]')
-        #axs[i].set_ylim([-0.02, 0.14])
+        axs[i].plot(load_curves_mean[0,:,0], load_curves_mean[0,:,1], label = f'average')
+        axs[i].legend()
+        axs[i].set_xlabel(r"$t_p$ [ns]")
+        axs[i].set_ylabel(r"$f$ [$\mu$N]")
+        axs[i].set_title(f'velocity {vel} [m/s]')
+        axs[i].set_ylim([-0.02, 0.14])
 
     fig.suptitle(f"Load curves for the chess system with increasing top plate velocity")
     fig.tight_layout(pad=1.8)
@@ -91,7 +90,7 @@ def load_vs_normal_force():
     outname = 'vary_vel.png'
 
     print(f'saved fig to {fig_dir + outname}')
-    #fig.savefig(fig_dir + outname, dpi = 200)
+    fig.savefig(fig_dir + outname, dpi = 200)
 
     axs2[0].set_title('maximum static')
     axs2[1].set_title('slope of sigmoid fit')

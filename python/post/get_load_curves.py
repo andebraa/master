@@ -78,7 +78,7 @@ def all_curves(production = True):
 
     if production: #beware /datset here
         force = 0
-        filetemplate = f'../../simulations/sys_asp{asperities}_uc{uc}/production/sim_temp{temp}_force{force}_asp{asperities}_or{orientation}_time*_initnum*_seed*_errgrid4_4/log.lammps'
+        filetemplate = f'../../simulations/sys_asp{asperities}_uc{uc}/production/dataset/sim_temp{temp}_force{force}_asp{asperities}_or{orientation}_time*_initnum*_seed*_errgrid4_4/log.lammps'
     else:
         filetemplate = f'../../simulations/sys_asp{asperities}_uc{uc}/vary_normforce/sim_temp{temp}_force*_asp{asperities}_or{orientation}_time{time}_seed*_errgrid4_4/log.lammps'
 
@@ -121,4 +121,4 @@ def all_curves(production = True):
 
 if __name__ == '__main__':
     #get_load_curves()
-    all_curves(production = False)
+    all_curves(production = True)
