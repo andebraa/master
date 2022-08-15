@@ -559,7 +559,7 @@ def plot_production():
     #initseed = {0: (88094, 43563), 1: (98414, 72415), 2: (86494, 67638), 3: (94091, 77768)}
     initseed = {0: (66232, 77222, 79443), 1: (29672, 31291, 40129), 2: (32077, 56099, 64364), 3: (33829,49719, 84296),
                 4: (29082,30502,59000), 5:(16388,65451,96035), 6:(51217,52315,69759), 7:(11778,62780,65472),
-                8: (49460,69872,99602), 9:(35199,43361,58703)}
+                8: (49460,69872,99602), 9:(35199,43361,58703)} #2 asperity
 
     man_init_2asp = {0:'[[0,0,0,0][0,0,0,0][1,0,0,1][0,0,0,0]]', 1:'[[0,0,0,1][0,0,0,0][1,0,0,0][0,0,0,0]]',
                      2:'[[0,0,0,0][0,0,0,1][0,0,1,0][0,0,0,0]]', 3:'[[0,0,1,0][0,0,0,0][0,0,0,0][0,0,1,0]]',
@@ -571,6 +571,8 @@ def plot_production():
                         2: '[[0,1,0,0][1,1,1,0][1,1,1,0][0,1,0,0]]', 3: '[[1,0,1,0][0,1,0,1][1,0,1,0][0,1,0,1]]'}
     strange = True
     c = plt.cm.viridis((3 - np.arange(3))/(3 - 0 + 0.01))
+    print(c)
+    c = np.flip(c, axis = 0)
     for i, (initnum, seeds) in enumerate(initseed.items()):
         if production:
             load_curves_all, load_curves_mean= load_load_curves(temp, vel, force, asperities, orientation,
@@ -613,9 +615,9 @@ def plot_production():
         #print('ms all, ms mean ', ms_all, ms_mean) 
         #print('load curves', np.shape(load_curves_all), np.shape(load_curves_mean))
         for j, load_curve in enumerate(load_curves_all):
-            axs[i].plot(load_curve[:,0], load_curve[:,1], c = c[j], label = f'rise: {rise_all[j]:.4e}')
+            axs[i].plot(load_curve[:,0], load_curve[:,1], c = c[j],alpha = 0.45, label = f'rise: {rise_all[j]:.4e}')
             axs[i].legend()
-            fit_sigmoid(load_curve, fig, axs[i])
+            fit_sigmoid(load_curve, fig, axs[i], c=c[j])
 
 
 
@@ -627,6 +629,7 @@ def plot_production():
 
         axs[i].set_xlabel(r"$t_p$ [ns]")
         axs[i].set_ylabel(r"$f$ [$\mu$N]")
+        axs[i].set_xlim([0.4, 1.4])
         if asperities == 2:
             axs[i].set_title(man_init_2asp[i])
         elif asperities ==8 and not strange:
@@ -698,8 +701,8 @@ if __name__ == '__main__':
     #plot_all_curves_and_mean(temp, vel, force, orientation, grid, template_lc, template_ms, seeds)    
     #plot_mean_of_multiple()
     #plot_load_curves_as_funciton_of_top_thiccness()
-    load_vs_normal_force()
+    #load_vs_normal_force()
     #plot_single_loadcurve()
     #plot_production(temp, vel, force, uc, 8, time,orientation, grid, erratic, production = False)
     #test_rip_norm()
-    #plot_production()
+    plot_production()
