@@ -443,6 +443,7 @@ def load_vs_normal_force():
                         3: '[[0,1,0,0][1,1,1,0][1,1,1,0][0,1,0,0]]', 0: '[[1,0,1,0][0,1,0,1][1,0,1,0][0,1,0,1]]'}
 
     c = plt.cm.viridis((3 - np.arange(5))/(3 - 0 + 0.01))
+    c = np.flip(c, axis=0)
     for i, (layout_int, seed) in enumerate(varystrange.items()):
         
         load_curves_all, load_curves_mean = load_load_curves(temp, vel, force, asperities, orientation,
@@ -701,8 +702,8 @@ if __name__ == '__main__':
     #plot_all_curves_and_mean(temp, vel, force, orientation, grid, template_lc, template_ms, seeds)    
     #plot_mean_of_multiple()
     #plot_load_curves_as_funciton_of_top_thiccness()
-    #load_vs_normal_force()
+    load_vs_normal_force()
     #plot_single_loadcurve()
     #plot_production(temp, vel, force, uc, 8, time,orientation, grid, erratic, production = False)
     #test_rip_norm()
-    plot_production()
+    #plot_production()
