@@ -59,6 +59,7 @@ def load_vs_normal_force():
                         3: '[[0,1,0,0][1,1,1,0][1,1,1,0][0,1,0,0]]', 0: '[[1,0,1,0][0,1,0,1][1,0,1,0][0,1,0,1]]'}
 
     #c = plt.cm.viridis(np.array(tuple(varyforce))/(0.01))
+    c = plt.cm.viridis((3 - np.arange(len(vary_norm)))/(3 - 0 + 0.01))
     for i, (normforce, seed) in enumerate(vary_norm.items()):
 
         load_curves_all, load_curves_mean = load_load_curves(temp, vel, normforce, asperities, orientation,
@@ -79,59 +80,45 @@ def load_vs_normal_force():
         #print('glob heights file ',len(glob(heights_file)))
         #assert len(glob(heights_file)) == 1
 
-        for curve in load_curves_all:
-            axs[i].plot(curve[:,0], curve[:,1], alpha = 0.4)
-        for max_static in max_static_all:
-            axs[i].plot(max_static[0], max_static[1], 'o')
-            axs2[0].plot(normforce, max_static[1], 'or')
-        axs2[0].plot(normforce, max_static_mean[1], '*', label='mean')
-        for rise in rise_all:
-            axs2[1].plot(i, rise, 'or')
-        axs2[1].plot(normforce, rise_mean, '*', label='mean')
+        
+        for j,curve in enumerate(load_curves_all):
+            axs[i].plot(curve[:,0], curve[:,1], alpha = 0.4, c=c[j])
+        for j, max_static in enumerate(max_static_all):
+            axs[i].plot(max_static[0], max_static[1], 'bo')
+            axs2[0].plot(normforce, max_static[1], 'o', c=c[j])
+        #axs2[0].plot(normforce, max_static_mean[1], '*', label='mean')
+        for j,rise in enumerate(rise_all):
+            axs2[1].plot(normforce, rise, 'o', c = c[j])
+        #axs2[1].plot(normforce, rise_mean, '*', label='mean')
         axs2[0].legend()
 
-        #height plot
-
-        #data = np.loadtxt(maxz_file)
-        #timeframes = []
-        #height = []
-        #for row in data:
-        #    timeframes.append(row[0]*timestep*0.001)
-        #    height.append(row[1])
-
-        #timeframes = np.array(timeframes)
-        #height = np.array(height)
-
-
-        #axs[0].plot(disp_mean[0,:,0], disp_mean[0,:,1], label = f'force {force}')
-        #axs[1].plot(disp_mean[0,:,0], disp_mean[0,:,1], label = f'force {force}')
-        #axs[i].plot(load_curves_mean[0,:,0], load_curves_mean[0,:,1], label=f'average')
+    
+        axs[i].plot(load_curves_mean[0,:,0], load_curves_mean[0,:,1], label = f'average')
         axs[i].legend()
-        #axs[1].plot(timeframes, height)
-        #axs[i].set_ylim([-0.03, 0.1])
         axs[i].set_xlabel(r"$t_p$ [ns]")
         axs[i].set_ylabel(r"$f$ [$\mu$N]")
-        axs[i].set_title(f'Normal force {normforce} UNITS')
+        axs[i].set_title(f'Normal force {normforce} [$\mu$N]')
+        axs[i].set_ylim([-0.03, 0.5])
 
-    fig.suptitle(f"Load curves for varying selected systems")
-    fig.legend()
+    fig.suptitle(f"Load curves for the chess system with increasing normal force")
     fig.tight_layout(pad=1.8)
     
     outname = 'vary_normforce.png'
 
     print(f'saved fig to {fig_dir + outname}')
-    fig.savefig(fig_dir + outname)
+    fig.savefig(fig_dir + outname, dpi = 200)
 
-    axs2[0].set_xlabel('normal force ADD UNITS')
-    axs2[1].set_xlabel('normal force')
+    axs2[0].set_title('maximum static')
+    axs2[1].set_title('slope of sigmoid fit')
+    axs2[0].set_xlabel('normal force [$\mu$N]')
+    axs2[1].set_xlabel('normal force [$\mu$N]')
     axs2[0].set_ylabel(r"$f$ [$\mu$N]")
     axs2[1].set_ylabel(r"$f$ [$\mu$N]")
 
 
-    fig2.suptitle(f'rise and max static for varying normal force, chess layout')
-    fig2.legend()
+    fig2.suptitle(f'slope and maximum static friction for varying normal force, chess layout')
     fig2.tight_layout()
-    fig2.savefig(fig_dir + 'varying_normforce_rise_maxstatic.png')
+    fig2.savefig(fig_dir + 'varying_normforce_rise_maxstatic.png', dpi = 200)
 
 if __name__ == '__main__':
 

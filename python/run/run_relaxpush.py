@@ -181,7 +181,7 @@ def run_relaxpush(force = 0, init_num = 0, run_num = 0, asperities = 8, orientat
 
 if __name__ == '__main__':
     #run_relaxpush(init_num = 0, asperities = 8, production = False)
-    for force in [0.1, 1]:
+    for force in [0.004, 0.006]:
         run_relaxpush(force = force, production = False)
     
     #for vel in [1, 3, 8, 13]:
