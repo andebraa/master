@@ -2,6 +2,7 @@ import numpy as np
 from glob import glob
 from utils import *
 import matplotlib.pyplot as plt
+plt.style.use('seaborn')
 
 path_dnn = 'CV_results/dnn/'
 path_cnn = 'CV_results/cnn/'
@@ -18,6 +19,7 @@ actual_cnn = []
 
 fig, axs = plt.subplots(2)
 axs = axs.ravel()
+c = plt.cm.viridis((1 - np.arange(2))/(1 - 0 + 0.1))
 for i,_file in enumerate(files_dnn):
     obj = np.load(_file, allow_pickle = True)
     best_mse = obj['arr_0'][0].mse_test
@@ -27,11 +29,11 @@ for i,_file in enumerate(files_dnn):
     print(i, obj['arr_0'][0])
     if 'random' in _file:
         random_dnn.append((best_r2, best_mse))
-        axs[0].plot(best_mse, best_r2, 'o',c='r')
+        axs[0].plot(best_mse, best_r2, 'o',c=c[0])
         print('^^random')
     else:
         actual_dnn.append((best_r2, best_mse))
-        axs[0].plot(best_mse, best_r2, 'o',c='b')
+        axs[0].plot(best_mse, best_r2, 'o',c=c[1])
 
 
 for i,_file in enumerate(files_cnn):
@@ -42,11 +44,11 @@ for i,_file in enumerate(files_cnn):
     print(i, obj['arr_0'][1])
     if 'random' in _file:
         random_cnn.append((best_r2, best_mse))
-        axs[1].plot(best_mse, best_r2, 'o',c='r')
+        axs[1].plot(best_mse, best_r2, 'o',c=c[0])
         print('^^random')
     else:
         actual_cnn.append((best_r2, best_mse))
-        axs[1].plot(best_mse, best_r2, 'o',c='b')
+        axs[1].plot(best_mse, best_r2, 'o',c=c[1])
 
 axs[1].set_title('cnn')
 axs[0].set_title('dnn')
@@ -54,4 +56,5 @@ axs[0].set_xlabel('mse')
 axs[1].set_xlabel('mse')
 axs[0].set_ylabel('r2')
 axs[1].set_ylabel('r2')
-fig.savefig('fig/ml_plot.png')
+plt.tight_layout()
+fig.savefig('fig/ml_res.png', dpi = 200)
