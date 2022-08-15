@@ -48,6 +48,9 @@ def plot_max_static_dist():
     fig2, axs2 = plt.subplots()
     axs = axs.ravel()
     c = plt.cm.viridis(np.linspace(0, 1, 100))
+    avg_ms = 0
+    avg_slope = 0
+    avg_sigmax = 0
     for i in range(320): #this code now works with producition
         lc_files = glob(template_lc.format(temp, vel, force, asperities,orientation, i, grid[0], grid[1]))
         lc_file = lc_files[0]
@@ -64,7 +67,12 @@ def plot_max_static_dist():
         load_curve = np.array(infile)
         rise = loadtxt(rise_file)
         ms = np.array(loadtxt(ms_file))
+        
+        max_sig = fit_sigmoid(load_curve, fig2, axs2)
 
+        avg_ms += ms[1]
+        avg_slope += rise
+        avg_sigmax += max_sig
         #fit_sigmoid(load_curve, fig, axs[i])
         ##finding the auxiliary folder of the run to find the norm
         with open (glob(template_aux.format(asperities, uc, temp, force, asperities, orientation,
@@ -72,18 +80,26 @@ def plot_max_static_dist():
             #note that seeds contain runs of the same system, so all are similar to seeds[0]
             aux_dict = json.loads(fp.read())
 
-        max_sig = fit_sigmoid(load_curve, fig2, axs2)
         matrix_norm = rip_norm(aux_dict['erratic'])
         axs[0].plot(matrix_norm, rise, 'o', c = c[int(np.round(matrix_norm*10))])
         axs[1].plot(matrix_norm, ms[1], 'o', c= c[int(np.round(matrix_norm*10))])
         axs[2].plot(matrix_norm, max_sig, 'o', c = c[int(np.round(matrix_norm*10))])
 
-
+    avg_ms /= 320
+    avg_slope /= 320
+    avg_sigmax /= 320
 
     axs[0].set_xlabel('norm of asperity distance')
     axs[0].set_ylabel('slope of simoid fit')
+    axs[0].axhline(avg_slope, label='average')
+    axs[0].legend()
     axs[1].set_ylabel('maximum static friction')
+    axs[1].axhline(avg_ms, label='average')
+    axs[1].legend()
     axs[2].set_ylabel('highest sigmoid value')
+    axs[2].axhline(avg_sigmax, label = 'average')
+    axs[2].legend()
+    
     fig.suptitle(f"the slope and maximum static friction as a function of the norm of asperity distances, \n temp {temp}, force {force}, vel {vel}, asperities {asperities}, orientation {orientation}")
     fig.savefig(fig_dir + 'png/asperity_distance_v_maxstatic.png', dpi = 200)
 

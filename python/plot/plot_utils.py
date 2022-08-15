@@ -79,7 +79,7 @@ def fit_sigmoid(load_curve, fig, axs, c = False):
 
     max_sig = sigmoid(time_nnan, *popt)[-1]
     
-    if c.any(): #gotta add . any () to this
+    if c: #gotta add . any () to this
         axs.plot(time_nnan, sigmoid(time_nnan, *popt), c= c, linewidth = 2)
     else:
         axs.plot(time_nnan, sigmoid(time_nnan, *popt))
