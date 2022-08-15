@@ -76,12 +76,14 @@ def fit_sigmoid(load_curve, fig, axs, c = False):
 
 
     rise, intersect = np.polyfit(polfit_data2[:,0], polfit_data2[:,1], 1)
+
+    max_sig = sigmoid(time_nnan, *popt)[-1]
     
-    if c.any():
+    if c.any(): #gotta add . any () to this
         axs.plot(time_nnan, sigmoid(time_nnan, *popt), c= c, linewidth = 2)
     else:
         axs.plot(time_nnan, sigmoid(time_nnan, *popt))
 
-    return 1
+    return max_sig
 
 

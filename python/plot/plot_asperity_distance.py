@@ -44,7 +44,8 @@ def plot_max_static_dist():
     template_r = rise_dir + 'rise_temp{}_vel{}_force{}_asp{}_or{}_initnum{}_seed*_errgrid4_4.txt'
     template_aux = project_dir + 'simulations/sys_asp{}_uc{}/production/dataset/sim_temp{}_force{}_asp{}_or{}_time*_initnum{}_seed{}_errgrid4_4/system_asp{}_or{}_uc{}_initnum{}_errgrid4_4_auxiliary.json'
 
-    fig, axs = plt.subplots(2, figsize=(10,10))
+    fig, axs = plt.subplots(3, figsize=(10,10), sharex=True)
+    fig2, axs2 = plt.subplots()
     axs = axs.ravel()
     c = plt.cm.viridis(np.linspace(0, 1, 100))
     for i in range(320): #this code now works with producition
@@ -71,17 +72,18 @@ def plot_max_static_dist():
             #note that seeds contain runs of the same system, so all are similar to seeds[0]
             aux_dict = json.loads(fp.read())
 
-
+        max_sig = fit_sigmoid(load_curve, fig2, axs2)
         matrix_norm = rip_norm(aux_dict['erratic'])
         axs[0].plot(matrix_norm, rise, 'o', c = c[int(np.round(matrix_norm*10))])
         axs[1].plot(matrix_norm, ms[1], 'o', c= c[int(np.round(matrix_norm*10))])
+        axs[2].plot(matrix_norm, max_sig, 'o', c = c[int(np.round(matrix_norm*10))])
 
 
 
     axs[0].set_xlabel('norm of asperity distance')
     axs[0].set_ylabel('slope of simoid fit')
-    axs[1].set_xlabel('norm of asperity distance')
     axs[1].set_ylabel('maximum static friction')
+    axs[2].set_ylabel('highest sigmoid value')
     fig.suptitle(f"the slope and maximum static friction as a function of the norm of asperity distances, \n temp {temp}, force {force}, vel {vel}, asperities {asperities}, orientation {orientation}")
     fig.savefig(fig_dir + 'png/asperity_distance_v_maxstatic.png', dpi = 200)
 

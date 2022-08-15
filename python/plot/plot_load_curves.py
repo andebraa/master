@@ -549,7 +549,7 @@ def plot_production():
         template_r = rise_dir + 'rise_temp{}_vel{}_force{}_asp{}_or{}_seed{}_errgrid4_4.txt'
         template_aux = project_dir + 'simulations/sys_asp{}_uc{}/erratic/sim_temp{}_force{}_asp{}_or{}_time{}_seed{}_errgrid4_4/system_asp{}_or{}_uc{}_initnum{}_errgrid4_4_auxiliary.json'
 
-    fig2, axs2 = plt.subplots(2,1) #slope and ms
+    fig2, axs2 = plt.subplots(3,1, sharex = True, figsize = (10,8)) #slope and ms
     fig, axs = plt.subplots(5,2, sharex = True, figsize = (15,15))
     axs = axs.ravel()
     axs2 = axs2.ravel()
@@ -571,7 +571,7 @@ def plot_production():
     man_init_strange = {0: '[[0,1,1,0][0,1,1,0][0,1,1,0][0,1,1,0]]', 1: '[[0,0,0,0][1,1,1,1][1,1,1,1][0,0,0,0]]',
                         2: '[[0,1,0,0][1,1,1,0][1,1,1,0][0,1,0,0]]', 3: '[[1,0,1,0][0,1,0,1][1,0,1,0][0,1,0,1]]'}
     strange = True
-    c = plt.cm.viridis((3 - np.arange(3))/(3 - 0 + 0.01))
+    c = plt.cm.viridis((9 - np.arange(10))/(9 - 0 + 0.01))
     print(c)
     c = np.flip(c, axis = 0)
     for i, (initnum, seeds) in enumerate(initseed.items()):
@@ -618,15 +618,16 @@ def plot_production():
         for j, load_curve in enumerate(load_curves_all):
             axs[i].plot(load_curve[:,0], load_curve[:,1], c = c[j],alpha = 0.45, label = f'rise: {rise_all[j]:.4e}')
             axs[i].legend()
-            fit_sigmoid(load_curve, fig, axs[i], c=c[j])
+            max_sig = fit_sigmoid(load_curve, fig, axs[i], c=c[j])
+            axs2[2].plot(i, max_sig, 'o', c=c[i])
 
 
 
         for ms in ms_all:
            axs[i].plot(ms[0], ms[1], 'o') #this is just proprietary
-        #   axs2[0].plot(i, ms[1], 'ro', c=c[i])
-        #for slope in rise_all:
-        #    axs2[1].plot(i, slope, 'ro', c = c[i])
+           axs2[0].plot(i, ms[1], 'ro', c=c[i])
+        for slope in rise_all:
+            axs2[1].plot(i, slope, 'ro', c = c[i])
 
         axs[i].set_xlabel(r"$t_p$ [ns]")
         axs[i].set_ylabel(r"$f$ [$\mu$N]")
@@ -643,18 +644,16 @@ def plot_production():
         push_start_indx = (np.abs(load_curves_all[0][:,0] - 1.0)).argmin()
         push_stop_indx = (np.abs(load_curves_all[0][:,0] - 1.03)).argmin()
 
-        #axs[i].set_ylim(bottom = -0.02, top = 0.07)
-        #axs[i].set_xlim(left = 0.5, right = 1.7)
-        #axs[i].legend(f'mean rise: {rise_mean}') 
-        
+     
         #axs[i].axvline(load_curves_all[0][push_start_indx,0], alpha = 0.5)
         #axs[i].axvline(load_curves_all[0][push_stop_indx,0], alpha = 0.5)
 
         axs2[0].set_xlabel('configuration number')
         axs2[1].set_xlabel('configuration number')
+        axs2[2].set_xlabel('configuration number')
         axs2[0].set_ylabel('maximum static friction force [$\mu$N]')
         axs2[1].set_ylabel('slope of sigmoid fit')
-        
+        axs2[2].set_ylabel('highest sigmoid value')
     
     fig.subplots_adjust(hspace=0.3)
     fig.suptitle('load curves, maximum static friction and a fitted sigmoid curve for all 10 two asperity systems')
@@ -702,8 +701,8 @@ if __name__ == '__main__':
     #plot_all_curves_and_mean(temp, vel, force, orientation, grid, template_lc, template_ms, seeds)    
     #plot_mean_of_multiple()
     #plot_load_curves_as_funciton_of_top_thiccness()
-    load_vs_normal_force()
+    #load_vs_normal_force()
     #plot_single_loadcurve()
     #plot_production(temp, vel, force, uc, 8, time,orientation, grid, erratic, production = False)
     #test_rip_norm()
-    #plot_production()
+    plot_production()
