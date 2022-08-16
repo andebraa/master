@@ -7,6 +7,58 @@ import json
 import re
 import numpy as np
 from glob import glob
+from scipy.optimize import curve_fit
+def sigmoid(x, L ,x0, k, b):
+    y = L / (1 + np.exp(-k*(x-x0))) + b
+    return (y)
+
+def fit_sigmoid(load_curve):
+    '''
+    https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.curve_fit.html
+    https://stackoverflow.com/questions/55725139/fit-sigmoid-function-s-shape-curve-to-data-using-python
+    '''
+    time = load_curve[:,0]
+    fx = load_curve[:,1]
+
+    #fitting sigmoid to selected interval.
+    polfit_start_indx = (np.abs(time - 0.7)).argmin()
+    polfit_stop_indx = (np.abs(time - 1.3)).argmin()
+    #translation so it has same shape as load_curve
+    polfit_data = np.array((time[polfit_start_indx:polfit_stop_indx],
+                           fx[polfit_start_indx:polfit_stop_indx])).T
+
+
+    #curve fit doesn't like nan. removing theese for now
+    non_nan_mask = ~np.isnan(polfit_data[:,1])
+
+    #https://stackoverflow.com/questions/55725139/fit-sigmoid-function-s-shape-curve-to-data-using-python
+    time_nnan = polfit_data[non_nan_mask,0]
+    load_curve_nnan = polfit_data[non_nan_mask,1]
+    #this was [max(time_nnan), etc and worked.. website says ydata first
+    p0 = [max(time_nnan), np.median(time_nnan),1,min(load_curve_nnan)] # this is an mandatory initial guess
+
+
+    popt, pcov = curve_fit(sigmoid, time_nnan, load_curve_nnan,p0, method='dogbox')
+
+    #max_rise = np.max(np.gradient(sigmoid(time_nnan, *popt))) this gives wrong values. idk
+
+    #repeating selection and polyfit but this time fitting linear func to sigmoid midriff
+    midriff = np.array((popt[1] - 0.05, popt[1] + 0.05))
+
+    print(f'midriff ',midriff)
+    midriff_start_indx = (np.abs(time_nnan - midriff[0])).argmin()
+    midriff_stop_indx = (np.abs(time_nnan - midriff[1])).argmin()
+
+    print('midriff indices ', midriff_start_indx, midriff_stop_indx)
+    polfit_data2 = np.array((time_nnan[midriff_start_indx:midriff_stop_indx],
+                            load_curve_nnan[midriff_start_indx:midriff_stop_indx])).T
+
+
+    rise, intersect = np.polyfit(polfit_data2[:,0], polfit_data2[:,1], 1)
+
+    max_sig = sigmoid(time_nnan, *popt)[-1]
+
+    return max_sig
 
 def dataset_maker():
     temp = 2300
@@ -38,8 +90,11 @@ def dataset_maker():
     n = len(lc_files)
     print('len lc files: ', n)
     out_matrix = np.zeros((n, 4,4)) #4,4 matrix, 1 rise, 1 max static
-    out_y = np.zeros((n, 2))
+    out_y = np.zeros((n, 3))
     for i, lc_file in enumerate(lc_files): #this code now works with producition
+        print(lc_file)
+        if lc_file == '.':
+            continue
         try:
             matches = re.findall('\d+', lc_file)
         except:
@@ -51,10 +106,10 @@ def dataset_maker():
 
         rise_files = glob(template_r.format(temp, vel, force, asperities, orientation,initnum, grid[0], grid[1]))
         ms_files = glob(template_ms.format(temp, vel, force, asperities, orientation,initnum, grid[0], grid[1]))
-        load_curves = []
         rise = []
         ms = []
 
+        load_curves = np.loadtxt(lc_file)
         for rise_file in rise_files:
             rise.append(np.loadtxt(rise_file))
         for ms_file in ms_files:
@@ -71,12 +126,14 @@ def dataset_maker():
         else:
             rise = rise[0]
             ms = ms[0]
+        sigmax = fit_sigmoid(load_curves)
         
-    
+        
         out_matrix[i, :,:] = np.array(aux_dict['erratic'])
-        out_y[i,:]= np.array((rise,ms))
+        out_y[i,:]= np.array((rise,ms,sigmax))
     print(out_y)
     print(out_matrix)
+    print('shape y', np.shape(out_y))
     print('number of datasets: ', len(out_y))
     np.save( 'out_y.npy', out_y)
     np.save('out_matrix.npy', out_matrix)
@@ -117,5 +174,5 @@ def random_dataset():
 
 if __name__ == '__main__':
     dataset_maker()
-    random_dataset()
+    #random_dataset()
         

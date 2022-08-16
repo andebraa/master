@@ -192,12 +192,12 @@ def load_data(padding = 2, method = 'cnn', random = False):
     if random:
         X = np.load('rand_matrix.npy') 
         Y = np.load('rand_y.npy') 
-        Y = Y[:,0]
+        Y = Y[:,2]
 
     else:
         X = np.load('out_matrix.npy') 
         Y = np.load('out_y.npy') 
-        Y = Y[:,0]
+        Y = Y[:,2]
  
     #shuffle 
     indx = np.arange(0, X.shape[0]) 

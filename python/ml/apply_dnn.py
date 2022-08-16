@@ -125,7 +125,7 @@ def run_dnn_search(epochs, mode):
 
     padding = 1
     X_CV, y_CV, X_test, y_test = utils.load_data(padding, method = 'dnn', random = False) #X_CV, y_CV, X_test, y_test
-    device = utils.get_device("cpu", verbose = True)
+    device = utils.get_device("gpu", verbose = True)
 
     n_nodes_list = 2**np.arange(2, 9) # 4 - 1024 nodes
     n_layers_list = 2**np.arange(2, 9) # 2 - 128 layers
@@ -161,7 +161,7 @@ def run_dnn_search(epochs, mode):
     results.insert(0, final_result)
 
     seed = np.random.randint(10000, 100000)
-    outname = f"CV_results/scores_dnn_{mode}_epochs{epochs}_pad{padding}_splits{splits}_{seed}.npz"
+    outname = f"CV_results/scores_dnn_{mode}_epochs{epochs}_pad{padding}_splits{splits}_{seed}_sigmax.npz"
     if os.path.exists(outname):
         print(f"WARNING: {outname} exists. Exiting..")
         return
