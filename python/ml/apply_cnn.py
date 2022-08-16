@@ -248,9 +248,9 @@ class GridSearchCNN(GridSearch):
 
 
 def run_cnn_search(epochs, mode):
-
+    random = False
     padding = 1
-    X_CV, y_CV, X_test, y_test = utils.load_data(padding, random = True) #X_CV, y_CV, X_test, y_test
+    X_CV, y_CV, X_test, y_test = utils.load_data(padding, random = random) #X_CV, y_CV, X_test, y_test
     device = utils.get_device("gpu", verbose = True)
 
 
@@ -290,7 +290,11 @@ def run_cnn_search(epochs, mode):
     results.insert(0, final_result)
 
     seed = np.random.randint(10000, 100000)
-    outname = f"CV_results/scores_cnn_{mode}_epochs{epochs}_pad{padding}_splits{splits}_{seed}_sigmax_random.npz"
+    if random:
+        outname = f"CV_results/scores_cnn_{mode}_epochs{epochs}_pad{padding}_splits{splits}_{seed}_sigmax_random.npz"
+    else:
+        outname = f"CV_results/scores_cnn_{mode}_epochs{epochs}_pad{padding}_splits{splits}_{seed}_sigmax.npz"
+
     if os.path.exists(outname):
         print(f"WARNING: {outname} exists. Exiting..")
         return
