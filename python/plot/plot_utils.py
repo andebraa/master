@@ -66,11 +66,9 @@ def fit_sigmoid(load_curve, fig, axs, c = False):
     #repeating selection and polyfit but this time fitting linear func to sigmoid midriff
     midriff = np.array((popt[1] - 0.05, popt[1] + 0.05))
 
-    print(f'midriff ',midriff)
     midriff_start_indx = (np.abs(time_nnan - midriff[0])).argmin()
     midriff_stop_indx = (np.abs(time_nnan - midriff[1])).argmin()
 
-    print('midriff indices ', midriff_start_indx, midriff_stop_indx)
     polfit_data2 = np.array((time_nnan[midriff_start_indx:midriff_stop_indx],
                             load_curve_nnan[midriff_start_indx:midriff_stop_indx])).T
 

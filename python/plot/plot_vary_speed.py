@@ -97,10 +97,13 @@ def load_vs_normal_force():
         #axs[i].set_ylim([-0.02, 0.14])
 
     sigmax_logfit = np.polyfit(np.log(vels), sigmax_vels, 1)
-    axs2[2].plot(sigmax_logfit[0] * np.log(vels) + sigmax_logfit[1], label='logfit')
+    polfit_plot_vels = np.linspace(vels[0], vels[-1], 100)
+    axs2[2].plot(polfit_plot_vels, sigmax_logfit[0] * np.log(polfit_plot_vels) + sigmax_logfit[1], label='logfit', alpha = 0.8)
+    axs2[2].legend()
 
     ms_logfit = np.polyfit(np.log(vels), ms_vels, 1)
-    axs2[1].plot(ms_logfit[0] * np.log(np.linspace(1, vels[-1], 100)) + ms_logfit[1], label='logfit')
+    axs2[0].plot(polfit_plot_vels, ms_logfit[0] * np.log(polfit_plot_vels) + ms_logfit[1], label='logfit', alpha = 0.8)
+    axs2[0].legend()
     fig.suptitle(f"Load curves for the chess system with increasing top plate velocity")
     fig.tight_layout(pad=1.8)
     
@@ -113,6 +116,7 @@ def load_vs_normal_force():
     axs2[1].set_title('slope of sigmoid fit')
     axs2[0].set_xlabel('top plate velocity [m/s]')
     axs2[1].set_xlabel('top plate velocity [m/s]')
+    axs2[1].set_ylabel(r"$f$ [$\mu$Ns/m]")
     axs2[0].set_ylabel(r"$f$ [$\mu$N]")
     axs2[2].set_xlabel('top plate velocity [m/s]')
     axs2[2].set_ylabel(r"$f$ [$\mu$N]")

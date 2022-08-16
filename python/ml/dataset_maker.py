@@ -150,21 +150,22 @@ def random_dataset():
     real_y = np.load('out_y.npy')
     print(np.shape(real_y))
     print(real_y)
-    avg_ms, avg_rise = np.mean(real_y, axis=0)
-    std_ms, std_rise = np.std(real_y, axis=0)#overflow here
-    print(std_ms, std_rise)
+    avg_ms, avg_rise, avg_sigmax = np.mean(real_y, axis=0)
+    std_ms, std_rise, std_sigmax = np.std(real_y, axis=0)#overflow here
+    print(std_ms, std_rise, std_sigmax)
     
     N = 310 #number of fake samples
     matrices = np.load('../pre/config_list.npy')
     out_matrix = np.empty((N, 4,4))
-    out_y = np.empty((N,2))
+    out_y = np.empty((N,3))
     
     for i in range(N):
         out_matrix[i, :,:] = matrices[np.random.randint(0, len(matrices))] #select random matrix setup
         rand_ms = np.random.normal(avg_ms, std_ms)
         rand_rise = np.random.normal(avg_rise, std_rise)
+        rand_sigmax = np.random.normal(avg_sigmax, std_sigmax)
 
-        out_y[i, :] = np.array((rand_ms, rand_rise))
+        out_y[i, :] = np.array((rand_ms, rand_rise, rand_sigmax))
 
         
     np.save('rand_matrix.npy', out_matrix)
@@ -173,6 +174,6 @@ def random_dataset():
 
 
 if __name__ == '__main__':
-    dataset_maker()
-    #random_dataset()
+    #dataset_maker()
+    random_dataset()
         
