@@ -103,8 +103,8 @@ def load_vs_normal_force():
     polfit_plot_vels = np.linspace(vels[0], vels[-1], 100)
     sigmax_logfit_arr = sigmax_logfit[0] * np.log(vels) + sigmax_logfit[1]
     sigmax_linfit_arr = sigmax_linfit[0] * np.array(vels) + sigmax_linfit[1]
-    axs2[2].plot(vels, sigmax_logfit_arr, label=f'logfit r2 {r2_score(sigmax_vels, sigmax_logfit_arr)}', alpha = 0.8)
-    axs2[2].plot(vels, sigmax_linfit_arr, label=f'linfit r2 {r2_score(sigmax_vels, sigmax_linfit_arr)}', alpha = 0.8)
+    axs2[2].plot(vels, sigmax_logfit_arr, label=f'logfit r2 {r2_score(sigmax_vels, sigmax_logfit_arr):.2f}', alpha = 0.6)
+    axs2[2].plot(vels, sigmax_linfit_arr, label=f'linfit r2 {r2_score(sigmax_vels, sigmax_linfit_arr):.2f}', alpha = 0.6)
     axs2[2].legend()
 
     ms_logfit = np.polyfit(np.log(vels), ms_vels, 1)
@@ -112,8 +112,8 @@ def load_vs_normal_force():
 
     ms_logfit_arr = ms_logfit[0] * np.log(vels) + ms_logfit[1]
     ms_linfit_arr = ms_linfit[0] * np.array(vels) + ms_linfit[1] #apply linear fit to ms vels
-    axs2[0].plot(vels, ms_logfit_arr, label=f'logfit r2 {r2_score(ms_vels, ms_logfit_arr)}', alpha = 0.6)
-    axs2[0].plot(vels, ms_linfit_arr, label = f'linfit r2 {r2_score(ms_vels, ms_linfit_arr)}', alpha = 0.6)
+    axs2[0].plot(vels, ms_logfit_arr, label=f'logfit r2 {r2_score(ms_vels, ms_logfit_arr):.2f}', alpha = 0.6)
+    axs2[0].plot(vels, ms_linfit_arr, label = f'linfit r2 {r2_score(ms_vels, ms_linfit_arr):.2f}', alpha = 0.6)
     axs2[0].legend()
     fig.suptitle(f"Load curves for the chess system with increasing top plate velocity")
     fig.tight_layout(pad=1.8)
