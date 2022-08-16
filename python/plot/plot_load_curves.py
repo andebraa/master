@@ -427,7 +427,7 @@ def load_vs_normal_force():
     #axs1 is load curves over time
     fig, axs = plt.subplots(2,2, figsize = (12,12))
     #axs2 is max static and rise
-    fig2, axs2 = plt.subplots(3)
+    fig2, axs2 = plt.subplots(3, figsize=(12,8))
     axs2 = axs2.ravel()
     axs = axs.ravel()
     #axs2 = []

@@ -8,6 +8,8 @@ import matplotlib.pyplot as plt
 from multiline import multiline
 from matplotlib import style
 from plot_utils import sigmoid, rip_norm, test_rip_norm, fit_sigmoid
+from sklearn.metrics import r2_score
+
 
 plt.style.use('seaborn')
 
@@ -45,7 +47,7 @@ def load_vs_normal_force():
     #axs1 is load curves over time
     fig, axs = plt.subplots(2,2, figsize = (12,12))
     #axs2 is max static and rise
-    fig2, axs2 = plt.subplots(3)
+    fig2, axs2 = plt.subplots(3, figsize = (12, 8))
     fig3, axs3 = plt.subplots() #fake fig for sigmax
     axs2 = axs2.ravel()
     axs = axs.ravel()
@@ -97,12 +99,21 @@ def load_vs_normal_force():
         #axs[i].set_ylim([-0.02, 0.14])
 
     sigmax_logfit = np.polyfit(np.log(vels), sigmax_vels, 1)
+    sigmax_linfit = np.polyfit(vels, sigmax_vels, 1)
     polfit_plot_vels = np.linspace(vels[0], vels[-1], 100)
-    axs2[2].plot(polfit_plot_vels, sigmax_logfit[0] * np.log(polfit_plot_vels) + sigmax_logfit[1], label='logfit', alpha = 0.8)
+    sigmax_logfit_arr = sigmax_logfit[0] * np.log(vels) + sigmax_logfit[1]
+    sigmax_linfit_arr = sigmax_linfit[0] * np.array(vels) + sigmax_linfit[1]
+    axs2[2].plot(vels, sigmax_logfit_arr, label=f'logfit r2 {r2_score(sigmax_vels, sigmax_logfit_arr)}', alpha = 0.8)
+    axs2[2].plot(vels, sigmax_linfit_arr, label=f'linfit r2 {r2_score(sigmax_vels, sigmax_linfit_arr)}', alpha = 0.8)
     axs2[2].legend()
 
     ms_logfit = np.polyfit(np.log(vels), ms_vels, 1)
-    axs2[0].plot(polfit_plot_vels, ms_logfit[0] * np.log(polfit_plot_vels) + ms_logfit[1], label='logfit', alpha = 0.8)
+    ms_linfit = np.polyfit(vels, ms_vels, 1)
+
+    ms_logfit_arr = ms_logfit[0] * np.log(vels) + ms_logfit[1]
+    ms_linfit_arr = ms_linfit[0] * np.array(vels) + ms_linfit[1] #apply linear fit to ms vels
+    axs2[0].plot(vels, ms_logfit_arr, label=f'logfit r2 {r2_score(ms_vels, ms_logfit_arr)}', alpha = 0.6)
+    axs2[0].plot(vels, ms_linfit_arr, label = f'linfit r2 {r2_score(ms_vels, ms_linfit_arr)}', alpha = 0.6)
     axs2[0].legend()
     fig.suptitle(f"Load curves for the chess system with increasing top plate velocity")
     fig.tight_layout(pad=1.8)
