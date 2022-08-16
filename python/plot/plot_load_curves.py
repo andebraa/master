@@ -427,7 +427,7 @@ def load_vs_normal_force():
     #axs1 is load curves over time
     fig, axs = plt.subplots(2,2, figsize = (12,12))
     #axs2 is max static and rise
-    fig2, axs2 = plt.subplots(2)
+    fig2, axs2 = plt.subplots(3)
     axs2 = axs2.ravel()
     axs = axs.ravel()
     #axs2 = []
@@ -466,6 +466,7 @@ def load_vs_normal_force():
         
         for j, curve in enumerate(load_curves_all):
             axs[i].plot(curve[:,0], curve[:,1], alpha = 0.5, c = c[j])
+            axs2[2].plot(i, fit_sigmoid(curve), 'o', c = c[j])
         for j, max_static in enumerate(max_static_all):
             axs[i].plot(max_static[0], max_static[1], 'o')
             axs2[0].plot(i, max_static[1], 'o', c = c[j])
@@ -504,8 +505,14 @@ def load_vs_normal_force():
 
     axs2[0].set_xlabel('index of selected system')
     axs2[1].set_xlabel('index of selected system')
+    axs2[0].set_title('maximum static friction')
+    axs2[1].set_title('slope of sigmoid fit')
+    axs2[2].set_title('highest sigmoid value')
     axs2[0].set_ylabel(r"$f$ [$\mu$N]")
-    axs2[1].set_ylabel(r"$f$ [$\mu$N]")
+    axs2[1].set_ylabel(r"rise of sigmoid fit [$\mu$N/s]")
+    axs2[2].set_ylabel(r"highest sigmoid value [$\mu$N]")
+    axs2[2].set_xlabel('index of selected system')
+    
     
 
     fig2.suptitle(f'rise and max static for chosen layouts,\n0: {man_init_strange[0]} 1: {man_init_strange[1]} \n 2: {man_init_strange[2]} 3: {man_init_strange[3]}')
@@ -701,8 +708,8 @@ if __name__ == '__main__':
     #plot_all_curves_and_mean(temp, vel, force, orientation, grid, template_lc, template_ms, seeds)    
     #plot_mean_of_multiple()
     #plot_load_curves_as_funciton_of_top_thiccness()
-    #load_vs_normal_force()
+    load_vs_normal_force()
     #plot_single_loadcurve()
     #plot_production(temp, vel, force, uc, 8, time,orientation, grid, erratic, production = False)
     #test_rip_norm()
-    plot_production()
+    #plot_production()
