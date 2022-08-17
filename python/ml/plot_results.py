@@ -47,7 +47,7 @@ for i,_file in enumerate(files_dnn):
             else:
                 actual_dnn.append((best_r2, best_mse))
                 axs[0].plot(best_mse, best_r2, 'o',c=c[1], label = 'real data')
-axs[0].legend()
+axs[0].legend(numpoints=1)
 for i,_file in enumerate(files_cnn):
     obj = np.load(_file, allow_pickle = True)
     best_mse = obj['arr_0'][0].mse_test
@@ -72,7 +72,7 @@ for i,_file in enumerate(files_cnn):
             else:
                 actual_cnn.append((best_r2, best_mse))
                 axs[1].plot(best_mse, best_r2, 'o',c=c[1], label = 'real data')
-axs[1].legend()
+axs[1].legend(numpoints=1)
 if sigmax:
     fig.suptitle('best gridsearch results using sigmax output')
 else:
