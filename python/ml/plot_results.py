@@ -21,7 +21,7 @@ fig, axs = plt.subplots(2)
 axs = axs.ravel()
 c = plt.cm.viridis((1 - np.arange(2))/(1 - 0 + 0.1))
 
-sigmax = True
+sigmax = False
 
 for i,_file in enumerate(files_dnn):
     obj = np.load(_file, allow_pickle = True)
@@ -33,11 +33,11 @@ for i,_file in enumerate(files_dnn):
     if not sigmax:
         if 'random' in _file:
             random_dnn.append((best_r2, best_mse))
-            axs[0].plot(best_mse, best_r2, 'o',c=c[0])
+            axs[0].plot(best_mse, best_r2, 'o',c=c[0], label = 'random')
             print('^^random')
         else:
             actual_dnn.append((best_r2, best_mse))
-            axs[0].plot(best_mse, best_r2, 'o',c=c[1])
+            axs[0].plot(best_mse, best_r2, 'o',c=c[1], label = 'real data')
     else:
         if 'sigmax' in _file:
             if 'random' in _file:
@@ -46,7 +46,7 @@ for i,_file in enumerate(files_dnn):
                 print('^^random')
             else:
                 actual_dnn.append((best_r2, best_mse))
-                axs[0].plot(best_mse, best_r2, 'o',c=c[1])
+                axs[0].plot(best_mse, best_r2, 'o',c=c[1], label = 'real data')
 axs[0].legend()
 for i,_file in enumerate(files_cnn):
     obj = np.load(_file, allow_pickle = True)
@@ -58,11 +58,11 @@ for i,_file in enumerate(files_cnn):
     if not sigmax:
         if 'random' in _file:
             random_cnn.append((best_r2, best_mse))
-            axs[1].plot(best_mse, best_r2, 'o',c=c[0])
+            axs[1].plot(best_mse, best_r2, 'o',c=c[0], label = 'random')
             print('^^random')
         else:
             actual_cnn.append((best_r2, best_mse))
-            axs[1].plot(best_mse, best_r2, 'o',c=c[1])
+            axs[1].plot(best_mse, best_r2, 'o',c=c[1], label = 'real data')
     else:
         if 'sigmax' in _file:
             if 'random' in _file:
@@ -71,7 +71,7 @@ for i,_file in enumerate(files_cnn):
                 print('^^random')
             else:
                 actual_cnn.append((best_r2, best_mse))
-                axs[1].plot(best_mse, best_r2, 'o',c=c[1])
+                axs[1].plot(best_mse, best_r2, 'o',c=c[1], label = 'real data')
 axs[1].legend()
 if sigmax:
     fig.suptitle('best gridsearch results using sigmax output')
