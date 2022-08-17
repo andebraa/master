@@ -53,6 +53,7 @@ for i,_file in enumerate(files_cnn):
     best_mse = obj['arr_0'][0].mse_test
     best_r2 = obj['arr_0'][0].r2_test
     print('i, best config')
+    print(_file)
     print(i, obj['arr_0'][1])
     if not sigmax:
         if 'random' in _file:
