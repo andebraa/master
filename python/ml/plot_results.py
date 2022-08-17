@@ -42,12 +42,12 @@ for i,_file in enumerate(files_dnn):
         if 'sigmax' in _file:
             if 'random' in _file:
                 random_dnn.append((best_r2, best_mse))
-                axs[0].plot(best_mse, best_r2, 'o',c=c[0])
+                axs[0].plot(best_mse, best_r2, 'o',c=c[0], label='random')
                 print('^^random')
             else:
                 actual_dnn.append((best_r2, best_mse))
                 axs[0].plot(best_mse, best_r2, 'o',c=c[1])
-
+axs[0].legend()
 for i,_file in enumerate(files_cnn):
     obj = np.load(_file, allow_pickle = True)
     best_mse = obj['arr_0'][0].mse_test
@@ -67,12 +67,12 @@ for i,_file in enumerate(files_cnn):
         if 'sigmax' in _file:
             if 'random' in _file:
                 random_cnn.append((best_r2, best_mse))
-                axs[1].plot(best_mse, best_r2, 'o',c=c[0])
+                axs[1].plot(best_mse, best_r2, 'o',c=c[0], label='random')
                 print('^^random')
             else:
                 actual_cnn.append((best_r2, best_mse))
                 axs[1].plot(best_mse, best_r2, 'o',c=c[1])
-
+axs[1].legend()
 if sigmax:
     fig.suptitle('best gridsearch results using sigmax output')
 else:
