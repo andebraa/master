@@ -58,9 +58,9 @@ def load_vs_normal_force():
 
     c = plt.cm.viridis((3 - np.arange(len(vary_norm_alt)))/(3 - 0 + 0.01))
     
-    ms_vels = []
-    sigmax_vels = []
-    vels = []
+    ms_force = []
+    sigmax_force = []
+    forces = []
     for i, (force, seed) in enumerate(vary_norm_alt.items()):
 
         load_curves_all, load_curves_mean = load_load_curves(temp, vel, force, asperities, orientation,
@@ -74,19 +74,19 @@ def load_vs_normal_force():
                                                         grid, template_r, 0, seed, False)
 
 
-        _sigmax_vels = []
+        _sigmax_force= []
         for j,curve in enumerate(load_curves_all):
         #    axs[i].plot(curve[:,0], curve[:,1], alpha = 0.4, c=c[j])
-            axs2[2].plot(vel, fit_sigmoid(curve, fig3, axs3), 'o', c=c[j])
-            sigmax_vels.append(fit_sigmoid(curve, fig3, axs3))
-            vels.append(vel)
+            axs2[2].plot(force, fit_sigmoid(curve, fig3, axs3), 'o', c=c[j])
+            sigmax_force.append(fit_sigmoid(curve, fig3, axs3))
+            forces.append(force)
         for j, max_static in enumerate(max_static_all):
         #    axs[i].plot(max_static[0], max_static[1], 'bo')
-            axs2[0].plot(vel, max_static[1], 'o', c=c[j])
-            ms_vels.append(max_static[1])
+            axs2[0].plot(force, max_static[1], 'o', c=c[j])
+            ms_force.append(max_static[1])
         #axs2[0].plot(normforce, max_static_mean[1], '*', label='mean')
         for j,rise in enumerate(rise_all):
-            axs2[1].plot(vel, rise, 'o', c = c[j])
+            axs2[1].plot(force, rise, 'o', c = c[j])
         #axs2[1].plot(normforce, rise_mean, '*', label='mean')
         axs2[0].legend()
 
@@ -98,21 +98,21 @@ def load_vs_normal_force():
         #axs[i].set_title(f'velocity {vel} [m/s]')
         #axs[i].set_ylim([-0.02, 0.14])
 
-    sigmax_linfit = np.polyfit(vels, sigmax_vels, 1)
-    polfit_plot_vels = np.linspace(vels[0], vels[-1], 100)
-    sigmax_linfit_arr = sigmax_linfit[0] * np.array(vels) + sigmax_linfit[1]
-    axs2[2].plot(vels, sigmax_linfit_arr, label=f'linfit r2 {r2_score(sigmax_vels, sigmax_linfit_arr):.2f}', alpha = 0.6)
+    sigmax_linfit = np.polyfit(forces, sigmax_force, 1)
+    polfit_plot_force = np.linspace(forces[0], forces[-1], 100)
+    sigmax_linfit_arr = sigmax_linfit[0] * np.array(forces) + sigmax_linfit[1]
+    axs2[2].plot(forces, sigmax_linfit_arr, label=f'linfit r2 {r2_score(sigmax_force, sigmax_linfit_arr):.2f}', alpha = 0.6)
     axs2[2].legend()
 
-    ms_linfit = np.polyfit(vels, ms_vels, 1)
+    ms_linfit = np.polyfit(forces, ms_force, 1)
 
-    ms_linfit_arr = ms_linfit[0] * np.array(vels) + ms_linfit[1] #apply linear fit to ms vels
-    axs2[0].plot(vels, ms_linfit_arr, label = f'linfit r2 {r2_score(ms_vels, ms_linfit_arr):.2f}', alpha = 0.6)
+    ms_linfit_arr = ms_linfit[0] * np.array(forces) + ms_linfit[1] #apply linear fit to ms vels
+    axs2[0].plot(forces, ms_linfit_arr, label = f'linfit r2 {r2_score(ms_force, ms_linfit_arr):.2f}', alpha = 0.6)
     axs2[0].legend()
     fig.suptitle(f"Load curves for the chess system with various top plate normal force")
     fig.tight_layout(pad=1.8)
     
-    outname = 'vary_vel.png'
+    outname = 'vary_force.png'
 
     print(f'saved fig to {fig_dir + outname}')
     #fig.savefig(fig_dir + outname, dpi = 200)
@@ -129,7 +129,7 @@ def load_vs_normal_force():
 
     fig2.suptitle(f'maximum static friction, slope of the simoid value and the highest sigmoid value, chess layout')
     fig2.tight_layout()
-    fig2.savefig(fig_dir + 'varying_vel_rise_normforce.png', dpi = 200)
+    fig2.savefig(fig_dir + 'varying_force_rise_normforce.png', dpi = 200)
 
 if __name__ == '__main__':
 
