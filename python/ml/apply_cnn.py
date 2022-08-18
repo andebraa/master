@@ -310,7 +310,7 @@ def run_cnn_search(epochs, mode):
 def main():
 
     epochs = 300
-    mode = "mse"
+    mode = "r2"
     run_cnn_search(epochs=epochs, mode=mode)
 
 if __name__ == '__main__':
