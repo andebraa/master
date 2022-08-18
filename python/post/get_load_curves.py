@@ -121,4 +121,4 @@ def all_curves(production = True):
 
 if __name__ == '__main__':
     #get_load_curves()
-    all_curves(production = True)
+    all_curves(production = False)
