@@ -21,7 +21,7 @@ fig, axs = plt.subplots(2)
 axs = axs.ravel()
 c = plt.cm.viridis((1 - np.arange(2))/(1 - 0 + 0.1))
 
-sigmax = False
+sigmax = True
 
 for i,_file in enumerate(files_dnn):
     obj = np.load(_file, allow_pickle = True)
