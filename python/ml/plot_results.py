@@ -23,6 +23,7 @@ c = plt.cm.viridis((1 - np.arange(2))/(1 - 0 + 0.1))
 
 sigmax = True
 
+
 for i,_file in enumerate(files_dnn):
     obj = np.load(_file, allow_pickle = True)
     best_mse = obj['arr_0'][0].mse_test
@@ -42,11 +43,11 @@ for i,_file in enumerate(files_dnn):
         if 'sigmax' in _file:
             if 'random' in _file:
                 random_dnn.append((best_r2, best_mse))
-                axs[0].plot(best_mse, best_r2, 'o',c=c[0], label='random')
+                #axs[0].plot(best_mse, best_r2, 'o',c=c[0], label='random')
                 print('^^random')
             else:
                 actual_dnn.append((best_r2, best_mse))
-                axs[0].plot(best_mse, best_r2, 'o',c=c[1], label = 'real data')
+                #axs[0].plot(best_mse, best_r2, 'o',c=c[1], label = 'real data')
 axs[0].legend(numpoints=1)
 for i,_file in enumerate(files_cnn):
     obj = np.load(_file, allow_pickle = True)
@@ -67,12 +68,21 @@ for i,_file in enumerate(files_cnn):
         if 'sigmax' in _file:
             if 'random' in _file:
                 random_cnn.append((best_r2, best_mse))
-                axs[1].plot(best_mse, best_r2, 'o',c=c[0], label='random')
+                #axs[1].plot(best_mse, best_r2, 'o',c=c[0], label='random')
                 print('^^random')
             else:
                 actual_cnn.append((best_r2, best_mse))
-                axs[1].plot(best_mse, best_r2, 'o',c=c[1], label = 'real data')
+                #axs[1].plot(best_mse, best_r2, 'o',c=c[1], label = 'real data')
+actual_dnn = np.array(actual_dnn)
+random_dnn = np.array(random_dnn)
+actual_cnn = np.array(actual_cnn)
+random_cnn = np.array(random_dnn)
+axs[0].plot(actual_dnn[:,0], actual_dnn[:,1], label = 'real data')
+axs[0].plot(random_dnn[:,0], random_dnn[:,1], label = 'random data')
+axs[1].plot(actual_cnn[:,0], actual_cnn[:,1], label = 'real data')
+axs[1].plot(random_cnn[:,0], random_cnn[:,1], label = 'random data')
 axs[1].legend(numpoints=1)
+
 if sigmax:
     fig.suptitle('best gridsearch results using sigmax output')
 else:
