@@ -8,7 +8,7 @@ theme: solarized
 
 ---
 
-## presentation contents
+### presentation contents
 - introduction to friction
 - Molecular Dynamcs
 - Machine learning
@@ -16,8 +16,8 @@ theme: solarized
 - Results and discussion
 
 ---
-### Friction
-- mohr-coulomb 
+#### Friction
+- Da Vinci, Amontons (1699) , Coulomb et. al (1821). 
 $$
 \begin{aligned}
 f \leq& \mu_s F_n &, v = 0\\
@@ -25,14 +25,33 @@ f =& -sign(v) \mu_d F_N &, v \neq 0.
 \end{aligned}
 $$
 
-- ruina
+- ruina et. al. (1983)
 $$
 \begin{equation}
     \mu = \mu_0 a \ln \left( 1 + \frac{1}{v_0}\right) + b \ln \left( \frac{v_0 \theta(t)}{d_0} \right).
 \end{equation}
 $$
-- Fineberg group
+---
+Fineberg group
 
+"Static Friction Coefficient is Not a Material Constant" (2011)
+![[fig/temp_rupture_front.png|500]]
+
+--> there is a lot more going on
+---
+#### Ageing and Real Surface Areas
+<split even>
+![[temp_surfaces.png]]
+
+</split>
+
+---
+### how do we model friction?
+<split even>
+![[spring_model.png]] 
+
+test
+</split> 
 ---
 ### Molecular dynamics
 
