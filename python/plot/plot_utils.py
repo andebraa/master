@@ -33,7 +33,7 @@ def test_rip_norm():
     a = np.array(([[0,0,0,0,],[0,1,1,0],[0,0,0,0],[0,0,0,0]]))
     assert rip_norm(a) ==1
 
-def fit_sigmoid(load_curve, fig, axs, c = False):
+def fit_sigmoid(load_curve, fig=False, axs=False, c = False):
     '''
     https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.curve_fit.html
     https://stackoverflow.com/questions/55725139/fit-sigmoid-function-s-shape-curve-to-data-using-python
@@ -77,9 +77,10 @@ def fit_sigmoid(load_curve, fig, axs, c = False):
 
     max_sig = sigmoid(time_nnan, *popt)[-1]
     
+    
     if c: #gotta add . any () to this
         axs.plot(time_nnan, sigmoid(time_nnan, *popt), c= c, linewidth = 2)
-    else:
+    elif axs and fig:
         axs.plot(time_nnan, sigmoid(time_nnan, *popt))
 
     return max_sig

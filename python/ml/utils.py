@@ -41,12 +41,6 @@ def r2_score(pred, true):
     r2 = (1 - SS_res/SS_tot)
     return r2
 
-def MSE(pred, true):
-    squared_err = np.sum((pred - true)**2)/len(pred)
-    return squared_err
-
-
-
 
 def train_model(model,device,train_loader,val_loader,epochs,
                 criterion,optimizer,scheduler = None,

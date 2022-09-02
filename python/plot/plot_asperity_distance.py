@@ -81,24 +81,28 @@ def plot_max_static_dist():
             aux_dict = json.loads(fp.read())
 
         matrix_norm = rip_norm(aux_dict['erratic'])
-        axs[0].plot(matrix_norm, rise, 'o', c = c[int(np.round(matrix_norm*10))])
-        axs[1].plot(matrix_norm, ms[1], 'o', c= c[int(np.round(matrix_norm*10))])
+        axs[1].plot(matrix_norm, rise, 'o', c = c[int(np.round(matrix_norm*10))])
+        axs[0].plot(matrix_norm, ms[1], 'o', c= c[int(np.round(matrix_norm*10))])
         axs[2].plot(matrix_norm, max_sig, 'o', c = c[int(np.round(matrix_norm*10))])
 
     avg_ms /= 320
     avg_slope /= 320
     avg_sigmax /= 320
 
-    axs[0].set_xlabel('norm of asperity distance')
-    axs[0].set_ylabel('slope of simoid fit')
-    axs[0].axhline(avg_slope, label='average')
-    axs[0].legend()
-    axs[1].set_ylabel('maximum static friction')
-    axs[1].axhline(avg_ms, label='average')
+    axs[2].set_xlabel('norm of asperity distance')
+    axs[1].set_ylabel('slope of simoid fit [$\mu$Ns]')
+    axs[1].axhline(avg_slope, label='average')
     axs[1].legend()
-    axs[2].set_ylabel('highest sigmoid value')
+    axs[0].set_ylabel('maximum static friction [$\mu$N]')
+    axs[0].axhline(avg_ms, label='average')
+    axs[0].legend()
+    axs[2].set_ylabel('highest sigmoid value [$\mu$N]')
     axs[2].axhline(avg_sigmax, label = 'average')
     axs[2].legend()
+
+    axs[0].set_title('maximum static friction')
+    axs[1].set_title('slope of sigmoid fit')
+    axs[2].set_title('highest sigmoid value')
     
     fig.suptitle(f"the slope and maximum static friction as a function of the norm of asperity distances, \n temp {temp}, force {force}, vel {vel}, asperities {asperities}, orientation {orientation}")
     fig.savefig(fig_dir + 'png/asperity_distance_v_maxstatic.png', dpi = 200)

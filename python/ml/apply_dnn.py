@@ -122,10 +122,10 @@ class GridSearchDNN(GridSearch):
 
 def run_dnn_search(epochs, mode):
 
-    random = False
+    random = True
     padding = 1
     X_CV, y_CV, X_test, y_test = utils.load_data(padding, method = 'dnn', random = random) #X_CV, y_CV, X_test, y_test
-    device = utils.get_device("gpu", verbose = True)
+    device = utils.get_device("cpu", verbose = True)
 
     n_nodes_list = 2**np.arange(2, 9) # 4 - 1024 nodes
     n_layers_list = 2**np.arange(2, 9) # 2 - 128 layers

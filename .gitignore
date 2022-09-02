@@ -153,3 +153,5 @@ python/ml/CV_results/*/scores*
 /home/users/andebraa/master/python/ml/CV_results/cnn/*
 
 python/ml/slurm_outs/*
+master_presentation/.obsidian/
+master_presentation/.obsidian/*
