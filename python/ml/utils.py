@@ -265,7 +265,7 @@ class FinalResult:
     def __repr__(self):
         return f"{self.__class__.__name__}({self.r2_test=:.5f}, {self.mse_test=:.5f}, {self.model_params=})"
 
-def test_model(model, device, criterion, test_loader, plot_predictions=True, title=None, predictor = "yield", savefig=None, verbose=True):
+def test_model(model, device, criterion, test_loader, plot_predictions=True, title=None, savefig='testfig.png', verbose=True):
     num_batches = 0
     model.eval()
     true_list = []
@@ -288,12 +288,6 @@ def test_model(model, device, criterion, test_loader, plot_predictions=True, tit
     if verbose:
         print(f"{title:10s}: MSE: {loss:.3e}, R2: {r2:.3e}")
 
-    if predictor == "yield":
-        std = 0.126
-    elif predictor == "residual":
-        std = 1.01
-    else:
-        std = 0
 
     if plot_predictions:
         x0 = np.min(true_list)
@@ -304,14 +298,9 @@ def test_model(model, device, criterion, test_loader, plot_predictions=True, tit
         fig, ax = plt.subplots(figsize=(8, 8))
 
         ax.scatter(true_list, pred_list, c="b", alpha=0.5)
-        ax.plot((x0, x1), (x0, x1), "k--")
-
-        ax.plot((x0, x1), (x0+std, x1+std), "r--")
-        ax.plot((x0, x1), (x0-std, x1-std), "r--", label=f"Std. of {predictor} stress in equal pore configurations: {std:.2f}")
 
 
-        ax.set_xlabel(f"True stress [GPa]")
-        ax.set_ylabel(f"Predicted stress [GPa]")
+
         ax.legend()
         if title is not None:
             ax.set_title(f"{title}\nMSE:{loss:.2e}, R2:{r2:.2f}")
