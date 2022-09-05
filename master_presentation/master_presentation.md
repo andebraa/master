@@ -32,18 +32,20 @@ $$
 \end{equation}
 $$
 ---
+#### Ageing and Real Surface Areas
+<split even>
+![[temp_surfaces.png]]
+![[temp_coulomb.png|300x200]]
+</split>
+![[li_etal.png|500x400]]
+
+---
 Fineberg group
 
 "Static Friction Coefficient is Not a Material Constant" (2011)
 ![[fig/temp_rupture_front.png|500]]
 
 --> there is a lot more going on
----
-#### Ageing and Real Surface Areas
-<split even>
-![[temp_surfaces.png]]
-
-</split>
 
 ---
 ### how do we model friction?
