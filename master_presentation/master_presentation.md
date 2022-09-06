@@ -1,4 +1,4 @@
-:---
+---
 theme: solarized
 ---
 
@@ -19,6 +19,7 @@ theme: solarized
 ---
 #### Friction
 _Forces which resist relative motion_
+![[davinchi_experiemnt.png.svg]]
 - Da Vinci, Amontons (1699) , Coulomb et. al (1821). 
 $$
 \begin{aligned}
@@ -28,6 +29,8 @@ f =& -sign(v) \mu_d F_N &, v \neq 0.
 $$
 
 ---
+#### rate and state
+![[ruina_experiment.png|700x450]]
 - ruina et. al. (1983)
 $$
 \begin{equation}
