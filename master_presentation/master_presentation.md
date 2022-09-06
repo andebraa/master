@@ -30,7 +30,11 @@ $$
 
 ---
 #### rate and state
-![[ruina_experiment.png|700x450]]
+<split even>
+![[temp_coulomb.png|300x200]]
+![[ruina_experiment.png|300x200]]
+</split>
+
 - ruina et. al. (1983)
 $$
 \begin{equation}
@@ -41,7 +45,6 @@ $$
 #### Ageing and Real Surface Areas
 <split even>
 ![[temp_surfaces.png]]
-![[temp_coulomb.png|300x200]]
 </split>
 ![[li_etal.png|500x400]]
 
@@ -56,7 +59,7 @@ Fineberg group
 ---
 ### how do we model friction?
 <split even>
-![[spring_model.png]] 
+![[spring_model.png|300x500]] 
 
 test
 </split> 
@@ -66,6 +69,14 @@ test
 - Potentials and forces
 - Numerical methods
 
+---
+#### lennard-jones potential
+$$
+\begin{equation}
+    V(r_{i,j}) = 4 \epsilon \left[(\frac{\sigma}{r_{i.j}})^{12} - (\frac{\sigma}{r_{i,j}})^6\right]
+\end{equation}
+$$
+![[LJ_WW_Pauli.png|450x300]]
 ---
 Machine Learning
 - DNN
