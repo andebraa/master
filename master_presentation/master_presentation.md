@@ -11,12 +11,14 @@ theme: solarized
 ### presentation contents
 - introduction to friction
 - Molecular Dynamcs
-- Machine learning
-- Models and methods
+- analysis 
+	- Machine learning
+
 - Results and discussion
 
 ---
 #### Friction
+_Forces which resist relative motion_
 - Da Vinci, Amontons (1699) , Coulomb et. al (1821). 
 $$
 \begin{aligned}
@@ -25,6 +27,7 @@ f =& -sign(v) \mu_d F_N &, v \neq 0.
 \end{aligned}
 $$
 
+---
 - ruina et. al. (1983)
 $$
 \begin{equation}
