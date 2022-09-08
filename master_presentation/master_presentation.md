@@ -65,9 +65,10 @@ test
 </split> 
 ---
 ### Molecular dynamics
-
-- Potentials and forces
-- Numerical methods
+<split even>
+![[vashista potential image]]
+vashista potential 
+</split>
 
 ---
 #### lennard-jones potential
@@ -76,7 +77,10 @@ $$
     V(r_{i,j}) = 4 \epsilon \left[(\frac{\sigma}{r_{i.j}})^{12} - (\frac{\sigma}{r_{i,j}})^6\right]
 \end{equation}
 $$
+<split even>
 ![[LJ_WW_Pauli.png|450x300]]
+![[3c-sic-visualized.png|250x250]]
+</split>
 ---
 Machine Learning
 - DNN

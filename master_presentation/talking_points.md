@@ -48,11 +48,22 @@ The behaviour of junctions is at the core. Fineberg found rupture fronts
 6
 How Do We Model Friction?
 
-Simpler scalable models -> springs
-quantumn models -> too hard
+Models such as the spring model is very scalable, can easily recreate macroscopic systems. 
+But its a little less accurate, as we don't actually model the atoms
+
+Although its the most accurate description of particle interaction, quantumn modeling is far 
+too computationally intesive.
 
 ---
+%% ---------------------------------------------------molecular dynamics----- %%
 7
 Molecular dynamics
 
 Studying Interatomical interactions using a classical potential and newtons laws om motion.
+
+
+
+
+
+
+
