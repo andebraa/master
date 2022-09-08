@@ -76,41 +76,92 @@ How do interacting junctions behave at a microscopical level. Can we use knowled
 
 ![[initial_system_2asp_initnum3_render.png]]
 ---
-%%Drop this slide? %%
-%%
-### how do we model friction?
-![[spring_model.png|300x500]] 
 
-$$
-\begin{equation}
-	i \hbar \frac{\partial \psi(\vec{r},t)}{\partial t} = \frac{\hbar^2}{2m} \nabla^2 \psi(\vec{r}, t) + V\psi(\vec{r}, t)
-\end{equation}
-$$ 
----
-%%
 #### Modeling friction using molecular dynamics
-<split left="2" right="1">
-![[temp_vashista.png]]
-![[3c-sic-visualized.png]]
-</split>
-![[velocity_verlet.png|300]]
 
+![[temp_vashista.png]]
+<split even>
+![[3c-sic-visualized.png|300]]
+![[velocity_verlet.png]]
+</split>
 ---
 #### choosing a system
 ![[choosing_system2.svg]]
 Asperity shape based on Sveinsson et. al. (2020)
 
 ---
+#### Top plate thickness
+<split even>
+![[load_curves_varying_uc_ms_chess_2300.png|400x400]]
+![[max_static_chess_2300_1800.png|400x300]]
+</split>
+---
+#### varying velocity
+<split left="1" right="1">
+![[vary_vel.png|400x300]]
+![[varying_vel_rise_maxstatic.png|400x300]]
+</split>
 
+---
+#### varying normal force
+<split even>
+![[vary_normforce.png|400x300]]
+![[varying_force_rise_normforce.png|400x300]]
+</split>
 
+---
+#### 2 asperity system
+-periodic boundary conditions causes duplicates
+![[2_asp_systems_final.png]]
+---
+
+![[production_varying_initnum_temp2300_vel5_force0_asp2_or110_time1400.png|500x800]]
+---
+![[production_varying_initnum_temp2300_vel5_force0_asp2_or110_time1400_maxstatic_rise_altcolour.png|800x500]]
+
+---
+#### The eight asperity case
+![[asperity_distance_v_maxstatic.png]]
+---
+#### results of selected systems
+![[varying_strange.png]]
+---
+![[varying_strange_rise_ms.png]]
+---
 Machine Learning
-- DNN
-- CNN
+- Dense Neural Networks
+- Convolutional Neural Networks
 
 ---
-Models and Methods
-- Potentials and forces
-- Computational consciderations
-- Choosing a system
+#### Dense Neural Networks (DNN)
+![[dnn.png|400x300]]
+---
+#### Convolutional Neural Networks (CNN)
+![[cnn.png|500x300]]
+---
+#### grid search
+![[gridsearch_hyperparameters.png]]
+---
+#### Machine Learning Results
+![[ml_res.png]]
 
 ---
+![[ml_res_sigmax.png]]
+
+---
+
+#### Why doesn't configuration matter?
+- Two asperity showed promise, but eight saturated the system.
+- SiC is a very hard substance. Forces might not propogate through the top plate.
+---
+#### Diffusion creep
+- Asperities don't show stick-slip effects
+- High temperature -> High diffusion
+- Healing effects
+
+---
+#### Summary
+
+
+---
+#### Outlook

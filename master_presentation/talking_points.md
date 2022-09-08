@@ -17,6 +17,8 @@ friction plays a role in near everything we do.
 It also spans across multiple, if not all, natural sciences, 
 biology, geology, mathematics, chemistry etc etc
 
+-interdisciplinary
+
 Since da vinci, friction not dependent on object, just friction coefficient
 
 ---
@@ -80,7 +82,7 @@ These show rupture fronts, some of which are fast, and some slow
 9
 How do interacting junctions behave at a microscopical level. Can we use knowledge of interjunctional interactions to understand macroscopic friction?
 
-In order to explore this we made a system of two plates with a 4x4 grid with two and eight asperities inbetween.
+In order to explore this we made a system of two plates with a 4x4 grid with two and eight asperities inbetween. We wish to study whether the placement of asperities in relation to each other effects the friction in the system.
 
 ---
 %% ---------------------------------------------------molecular dynamics----- %%
@@ -98,7 +100,65 @@ Integrated using Velocity Verlet. Expanded taylor approximation, but more numeri
 ---
 Choosing a system
 
+In choosing our system there are several aspects we need to conscider.
+Any system we choose needs to be as realistic as possible, whilst keeping
+in mind computational limitations.
+
+
+We know we want two plates which slide in relation to each other... to have friction
+however various factors need to be chosen correctly.
+
 -junction between realism and computational consciderations
+-asperity shape is based on Sveinsson 2020 paper
+
+---
+top plate variation
+
+-explain max static
+-chess system
+-an arbitrarily large system would have no artifacts. when increasing top
+plate thickness we expect artifacts to sieze once system is big enough
+-one unit cell up adds 72000 atoms. from 735000 to 803000
+- bottom plate is (100)
+-thinnest top plate is very erratic. all slip at once
+
+-we choose 2300k as we wish for there to be some diffusion. this has intersting effects.
+
+---
+varying velocity 
+
+-explain sigmoid rise and max sigmoid
+---
+
+varying normal force
+---
+2 asperity simulations 1
+
+Now that we have chosen a system it is time to procede with the actual simulations.
+In order to increase scale we use periodic boundary conditions, this means that asperity configurations have many duplicates.
+
+-We study the 2 asperity systems with the parameters we've chosen earlier
+-2 asperities with translational and mirror symmetries excluded only has 10 possible configurations
+-Assume since we study all possible, this could be a pre-coursor to the eight asperity system with over 700 configurations
+
+-Note norm, we use this later
+---
+2 asperity simulations 2
+
+-max static affected by noise, use sigmoid fit instead.
+
+
+---
+8 asperity simulations
+
+---
+Machine learning 
+
+
+
+
+
+
 
 
 
