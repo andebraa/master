@@ -10,10 +10,12 @@ theme: solarized
 
 ### presentation contents
 - introduction to friction
-- Molecular Dynamcs
+	- why is it important to study
+- modeling friction
+	- Molecular Dynamcs
+- choosing and simulating a system
 - analysis 
 	- Machine learning
-
 - Results and discussion
 
 ---
@@ -29,59 +31,78 @@ f =& -sign(v) \mu_d F_N &, v \neq 0.
 $$
 
 ---
-#### rate and state
-<split even>
-![[temp_coulomb.png|300x200]]
-![[ruina_experiment.png|300x200]]
-</split>
+#### it's not that simple
 
-- ruina et. al. (1983)
+![[temp_coulomb.png|400]]
+
+-> ageing
+---
+
+
+
+![[baumberger.png]]
+%% ###### Baumberger & Caroli (2009) %%
+
+Real contact area for rough hard solids is much less than surface area.
+
+The junctions at which surfaces meet are called Asperities.
+---
+#### creep and diffusion
+<split even>
+![[ageing_creep.jpeg|400]]
+![[ageing_anim.gif]]
+</split>
+---
+
+#### rate and state
+![[ruina_experiment.png|300x200]]
+
+ruina et. al. (1983)
 $$
 \begin{equation}
     \mu = \mu_0 a \ln \left( 1 + \frac{1}{v_0}\right) + b \ln \left( \frac{v_0 \theta(t)}{d_0} \right).
 \end{equation}
 $$
----
-#### Ageing and Real Surface Areas
-<split even>
-![[temp_surfaces.png]]
-</split>
-![[li_etal.png|500x400]]
+dependent on split rate and state variables $\theta(t)$
 
 ---
 Fineberg group
 
 "Static Friction Coefficient is Not a Material Constant" (2011)
-![[fig/temp_rupture_front.png|500]]
-
---> there is a lot more going on
+![[finebert_experiment.png]]
 
 ---
+How do interacting junctions behave at a microscopical level. Can we use knowledge of interjunctional interactions to understand macroscopic friction?
+
+![[initial_system_2asp_initnum3_render.png]]
+---
+%%Drop this slide? %%
+%%
 ### how do we model friction?
-<split even>
 ![[spring_model.png|300x500]] 
 
-test
-</split> 
----
-### Molecular dynamics
-<split even>
-![[vashista potential image]]
-vashista potential 
-</split>
-
----
-#### lennard-jones potential
 $$
 \begin{equation}
-    V(r_{i,j}) = 4 \epsilon \left[(\frac{\sigma}{r_{i.j}})^{12} - (\frac{\sigma}{r_{i,j}})^6\right]
+	i \hbar \frac{\partial \psi(\vec{r},t)}{\partial t} = \frac{\hbar^2}{2m} \nabla^2 \psi(\vec{r}, t) + V\psi(\vec{r}, t)
 \end{equation}
-$$
-<split even>
-![[LJ_WW_Pauli.png|450x300]]
-![[3c-sic-visualized.png|250x250]]
-</split>
+$$ 
 ---
+%%
+#### Modeling friction using molecular dynamics
+<split left="2" right="1">
+![[temp_vashista.png]]
+![[3c-sic-visualized.png]]
+</split>
+![[velocity_verlet.png|300]]
+
+---
+#### choosing a system
+![[choosing_system2.svg]]
+Asperity shape based on Sveinsson et. al. (2020)
+
+---
+
+
 Machine Learning
 - DNN
 - CNN
