@@ -97,23 +97,25 @@ Also handles charges due to multiple atoms SI and C
 
 Integrated using Velocity Verlet. Expanded taylor approximation, but more numerically stable.
 
+%% Mention LAMMPS?%%
 ---
 Choosing a system
 
 In choosing our system there are several aspects we need to conscider.
-Any system we choose needs to be as realistic as possible, whilst keeping
-in mind computational limitations.
-
+- realism vs computaional consciderations
 
 We know we want two plates which slide in relation to each other... to have friction
 however various factors need to be chosen correctly.
 
--junction between realism and computational consciderations
--asperity shape is based on Sveinsson 2020 paper
+- introduce SiC, and surface energy, lots of diffusion
+- perform perliminary simulations to choose system
+- asperity shape is based on Sveinsson 2020 paper
+- Shape important to energy levels in SiC. Diffusion is more prevalent.
 
 ---
 top plate variation
 
+-explain load curves
 -explain max static
 -chess system
 -an arbitrarily large system would have no artifacts. when increasing top
@@ -128,9 +130,14 @@ plate thickness we expect artifacts to sieze once system is big enough
 varying velocity 
 
 -explain sigmoid rise and max sigmoid
+- increasing static with higher speeds in accordance with THEMRAL ACTIVATION
+- energy level of atom oscilates. every now and then conditions are fulfilled for a bond break
+- Trade off raskere hastighet mindre simulering. Dog ønsker så sakte hastighet som mulig. (vet henrik hvem en skal sitere)
 ---
 
 varying normal force
+
+- no creep effects with no normal force. only wan-der-waals
 ---
 2 asperity simulations 1
 

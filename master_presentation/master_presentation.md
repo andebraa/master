@@ -35,13 +35,13 @@ $$
 
 ![[temp_coulomb.png|400]]
 
--> ageing
+-> Real contact area and ageing
 ---
 
 
 
 ![[baumberger.png]]
-%% ###### Baumberger & Caroli (2009) %%
+###### Baumberger & Caroli (2009)
 
 Real contact area for rough hard solids is much less than surface area.
 
@@ -75,6 +75,8 @@ Fineberg group
 How do interacting junctions behave at a microscopical level. Can we use knowledge of interjunctional interactions to understand macroscopic friction?
 
 ![[initial_system_2asp_initnum3_render.png]]
+
+- Varying asperity configuration
 ---
 
 #### Modeling friction using molecular dynamics
@@ -102,20 +104,32 @@ Asperity shape based on Sveinsson et. al. (2020)
 ![[varying_vel_rise_maxstatic.png|400x300]]
 </split>
 
+\begin{equation}
+    F \propto c - T^{2/3} |\ln v/T|^{2/3}.
+\end{equation}
+
+
 ---
 #### varying normal force
 <split even>
 ![[vary_normforce.png|400x300]]
 ![[varying_force_rise_normforce.png|400x300]]
 </split>
-
+\begin{equation}
+    \mu_s = F_n \tan(\phi) + c,
+\end{equation}
+mohr-coloumb (1777)
+---
+#### Bottom plate orientation
+![[identify_diamond_comb.png]]
 ---
 #### 2 asperity system
--periodic boundary conditions causes duplicates
+- periodic boundary conditions causes duplicates
 ![[2_asp_systems_final.png]]
+- asperity-asperity norm
 ---
 
-![[production_varying_initnum_temp2300_vel5_force0_asp2_or110_time1400.png|500x800]]
+![[production_varying_initnum_temp2300_vel5_force0_asp2_or110_time1400.png|700x800]]
 ---
 ![[production_varying_initnum_temp2300_vel5_force0_asp2_or110_time1400_maxstatic_rise_altcolour.png|800x500]]
 
@@ -123,7 +137,7 @@ Asperity shape based on Sveinsson et. al. (2020)
 #### The eight asperity case
 ![[asperity_distance_v_maxstatic.png]]
 ---
-#### results of selected systems
+#### Simulating selected systems
 ![[varying_strange.png]]
 ---
 ![[varying_strange_rise_ms.png]]
@@ -160,8 +174,23 @@ Machine Learning
 - Healing effects
 
 ---
-#### Summary
-
+## Summary
+- Methods for analyzing the system
+	- norm of asperity distances
+	- maximum static friction
+	- sigmoid fit
+- Simulations
+	- pipeline for creating stable systems
+	- limited to asperity configurations (no ageing or slide-hold-slide)
+	- 320 simulations for machine learning
+- Machine learning
+	- CNN and DNN applied to confirm little asperity configuration dependency
+	- application of random dataset for baseline
 
 ---
-#### Outlook
+#### outlook
+- Numerous variations of the system can be made
+- Lower temperature for less diffusion and healing effects
+- Increase system if computationally feasible or decrease number of asperities
+- Calculate real contact area of asperities
+- Observe each asperity individually for rupture behaviour
