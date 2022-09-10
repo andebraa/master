@@ -122,6 +122,10 @@ mohr-coloumb (1777)
 #### Bottom plate orientation
 ![[identify_diamond_comb.png]]
 ---
+### Ready to simulate
+![[visualized_system.gif]]
+
+---
 #### 2 asperity system
 - periodic boundary conditions causes duplicates
 ![[2_asp_systems_final.png]]
@@ -136,6 +140,9 @@ mohr-coloumb (1777)
 ---
 #### The eight asperity case
 ![[asperity_distance_v_maxstatic.png|600x600]]
+---
+### Simulating selected systems
+![[strange_system_visualized.svg]]
 ---
 #### results of selected systems
 ![[varying_strange.png|600x600]]
@@ -153,6 +160,9 @@ Machine Learning
 #### Convolutional Neural Networks (CNN)
 ![[cnn.png|500x300]]
 ---
+### $R^2$ and MSE
+---
+
 #### grid search
 ![[gridsearch_hyperparameters.png]]
 ---
