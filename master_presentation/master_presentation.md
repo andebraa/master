@@ -33,7 +33,7 @@ $$
 ---
 #### it's not that simple
 
-![[temp_coulomb.png|400]]
+![[temp_coulomb.png|600]]
 
 -> ageing
 ---
@@ -41,7 +41,6 @@ $$
 
 
 ![[baumberger.png]]
-%% ###### Baumberger & Caroli (2009) %%
 
 Real contact area for rough hard solids is much less than surface area.
 
@@ -50,7 +49,7 @@ The junctions at which surfaces meet are called Asperities.
 #### creep and diffusion
 <split even>
 ![[ageing_creep.jpeg|400]]
-![[ageing_anim.gif]]
+![[ageing_anim.gif|550]]
 </split>
 ---
 
@@ -93,20 +92,20 @@ Asperity shape based on Sveinsson et. al. (2020)
 #### Top plate thickness
 <split even>
 ![[load_curves_varying_uc_ms_chess_2300.png|400x400]]
-![[max_static_chess_2300_1800.png|400x300]]
+![[max_static_chess_2300_1800.png|500x400]]
 </split>
 ---
 #### varying velocity
 <split left="1" right="1">
-![[vary_vel.png|400x300]]
-![[varying_vel_rise_maxstatic.png|400x300]]
+![[vary_vel.png|500x400]]
+![[varying_vel_rise_maxstatic.png|500x400]]
 </split>
 
 ---
 #### varying normal force
 <split even>
-![[vary_normforce.png|400x300]]
-![[varying_force_rise_normforce.png|400x300]]
+![[vary_normforce.png|500x400]]
+![[varying_force_rise_normforce.png|500x400]]
 </split>
 
 ---
@@ -115,16 +114,16 @@ Asperity shape based on Sveinsson et. al. (2020)
 ![[2_asp_systems_final.png]]
 ---
 
-![[production_varying_initnum_temp2300_vel5_force0_asp2_or110_time1400.png|500x800]]
+![[production_varying_initnum_temp2300_vel5_force0_asp2_or110_time1400.png|800x800]]
 ---
 ![[production_varying_initnum_temp2300_vel5_force0_asp2_or110_time1400_maxstatic_rise_altcolour.png|800x500]]
 
 ---
 #### The eight asperity case
-![[asperity_distance_v_maxstatic.png]]
+![[asperity_distance_v_maxstatic.png|600x600]]
 ---
 #### results of selected systems
-![[varying_strange.png]]
+![[varying_strange.png|600x600]]
 ---
 ![[varying_strange_rise_ms.png]]
 ---
@@ -143,7 +142,7 @@ Machine Learning
 ![[gridsearch_hyperparameters.png]]
 ---
 #### Machine Learning Results
-![[ml_res.png]]
+![[ml_res.png|800x600]]
 
 ---
 ![[ml_res_sigmax.png]]
