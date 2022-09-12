@@ -7,17 +7,17 @@ theme: solarized
 #### _Interjunctional Asperity Relations_
 
 ---
-
+![[initial_system_2asp_initnum3_render.png]]
+---
 ### presentation contents
-- introduction to friction
-	- why is it important to study
-- modeling friction
-	- Molecular Dynamcs
-- choosing and simulating a system
-- analysis 
+- Introduction to friction
+	- Why is it important to study
+- Modeling friction
+	- Molecular Dynamics
+- Choosing and simulating a system
+- Analysis 
 	- Machine learning
 - Results and discussion
-
 ---
 ### Friction
 _Forces which resist relative motion_
@@ -56,13 +56,14 @@ The junctions at which surfaces meet are called Asperities.
 ### Rate and state
 ![[ruina_experiment.png|300x200]]
 
-ruina et. al. (1983)
+Ruina et. al. (1983)
 $$
 \begin{equation}
     \mu = \mu_0 a \ln \left( 1 + \frac{1}{v_0}\right) + b \ln \left( \frac{v_0 \theta(t)}{d_0} \right).
 \end{equation}
 $$
-dependent on split rate and state variables $\theta(t)$
+Dependent on split rate and state variables $\theta(t)$. 
+- Empirical
 
 ---
 ### Fineberg group
@@ -72,10 +73,8 @@ dependent on split rate and state variables $\theta(t)$
 
 ---
 How do interacting junctions behave at a microscopical level. Can we use knowledge of interjunctional interactions to understand macroscopic friction?
-
 ![[initial_system_2asp_initnum3_render.png]]
 
-- Varying asperity configuration
 ---
 
 ### Modeling friction using molecular dynamics
@@ -89,13 +88,16 @@ How do interacting junctions behave at a microscopical level. Can we use knowled
 ### Choosing a system
 ![[choosing_system2.svg]]
 Asperity shape based on Sveinsson et. al. (2020)
-
+---
+![[temp_chess_system_viz.png]]
 ---
 ### Top plate thickness
 <split even>
 ![[load_curves_varying_uc_ms_chess_2300.png|400x400]]
 ![[max_static_chess_2300_1800.png|500x400]]
 </split>
+---
+![[temp_zoomed_loadcurve.png]]
 ---
 ### Varying velocity
 <split left="1" right="1">
@@ -117,7 +119,7 @@ Asperity shape based on Sveinsson et. al. (2020)
 \begin{equation}
     \mu_s = F_n \tan(\phi) + c,
 \end{equation}
-mohr-coloumb (1777)
+Mohr-Coulomb (1777)
 ---
 ### Bottom plate orientation
 ![[identify_diamond_comb.png]]
@@ -127,9 +129,9 @@ mohr-coloumb (1777)
 
 ---
 ### 2 asperity system
-- periodic boundary conditions causes duplicates
+- Periodic boundary conditions causes duplicates
 ![[2_asp_systems_final.png]]
-- asperity-asperity norm
+- Asperity-asperity norm
 ---
 
 ![[production_varying_initnum_temp2300_vel5_force0_asp2_or110_time1400.png|800x800]]
@@ -144,7 +146,7 @@ mohr-coloumb (1777)
 ### Simulating selected systems
 ![[strange_system_visualized.svg]]
 ---
-#### results of selected systems
+#### Results of selected systems
 
 ![[varying_strange.png|600x600]]
 ---
@@ -163,16 +165,23 @@ Machine Learning
 ---
 
 ### $R^2$ and MSE
----
 
-#### grid search
+$
+R^2 = 1 - \frac{\sum_i (y_i - y_i^*)^2}{\sum_i (y_i - \overline{y})^2},
+$
+$
+MSE = \frac{1}{n} \sum_{i=1}^{n} (y_i - \hat{y}_i)^2
+$
+
+
+---
+![[ml_data_distribution.png]]
+---
+#### Grid search
 
 ![[gridsearch_hyperparameters.png]]
 ---
 ### Machine Learning Results
-![[ml_res.png|800x600]]
-
----
 ![[ml_res_sigmax.png]]
 
 ---
@@ -185,20 +194,29 @@ Machine Learning
 - Asperities don't show stick-slip effects
 - High temperature -> High diffusion
 - Healing effects
-
 ---
-### Summary
+
+### Thesis summary
+- Systems and simulations
+	- Made a system for simulating friction with a flexible configuration
+	- Limited scope to asperity configuration
+	- Identified unique systems based on periodic boundaries
+	- Simulated 320 systems
+---
+
 - Methods for analyzing the system
-	- norm of asperity distances
-	- maximum static friction
-	- sigmoid fit
-- Simulations
-	- pipeline for creating stable systems
-	- limited to asperity configurations (no ageing or slide-hold-slide)
-	- 320 simulations for machine learning
+	- Norm of asperity distances
+	- Maximum static friction
+	- Sigmoid fit
+---
 - Machine learning
 	- CNN and DNN applied to confirm little asperity configuration dependency
-	- application of random dataset for baseline
+	- Application of random dataset for baseline
+---
+### Result summary
+- Effects such as cohesion, thermal actiavtion and linear dependence on normal force confirmed
+- Static friction in our system is independent from asperity configuration
+- Effects of diffusion creep altered the system behaviour
 
 ---
 ### outlook
@@ -207,3 +225,6 @@ Machine Learning
 - Increase system if computationally feasible or decrease number of asperities
 - Calculate real contact area of asperities
 - Observe each asperity individually for rupture behaviour
+---
+---
+![[ml_res.png|800x600]]

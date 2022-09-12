@@ -3,6 +3,12 @@ Predicting static friction in a molecular dynamic system using machine learning
 -> interjunctional asperities
 
 ---
+
+In my thesis we studied microscopic friction in a system in which we varied the asperity placements to observe the effects of asperity interactions on the static friction
+- multi scale effects of asperities makes friction complicated.
+- wish to study effects of varying asperity configurations.
+
+---
 1
 Introduction to friction -> WHY IS IT IMPORTANT TO STUDY
 molecular dynamics -> how do we model friction
@@ -29,7 +35,6 @@ coulomb himself found in 1821 that static friction depended on time spent in con
 
 -ageing
 
-Also the fact that transition from static to dynamic is not infinitely sharp.
 To explain ageing we need to look at what is going on at a microscopical level.
 
 ---
@@ -82,8 +87,7 @@ These show rupture fronts, some of which are fast, and some slow
 9
 How do interacting junctions behave at a microscopical level. Can we use knowledge of interjunctional interactions to understand macroscopic friction?
 
-In order to explore this we made a system of two plates with a 4x4 grid with two and eight asperities inbetween. We wish to study whether the placement of asperities in relation to each other effects the friction in the system.
-
+To study this we need to make a model
 ---
 %% ---------------------------------------------------molecular dynamics----- %%
 10
@@ -111,8 +115,10 @@ however various factors need to be chosen correctly.
 - perform perliminary simulations to choose system
 - asperity shape is based on Sveinsson 2020 paper
 - Shape important to energy levels in SiC. Diffusion is more prevalent.
+- system is a 4x4 grid
 
 ---
+->> 10 minutes
 top plate variation
 
 -explain load curves
@@ -123,29 +129,52 @@ plate thickness we expect artifacts to sieze once system is big enough
 -one unit cell up adds 72000 atoms. from 735000 to 803000
 - bottom plate is (100)
 -thinnest top plate is very erratic. all slip at once
+- running mean of load curve makes graph smooth
 
 -we choose 2300k as we wish for there to be some diffusion. this has intersting effects.
 
 ---
+- explain sigmoid fit
+- max static friction
+- max sigmoid
+- rise
+
+---
 varying velocity 
 
--explain sigmoid rise and max sigmoid
 - increasing static with higher speeds in accordance with THEMRAL ACTIVATION
 - energy level of atom oscilates. every now and then conditions are fulfilled for a bond break
-- Trade off raskere hastighet mindre simulering. Dog ønsker så sakte hastighet som mulig. (vet henrik hvem en skal sitere)
+- Trade off raskere hastighet mindre simulering. Dog ønsker så sakte hastighet som mulig.
+
+- we choose 5 m/s
 ---
 
 varying normal force
 
+- no force -> COHESION (mohr-coulomb)
 - no creep effects with no normal force. only wan-der-waals
+- less squish with 0
+
+- we choose 0 normal force
+
+---
+Bottom plate orientation
+
+- Bottom plate from a different object, hence different orientation
+- Doesn't form continous crystal
+- continous in x and y direction
+
+---
+READY TO SIMULATE
+- relax 1 ns, push 1 ns
+- periodic boundary conditions
 ---
 2 asperity simulations 1
 
-Now that we have chosen a system it is time to procede with the actual simulations.
 In order to increase scale we use periodic boundary conditions, this means that asperity configurations have many duplicates.
 
 -We study the 2 asperity systems with the parameters we've chosen earlier
--2 asperities with translational and mirror symmetries excluded only has 10 possible configurations
+-10 possible configurations
 -Assume since we study all possible, this could be a pre-coursor to the eight asperity system with over 700 configurations
 
 -Note norm, we use this later
@@ -153,9 +182,9 @@ In order to increase scale we use periodic boundary conditions, this means that 
 2 asperity simulations 2
 
 -max static affected by noise, use sigmoid fit instead.
-
-
+- some variation in sigmoid ms
 ---
+
 8 asperity simulations
 
 ---
